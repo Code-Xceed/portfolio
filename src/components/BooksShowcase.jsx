@@ -617,7 +617,7 @@ export function BooksShowcase({
       x.fillStyle = '#A87928';
       x.font = '24px serif';
       x.textAlign = 'center';
-      x.fillText('❦   EX CODEX NATURE   ❦', w / 2, 138);
+      x.fillText('❦   EX CODEX ATELIER ARCHIVE   ❦', w / 2, 138);
 
       // Title in rich aged walnut / iron-gall ink
       x.fillStyle = '#261D15';
@@ -2198,13 +2198,13 @@ export function BooksShowcase({
             ))}
           </div>
 
-          {/* 4. Live Project CTA (Radiant Venetian Gold Leaf Cartouche) */}
-          <div className={`mt-6 sm:mt-10 ${dpChild(270)}`}>
+          {/* 4. Live Project & Source CTAs (Radiant Venetian Gold Leaf Cartouches) */}
+          <div className={`mt-6 sm:mt-10 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(270)}`}>
             <a
               href={selectedCfg?.liveURL || selectedCfg?.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="group pointer-events-auto relative inline-flex items-center gap-3.5 px-8 py-4 sm:px-9 sm:py-4.5 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+              className="group pointer-events-auto relative inline-flex items-center gap-3 px-7 py-3.5 sm:px-8 sm:py-4 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
               [clip-path:polygon(0%_12%,1.8%_4%,5%_6%,12%_1.5%,25%_4%,38%_1%,50%_3.5%,62%_1%,75%_4%,88%_1.5%,95%_5%,98.2%_3%,100%_12%,99%_32%,100%_52%,99%_72%,100%_88%,98.2%_97%,95%_95%,88%_98.5%,75%_96%,62%_99%,50%_96.5%,38%_99%,25%_96%,12%_98.5%,5%_95%,1.8%_97%,0%_88%,1%_70%,0%_50%,1%_30%)]
               [background:repeating-linear-gradient(118deg,rgba(255,255,255,0.10)_0px_2px,transparent_2px_7px),radial-gradient(135%_160%_at_28%_18%,#ECC76F_0%,#D49E38_55%,#B0771E_100%)]
               border-2 border-[#FFE28A]
@@ -2219,11 +2219,11 @@ export function BooksShowcase({
               </span>
 
               {/* Label */}
-              <span className="font-cinzel text-[12px] sm:text-[13px] font-bold tracking-[0.24em] uppercase text-[#18140E] transition-colors duration-300">
-                View Project Live
+              <span className="font-cinzel text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.22em] uppercase text-[#18140E] transition-colors duration-300">
+                View Repository
               </span>
 
-              {/* Calligraphic Artisanal Diagonal Arrow (matching carousel arrow style) */}
+              {/* Calligraphic Diagonal Arrow */}
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
@@ -2239,6 +2239,39 @@ export function BooksShowcase({
                 <circle cx="14.5" cy="5.5" r="1.3" fill="currentColor" />
               </svg>
             </a>
+
+            {/* Optional Live Demo / Showcase Link */}
+            {selectedCfg?.demoURL && (
+              <a
+                href={selectedCfg.demoURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group pointer-events-auto relative inline-flex items-center gap-2.5 px-6 py-3.5 sm:px-7 sm:py-4 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+                border border-[#C79238]/60 [background:rgba(21,20,19,0.45)] backdrop-blur-md
+                hover:border-[#DFBA5A] hover:bg-[#151413]/70
+                [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]"
+              >
+                <span className="font-serif text-[12px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
+                  ✦
+                </span>
+                <span className="font-cinzel text-[11.5px] sm:text-[12px] font-semibold tracking-[0.20em] uppercase text-[#FBF9F5]">
+                  Live Demo
+                </span>
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  className="h-3.5 w-3.5 text-[#DFBA5A] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                >
+                  <path
+                    d="M5.5 14.5L14.5 5.5M6.5 5.5h8v8"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            )}
           </div>
         </div>
       )}
