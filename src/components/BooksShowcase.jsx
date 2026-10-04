@@ -458,11 +458,11 @@ export function BooksShowcase({
     })();
 
     function paintDefaultFront(x, w, h, o) {
-      x.fillStyle = o.bg || '#1E1C19';
+      x.fillStyle = o.bg || '#F8F5EE';
       x.fillRect(0, 0, w, h);
-      x.fillStyle = 'rgba(223,186,90,0.15)';
+      x.fillStyle = 'rgba(199,146,56,0.12)';
       for (let i = 0; i < 60; i++) x.fillRect(Math.random() * w, Math.random() * h, 2, 2);
-      x.fillStyle = '#DFBA5A';
+      x.fillStyle = '#151413';
       x.textAlign = 'center';
       x.font = '400 82px "Bodoni Moda", serif';
       const words = (o.title || '').split(' ');
@@ -478,20 +478,18 @@ export function BooksShowcase({
       if (line) lines.push(line);
       const startY = h * 0.42 - ((lines.length - 1) * 88) / 2;
       lines.forEach((l, i) => x.fillText(l, w / 2, startY + i * 88));
-      x.globalAlpha = 0.85;
-      x.fillStyle = '#FAF7F0';
+      x.fillStyle = '#58534C';
       x.font = 'italic 34px "Cormorant Garamond", serif';
       x.fillText(o.author || 'Aditya Rathore', w / 2, startY + lines.length * 88 + 60);
-      x.globalAlpha = 1;
-      x.strokeStyle = 'rgba(223,186,90,0.5)';
+      x.strokeStyle = 'rgba(199,146,56,0.85)';
       x.lineWidth = 2.5;
-      x.strokeRect(60, 60, w - 120, h - 120);
+      x.strokeRect(55, 55, w - 110, h - 110);
     }
 
     function paintBack(x, w, h, o) {
-      x.fillStyle = o.backBg || '#1E1C19';
+      x.fillStyle = o.backBg || '#F8F5EE';
       x.fillRect(0, 0, w, h);
-      const ink = o.backInk || '230,220,200';
+      const ink = o.backInk || '21,20,19';
       x.fillStyle = 'rgba(' + ink + ',.5)';
       rr(x, 150, 190, w - 460, 28, 14);
       x.fill();
@@ -501,11 +499,11 @@ export function BooksShowcase({
         rr(x, 150, 300 + i * 56, lw, 15, 7);
         x.fill();
       }
-      x.fillStyle = 'rgba(223,186,90,.65)';
+      x.fillStyle = 'rgba(199,146,56,.75)';
       x.beginPath();
       x.arc(178, h - 186, 26, 0, Math.PI * 2);
       x.fill();
-      x.fillStyle = '#FAF8F5';
+      x.fillStyle = '#FFFFFF';
       rr(x, w - 330, h - 262, 236, 152, 8);
       x.fill();
       x.fillStyle = '#151413';
@@ -522,12 +520,12 @@ export function BooksShowcase({
     }
 
     function paintSpine(x, w, h, o) {
-      x.fillStyle = o.spineBg || '#1E1C19';
+      x.fillStyle = o.spineBg || '#EDE4D4';
       x.fillRect(0, 0, w, h);
       x.save();
       x.translate(w / 2, h / 2);
       x.rotate(Math.PI / 2);
-      x.fillStyle = o.spineInk || '#DFBA5A';
+      x.fillStyle = o.spineInk || '#151413';
       x.font = o.spineFont || '600 36px "Bodoni Moda", serif';
       drawSpaced(x, (o.title || '').toUpperCase(), -h * 0.1, 15, 6);
       x.globalAlpha = 0.85;
@@ -535,11 +533,9 @@ export function BooksShowcase({
       drawSpaced(x, (o.author || 'ADITYA RATHORE').toUpperCase(), h * 0.325, 9, 4);
       x.globalAlpha = 1;
       x.restore();
-      x.fillStyle = o.spineInk || '#DFBA5A';
-      x.globalAlpha = 0.7;
+      x.fillStyle = '#C79238';
       x.fillRect(w / 2 - 26, 92, 52, 2.5);
       x.fillRect(w / 2 - 26, h - 95, 52, 2.5);
-      x.globalAlpha = 1;
     }
 
     function trimToWidth(x, text, maxW) {
@@ -736,24 +732,24 @@ export function BooksShowcase({
 
       const indexPageMat = std({ map: makeIndexPageTex(cfg.chapters), roughness: 0.92, envMapIntensity: 0.2, side: THREE.DoubleSide });
 
-      const edgeColor = cfg.edge ?? '#E8DFC8';
-      const mEdge = std({ color: edgeColor, bumpMap: laminateBump, bumpScale: 0.0035, roughness: 0.68, envMapIntensity: 0.3 });
-      const mFront = std({ bumpMap: laminateBump, bumpScale: 0.0035, roughness: 0.54, envMapIntensity: 0.28 });
-      const mBack = std({ bumpMap: laminateBump, bumpScale: 0.0035, roughness: 0.58, envMapIntensity: 0.26 });
-      const mSpine = std({ bumpMap: clothBump, bumpScale: 0.006, roughness: 0.78, envMapIntensity: 0.22 });
+      const edgeColor = cfg.edge ?? '#DECDB0';
+      const mEdge = std({ color: edgeColor, bumpMap: clothBump, bumpScale: 0.004, roughness: 0.82, envMapIntensity: 0.18 });
+      const mFront = std({ bumpMap: clothBump, bumpScale: 0.005, roughness: 0.84, envMapIntensity: 0.16 });
+      const mBack = std({ bumpMap: clothBump, bumpScale: 0.005, roughness: 0.84, envMapIntensity: 0.16 });
+      const mSpine = std({ bumpMap: clothBump, bumpScale: 0.006, roughness: 0.82, envMapIntensity: 0.18 });
 
       loadOrPaint(mFront, cfg.images?.front ?? cfg.coverURL ?? null, () => {
         const c = mkCanvas(1024, 1536);
         const ctx = c.getContext('2d');
         if (cfg.front) cfg.front(ctx, 1024, 1536);
-        else paintDefaultFront(ctx, 1024, 1536, { title: cfg.title, author: cfg.author, bg: cfg.spineBg ?? cfg.backBg ?? '#1E1C19' });
+        else paintDefaultFront(ctx, 1024, 1536, { title: cfg.title, author: cfg.author, bg: cfg.spineBg ?? cfg.backBg ?? '#F8F5EE' });
         return c;
       });
       loadOrPaint(mBack, cfg.images?.back ?? null, () => {
         const c = mkCanvas(1024, 1536);
         const ctx = c.getContext('2d');
         if (cfg.back) cfg.back(ctx, 1024, 1536);
-        else paintBack(ctx, 1024, 1536, { backBg: cfg.backBg ?? '#1E1C19', backInk: cfg.backInk ?? '235,220,195' });
+        else paintBack(ctx, 1024, 1536, { backBg: cfg.backBg ?? '#F8F5EE', backInk: cfg.backInk ?? '21,20,19' });
         return c;
       });
       loadOrPaint(mSpine, cfg.images?.spine ?? null, () => {
@@ -762,8 +758,8 @@ export function BooksShowcase({
         if (cfg.spine) cfg.spine(ctx, 220, 1536);
         else
           paintSpine(ctx, 220, 1536, {
-            spineBg: cfg.spineBg ?? cfg.backBg ?? '#1E1C19',
-            spineInk: cfg.spineInk ?? '#DFBA5A',
+            spineBg: cfg.spineBg ?? cfg.backBg ?? '#EDE4D4',
+            spineInk: cfg.spineInk ?? '#151413',
             spineFont: cfg.spineFont ?? '600 36px "Bodoni Moda", serif',
             title: cfg.title,
             author: cfg.author,
