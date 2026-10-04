@@ -16,14 +16,14 @@
  */
 
 // Helper to draw Venetian gold leaf decorative border
-function drawGoldBorder(ctx, w, h, inset = 55, lineWidth = 2.2) {
+function drawGoldBorder(ctx, w, h, inset = 55, lineWidth = 2.4) {
   ctx.save();
-  ctx.strokeStyle = 'rgba(199, 146, 56, 0.9)'; // Venetian Gold #C79238
+  ctx.strokeStyle = 'rgba(218, 168, 58, 0.95)'; // Radiant Venetian Gold
   ctx.lineWidth = lineWidth;
   ctx.strokeRect(inset, inset, w - inset * 2, h - inset * 2);
 
   // Inner fine hairline
-  ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+  ctx.strokeStyle = 'rgba(218, 168, 58, 0.5)';
   ctx.lineWidth = 1;
   ctx.strokeRect(inset + 10, inset + 10, w - (inset + 10) * 2, h - (inset + 10) * 2);
 
@@ -34,7 +34,7 @@ function drawGoldBorder(ctx, w, h, inset = 55, lineWidth = 2.2) {
     [inset + 5, h - inset - 5],
     [w - inset - 5, h - inset - 5],
   ];
-  ctx.fillStyle = '#C79238';
+  ctx.fillStyle = '#DFBA5A';
   corners.forEach(([cx, cy]) => {
     ctx.beginPath();
     ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
@@ -43,11 +43,11 @@ function drawGoldBorder(ctx, w, h, inset = 55, lineWidth = 2.2) {
   ctx.restore();
 }
 
-// Helper for luxurious natural linen cloth & woven fiber texture
+// Helper for luxurious natural linen cloth & woven fiber texture (warm brown edition)
 function applyLinenClothTexture(ctx, w, h) {
   ctx.save();
   // Delicate horizontal linen weft fibers
-  ctx.fillStyle = 'rgba(140, 110, 75, 0.032)';
+  ctx.fillStyle = 'rgba(80, 50, 25, 0.045)';
   for (let y = 0; y < h; y += 4) {
     ctx.fillRect(0, y, w, 1);
   }
@@ -56,12 +56,12 @@ function applyLinenClothTexture(ctx, w, h) {
     ctx.fillRect(x, 0, 1, h);
   }
   // Organic fiber flecks
-  ctx.fillStyle = 'rgba(100, 75, 45, 0.035)';
-  for (let i = 0; i < 2000; i++) {
+  ctx.fillStyle = 'rgba(70, 40, 18, 0.048)';
+  for (let i = 0; i < 2200; i++) {
     ctx.fillRect(Math.random() * w, Math.random() * h, 1.2, 1.2);
   }
   // Crisp highlight threads
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+  ctx.fillStyle = 'rgba(255, 245, 230, 0.28)';
   for (let i = 0; i < 1500; i++) {
     ctx.fillRect(Math.random() * w, Math.random() * h, 1.4, 1.4);
   }
@@ -955,24 +955,24 @@ export const MONOGRAPHS_DATA = [
       'WaterMedia & Source Stream Resolvers',
       'Open-Source Distribution & Modrinth',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. I', w / 2, 92);
@@ -986,47 +986,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 82px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('XMUSIC', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 28px "Cormorant Garamond", serif';
       ctx.fillText('Native In-Game Audio & Streaming Engine', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🌲   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('FABRIC ARCHITECTURE · OPEN SOURCE', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1035,7 +1035,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('XMUSIC  —  ADITYA RATHORE', 0, 12);
@@ -1043,21 +1043,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“Sound in games is not background noise;', w / 2, 380);
       ctx.fillText('it is the emotional architecture of the world.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Multi-version Fabric monorepo supporting 15+ MC releases.',
@@ -1068,13 +1068,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1108,24 +1108,24 @@ export const MONOGRAPHS_DATA = [
       'DaVinci Resolve Python Scripting API',
       'Visual Timeline Diffing & Rollback',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. II', w / 2, 92);
@@ -1139,47 +1139,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 80px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('FRAMEGIT', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 27px "Cormorant Garamond", serif';
       ctx.fillText('Version Control for Creative Video Professionals', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🌿   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('FASTCDC CAS + DAG · ELECTRON ENGINE', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1188,7 +1188,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('FRAMEGIT  —  ADITYA RATHORE', 0, 12);
@@ -1196,21 +1196,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“Terabytes of binary cinema;', w / 2, 380);
       ctx.fillText('now commanded with mathematical elegance.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Content-Addressed Storage eliminates multi-GB duplicate renders.',
@@ -1221,13 +1221,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1261,24 +1261,24 @@ export const MONOGRAPHS_DATA = [
       'Reactive WebSockets HUD (PyWebView)',
       'Direct Timeline & Bin Insertion',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. III', w / 2, 92);
@@ -1292,47 +1292,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 82px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('XDROP', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 28px "Cormorant Garamond", serif';
       ctx.fillText('Universal Social Media & Web Asset Importer', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🌊   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('FASTAPI · WEBSOCKETS · PYWEBVIEW', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1341,7 +1341,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('XDROP  —  ADITYA RATHORE', 0, 12);
@@ -1349,21 +1349,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“Context switching kills creativity;', w / 2, 380);
       ctx.fillText('drop web assets directly into your timeline.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Native script API integration for DaVinci Resolve & Adobe.',
@@ -1374,13 +1374,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1414,24 +1414,24 @@ export const MONOGRAPHS_DATA = [
       'Next.js 15 & Prisma Architecture',
       'Strict Zero-Outreach Privacy Radar',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. IV', w / 2, 92);
@@ -1445,47 +1445,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 78px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('XOPPOR AI', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 27px "Cormorant Garamond", serif';
       ctx.fillText('Autonomous Opportunity Radar & AI Evaluator', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🦅   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('GOOGLE GEMINI AI · NEXT.JS 15 · PRISMA', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1494,7 +1494,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('XOPPOR AI  —  ADITYA RATHORE', 0, 12);
@@ -1502,21 +1502,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“Opportunity favors the vigilant;', w / 2, 380);
       ctx.fillText('autonomous radar surfaces high-conviction signals.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Scouts 16 web sources continuously for high-yield engineering leads.',
@@ -1527,13 +1527,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1567,24 +1567,24 @@ export const MONOGRAPHS_DATA = [
       'Hardened Anti-Evasion Authentication',
       'Fabric API Client Architecture',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. V', w / 2, 92);
@@ -1598,47 +1598,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 82px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('VAULTOP', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 28px "Cormorant Garamond", serif';
       ctx.fillText('Official Competitive Tournament Client Mod', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🌾   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('FABRIC 1.21.X · NETTY INFRASTRUCTURE', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1647,7 +1647,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('VAULTOP  —  ADITYA RATHORE', 0, 12);
@@ -1655,21 +1655,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“True competition demands zero friction;', w / 2, 380);
       ctx.fillText('from queue to arena in a single heartbeat.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Official client companion for the VaultOP competitive platform.',
@@ -1680,13 +1680,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1721,24 +1721,24 @@ export const MONOGRAPHS_DATA = [
       'Gradle Kotlin DSL Single-Root Build',
       'Archival Open-Source Release',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. VI', w / 2, 92);
@@ -1752,47 +1752,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 78px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('CODEX CLIENT', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 27px "Cormorant Garamond", serif';
       ctx.fillText('Archival Fabric Utility & Performance Client', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🍃   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('MC 1.21.4 · FABRIC MIXINS · GRADLE KTS', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1801,7 +1801,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('CODEX CLIENT  —  ADITYA RATHORE', 0, 12);
@@ -1809,21 +1809,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“A clean codebase left in the open', w / 2, 380);
       ctx.fillText('is infinitely greater than an abandoned secret.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Single-root Gradle Kotlin DSL build targeting Minecraft 1.21.4.',
@@ -1834,13 +1834,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
@@ -1874,24 +1874,24 @@ export const MONOGRAPHS_DATA = [
       'Storage Directory & Filename Rules',
       'FFmpeg Transcoding Automation',
     ],
-    edge: '#DECDB0',
-    backBg: '#F8F5EE',
-    backInk: '21,20,19',
-    spineBg: '#EDE4D4',
-    spineInk: '#151413',
+    edge: '#CCB599',
+    backBg: '#D8C2A8',
+    backInk: '24,18,11',
+    spineBg: '#C8B093',
+    spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
     front: (ctx, w, h) => {
-      // Warm Natural Linen Cloth Ground (Portfolio Canvas Palette: #FBF9F5 / #F4EFEA)
+      // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F3ECE0');
-      grad.addColorStop(1, '#ECE2D2');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.48, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 2.2);
+      drawGoldBorder(ctx, w, h, 55, 2.4);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 17px "Cinzel", serif';
       ctx.textAlign = 'center';
       ctx.fillText('COLLECTION NATURE & ATELIER  ·  VOL. VII', w / 2, 92);
@@ -1905,47 +1905,47 @@ export const MONOGRAPHS_DATA = [
 
       // Gilded Bevel Frame around Landscape
       ctx.save();
-      ctx.strokeStyle = '#C79238';
+      ctx.strokeStyle = '#DFBA5A';
       ctx.lineWidth = 2.5;
       ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
+      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
       ctx.lineWidth = 1;
       ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
       ctx.restore();
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '400 80px "Bodoni Moda", "Didot", serif';
       ctx.textAlign = 'center';
       ctx.fillText('YT MEDIA', w / 2, textCenterY);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = 'italic 300 27px "Cormorant Garamond", serif';
       ctx.fillText('High-Fidelity Desktop Stream Harvester', w / 2, textCenterY + 54);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.font = '18px serif';
       ctx.fillText('❧   ✦   🌸   ✦   ❧', w / 2, textCenterY + 104);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('ADITYA RATHORE', w / 2, h - 165);
 
-      ctx.fillStyle = '#8C6422';
+      ctx.fillStyle = '#7E5318';
       ctx.font = '300 20px "Cinzel", serif';
       ctx.fillText('PYTHON 3 · CUSTOMTKINTER · YT-DLP', w / 2, h - 120);
     },
     spine: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
-      grad.addColorStop(0, '#E8DFD0');
-      grad.addColorStop(0.5, '#F3EBE0');
-      grad.addColorStop(1, '#E4DACE');
+      grad.addColorStop(0, '#C8B093');
+      grad.addColorStop(0.5, '#DAC5AC');
+      grad.addColorStop(1, '#C2A88B');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
 
-      ctx.fillStyle = '#C79238';
+      ctx.fillStyle = '#DFBA5A';
       ctx.fillRect(w / 2 - 32, 90, 64, 2.5);
       ctx.fillRect(w / 2 - 32, 98, 64, 1);
       ctx.fillRect(w / 2 - 32, h - 100, 64, 1);
@@ -1954,7 +1954,7 @@ export const MONOGRAPHS_DATA = [
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = '600 36px "Bodoni Moda", serif';
       ctx.fillText('YT MEDIA  —  ADITYA RATHORE', 0, 12);
@@ -1962,21 +1962,21 @@ export const MONOGRAPHS_DATA = [
     },
     back: (ctx, w, h) => {
       const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#F8F5EE');
-      grad.addColorStop(0.5, '#F2EBE0');
-      grad.addColorStop(1, '#ECE1D0');
+      grad.addColorStop(0, '#E8D7C2');
+      grad.addColorStop(0.5, '#D8C2A8');
+      grad.addColorStop(1, '#C6AB8C');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
       applyLinenClothTexture(ctx, w, h);
-      drawGoldBorder(ctx, w, h, 55, 1.5);
+      drawGoldBorder(ctx, w, h, 55, 1.6);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“High-fidelity media extraction;', w / 2, 380);
       ctx.fillText('uncompressed streams with zero browser friction.”', w / 2, 425);
 
-      ctx.fillStyle = '#58534C';
+      ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
         'Multi-threaded async extraction of 4K/8K 60fps video & lossless audio.',
@@ -1987,13 +1987,13 @@ export const MONOGRAPHS_DATA = [
         ctx.fillText(line, w / 2, 540 + i * 44);
       });
 
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#FAF6EE';
       ctx.fillRect(w / 2 - 120, h - 260, 240, 110);
-      ctx.strokeStyle = 'rgba(199, 146, 56, 0.4)';
+      ctx.strokeStyle = 'rgba(199, 146, 56, 0.45)';
       ctx.lineWidth = 1;
       ctx.strokeRect(w / 2 - 120, h - 260, 240, 110);
 
-      ctx.fillStyle = '#151413';
+      ctx.fillStyle = '#18120B';
       let bx = w / 2 - 100;
       while (bx < w / 2 + 100) {
         const bw = 2 + Math.random() * 5;
