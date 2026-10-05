@@ -74,855 +74,132 @@ function applyParchmentGrain(ctx, w, h, count = 2800) {
 }
 
 // ----------------------------------------------------------------------
-// 7 AUTHENTIC NATURE LANDSCAPES & BOTANICAL ART PLATES
+// AUTHENTIC PROJECT THUMBNAIL MOUNTING WITH CURATORIAL FILTERING
 // ----------------------------------------------------------------------
 
-// Plate 1: XMUSIC — Nocturne at Moonlit Mountain Lake
-function drawNocturneLake(ctx, x, y, w, h) {
+/**
+ * Mounts and filters project thumbnail logos inside the luxury cloth-bound monograph.
+ * Filters applied:
+ * 1. Deep mineral or vellum matting backdrop
+ * 2. Proportional cover-scale (maintains exact aspect ratio, no stretching)
+ * 3. Warm Venetian gold glaze (soft-light) to harmonise digital saturation with classical warm cloth
+ * 4. Archival edge vignette creating a rich physical plate-inset bevel
+ * 5. Microscopic linen/canvas grain overlay
+ * 6. Radiant Venetian gold double frame with decorative corner rosettes
+ */
+export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dark') {
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
 
-  // Sky: Deep nocturnal sapphire gradient
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#09121C');
-  sky.addColorStop(0.32, '#112236');
-  sky.addColorStop(0.60, '#1C3450');
-  sky.addColorStop(0.85, '#284666');
-  sky.addColorStop(1, '#1A2F45');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
+  const isLight = theme === 'light';
 
-  // Starfield
-  ctx.fillStyle = '#FFFFFF';
-  for (let s = 0; s < 75; s++) {
-    const sx = x + (Math.sin(s * 83.3) * 0.5 + 0.5) * w;
-    const sy = y + (Math.cos(s * 51.7) * 0.5 + 0.5) * (h * 0.52);
-    ctx.globalAlpha = 0.35 + (s % 5) * 0.15;
-    ctx.fillRect(sx, sy, 1.5, 1.5);
+  // 1. Museum Matting Backdrop
+  const bgGrad = ctx.createRadialGradient(
+    px + pw * 0.5, py + ph * 0.5, 30,
+    px + pw * 0.5, py + ph * 0.5, pw * 0.75
+  );
+  if (isLight) {
+    bgGrad.addColorStop(0, '#FAF6EE');
+    bgGrad.addColorStop(0.65, '#EFE7D8');
+    bgGrad.addColorStop(1, '#DECDB2');
+  } else {
+    bgGrad.addColorStop(0, '#161412');
+    bgGrad.addColorStop(0.55, '#0E0C0A');
+    bgGrad.addColorStop(1, '#060504');
   }
-  ctx.globalAlpha = 1.0;
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(px, py, pw, ph);
 
-  // Luminous Crescent Moon with Atmospheric Halo
-  ctx.save();
-  const moonX = x + w * 0.74;
-  const moonY = y + h * 0.22;
-  const moonGlow = ctx.createRadialGradient(moonX, moonY, 10, moonX, moonY, 110);
-  moonGlow.addColorStop(0, 'rgba(255, 245, 215, 0.5)');
-  moonGlow.addColorStop(0.5, 'rgba(223, 186, 90, 0.15)');
-  moonGlow.addColorStop(1, 'rgba(223, 186, 90, 0)');
-  ctx.fillStyle = moonGlow;
-  ctx.beginPath();
-  ctx.arc(moonX, moonY, 110, 0, Math.PI * 2);
-  ctx.fill();
+  // 2. Render Image if loaded
+  if (img && (img.width || img.naturalWidth) > 0 && (img.height || img.naturalHeight) > 0) {
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
 
-  ctx.fillStyle = '#FFF6D8';
-  ctx.shadowColor = 'rgba(255, 246, 216, 0.8)';
-  ctx.shadowBlur = 18;
-  ctx.beginPath();
-  ctx.arc(moonX, moonY, 34, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.beginPath();
-  ctx.arc(moonX - 12, moonY - 6, 32, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Distant Mountain Ridge 1 (Soft nocturnal violet)
-  ctx.fillStyle = '#162330';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.48);
-  ctx.bezierCurveTo(x + w * 0.25, y + h * 0.39, x + w * 0.5, y + h * 0.49, x + w * 0.75, y + h * 0.41);
-  ctx.bezierCurveTo(x + w * 0.88, y + h * 0.38, x + w * 0.95, y + h * 0.44, x + w, y + h * 0.42);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Mountain Ridge 2 (Deep indigo slate)
-  ctx.fillStyle = '#111B26';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.55);
-  ctx.bezierCurveTo(x + w * 0.3, y + h * 0.48, x + w * 0.6, y + h * 0.58, x + w, y + h * 0.51);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Still Glacial Mountain Lake
-  const lake = ctx.createLinearGradient(x, y + h * 0.55, x, y + h);
-  lake.addColorStop(0, '#0C1622');
-  lake.addColorStop(0.4, '#132334');
-  lake.addColorStop(0.8, '#1A2F45');
-  lake.addColorStop(1, '#0A121A');
-  ctx.fillStyle = lake;
-  ctx.fillRect(x, y + h * 0.55, w, h * 0.45);
-
-  // Moonlight Ripple Reflection path across water
-  ctx.save();
-  ctx.fillStyle = 'rgba(255, 245, 215, 0.45)';
-  for (let r = 0; r < 45; r++) {
-    const ry = y + h * 0.56 + r * 7;
-    const rw = 12 + r * 4.5 + Math.sin(r * 0.7) * 15;
-    const rx = moonX - rw / 2 + Math.sin(r * 0.9) * 8;
-    ctx.fillRect(rx, ry, rw, 2.2);
-  }
-  ctx.restore();
-
-  // Gentle nocturnal water ripple waves
-  ctx.save();
-  ctx.strokeStyle = 'rgba(223, 186, 90, 0.28)';
-  ctx.lineWidth = 1.2;
-  for (let wIdx = 0; wIdx < 8; wIdx++) {
-    const wy = y + h * 0.62 + wIdx * 24;
-    ctx.beginPath();
-    ctx.moveTo(x, wy);
-    ctx.bezierCurveTo(x + w * 0.3, wy - 5, x + w * 0.7, wy + 5, x + w, wy);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  // Foreground Alpine Pine Silhouettes
-  function drawNocturnePine(cx, cy, th, tw) {
     ctx.save();
-    ctx.fillStyle = '#060B10';
     ctx.beginPath();
-    ctx.moveTo(cx, cy - th);
-    ctx.lineTo(cx - tw * 0.4, cy - th * 0.7);
-    ctx.lineTo(cx - tw * 0.2, cy - th * 0.7);
-    ctx.lineTo(cx - tw * 0.7, cy - th * 0.35);
-    ctx.lineTo(cx - tw * 0.3, cy - th * 0.35);
-    ctx.lineTo(cx - tw, cy);
-    ctx.lineTo(cx + tw, cy);
-    ctx.lineTo(cx + tw * 0.3, cy - th * 0.35);
-    ctx.lineTo(cx + tw * 0.7, cy - th * 0.35);
-    ctx.lineTo(cx + tw * 0.2, cy - th * 0.7);
-    ctx.lineTo(cx + tw * 0.4, cy - th * 0.7);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
+    ctx.rect(px, py, pw, ph);
+    ctx.clip();
 
-  // Pine grove on left and right shores
-  const pines = [
-    [x + w * 0.08, y + h * 0.78, 170, 48],
-    [x + w * 0.14, y + h * 0.75, 140, 40],
-    [x + w * 0.02, y + h * 0.82, 190, 52],
-    [x + w * 0.88, y + h * 0.76, 160, 45],
-    [x + w * 0.94, y + h * 0.80, 180, 50],
-  ];
-  pines.forEach(([px, py, th, tw]) => drawNocturnePine(px, py, th, tw));
-
-  // Shoreline Wild Reeds
-  ctx.strokeStyle = '#05090D';
-  ctx.lineWidth = 1.8;
-  for (let rd = 0; rd < 35; rd++) {
-    const rx = x + w * 0.20 + rd * 8;
-    const ry = y + h * 0.90;
-    ctx.beginPath();
-    ctx.moveTo(rx, ry);
-    ctx.lineTo(rx + Math.sin(rd * 0.5) * 8, ry - 35 - (rd % 3) * 12);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-// Plate 2: FRAMEGIT — Ancient Pine Grove & Mountain Tributaries
-function drawMatsuPineLandscape(ctx, x, y, w, h) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  // Sky: Celadon & morning golden mist
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#526658');
-  sky.addColorStop(0.35, '#88A28E');
-  sky.addColorStop(0.6, '#D2DCC2');
-  sky.addColorStop(0.8, '#EFE6BE');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
-
-  // Distant Japanese Mountain Peaks
-  ctx.fillStyle = '#47534A';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.52);
-  ctx.lineTo(x + w * 0.18, y + h * 0.31);
-  ctx.lineTo(x + w * 0.32, y + h * 0.43);
-  ctx.lineTo(x + w * 0.52, y + h * 0.25);
-  ctx.lineTo(x + w * 0.72, y + h * 0.41);
-  ctx.lineTo(x + w * 0.88, y + h * 0.28);
-  ctx.lineTo(x + w, y + h * 0.41);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Mountain Ridge 2 (Moss Green with waterfall)
-  ctx.fillStyle = '#364336';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.61);
-  ctx.bezierCurveTo(x + w * 0.25, y + h * 0.47, x + w * 0.45, y + h * 0.57, x + w * 0.65, y + h * 0.45);
-  ctx.bezierCurveTo(x + w * 0.85, y + h * 0.39, x + w * 0.95, y + h * 0.51, x + w, y + h * 0.49);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Waterfall ribbon branching like natural tributaries
-  ctx.fillStyle = 'rgba(235, 248, 242, 0.88)';
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.48, y + h * 0.45);
-  ctx.lineTo(x + w * 0.495, y + h * 0.78);
-  ctx.lineTo(x + w * 0.518, y + h * 0.78);
-  ctx.lineTo(x + w * 0.492, y + h * 0.45);
-  ctx.fill();
-
-  // Secondary stream tributary branch
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.505, y + h * 0.60);
-  ctx.bezierCurveTo(x + w * 0.56, y + h * 0.66, x + w * 0.60, y + h * 0.72, x + w * 0.64, y + h * 0.82);
-  ctx.lineTo(x + w * 0.66, y + h * 0.82);
-  ctx.bezierCurveTo(x + w * 0.62, y + h * 0.72, x + w * 0.58, y + h * 0.66, x + w * 0.515, y + h * 0.60);
-  ctx.fill();
-
-  // River mist pool at bottom of waterfall
-  const waterMist = ctx.createRadialGradient(x + w * 0.5, y + h * 0.78, 10, x + w * 0.5, y + h * 0.78, 95);
-  waterMist.addColorStop(0, 'rgba(240, 250, 245, 0.80)');
-  waterMist.addColorStop(1, 'rgba(240, 250, 245, 0)');
-  ctx.fillStyle = waterMist;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.5, y + h * 0.78, 95, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Valley Basin (Ochre & Moss)
-  ctx.fillStyle = '#263224';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.75);
-  ctx.bezierCurveTo(x + w * 0.4, y + h * 0.69, x + w * 0.7, y + h * 0.83, x + w, y + h * 0.73);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Sweeping Ancient Japanese Pine (Matsu) with Root Architecture
-  ctx.save();
-  ctx.strokeStyle = '#20140A';
-  ctx.lineWidth = 16;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(x - 20, y + h * 0.95);
-  ctx.bezierCurveTo(x + w * 0.15, y + h * 0.82, x + w * 0.22, y + h * 0.64, x + w * 0.35, y + h * 0.55);
-  ctx.stroke();
-
-  // Secondary ancient boughs
-  ctx.lineWidth = 9;
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.22, y + h * 0.68);
-  ctx.bezierCurveTo(x + w * 0.32, y + h * 0.70, x + w * 0.42, y + h * 0.63, x + w * 0.52, y + h * 0.65);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.28, y + h * 0.60);
-  ctx.bezierCurveTo(x + w * 0.35, y + h * 0.51, x + w * 0.42, y + h * 0.47, x + w * 0.56, y + h * 0.49);
-  ctx.stroke();
-
-  // Pine needle cloud clusters
-  function drawPineCluster(px, py, radius) {
-    ctx.fillStyle = '#142419';
-    for (let c = 0; c < 5; c++) {
-      ctx.beginPath();
-      ctx.arc(px + (c - 2) * (radius * 0.35), py + Math.sin(c) * 4, radius * 0.46, 0, Math.PI * 2);
-      ctx.fill();
+    // Proportional cover-scale (no distortion/stretching)
+    const imgAspect = iw / ih;
+    const plateAspect = pw / ph;
+    let dw, dh, dx, dy;
+    if (imgAspect > plateAspect) {
+      dh = ph;
+      dw = ph * imgAspect;
+      dx = px + (pw - dw) * 0.5;
+      dy = py;
+    } else {
+      dw = pw;
+      dh = pw / imgAspect;
+      dx = px;
+      dy = py + (ph - dh) * 0.5;
     }
-  }
-  drawPineCluster(x + w * 0.35, y + h * 0.55, 34);
-  drawPineCluster(x + w * 0.44, y + h * 0.51, 30);
-  drawPineCluster(x + w * 0.56, y + h * 0.49, 38);
-  drawPineCluster(x + w * 0.52, y + h * 0.65, 36);
-  drawPineCluster(x + w * 0.40, y + h * 0.66, 32);
-  ctx.restore();
 
-  // White Cranes in flight
-  ctx.strokeStyle = '#FAF7F0';
-  ctx.lineWidth = 2.2;
-  const cranes = [
-    [x + w * 0.72, y + h * 0.28, 20],
-    [x + w * 0.78, y + h * 0.24, 16],
-    [x + w * 0.83, y + h * 0.27, 14],
-  ];
-  cranes.forEach(([cx, cy, span]) => {
-    ctx.beginPath();
-    ctx.moveTo(cx - span / 2, cy);
-    ctx.quadraticCurveTo(cx - span / 4, cy - 8, cx, cy);
-    ctx.quadraticCurveTo(cx + span / 4, cy - 8, cx + span / 2, cy);
-    ctx.stroke();
-  });
+    ctx.drawImage(img, dx, dy, dw, dh);
 
-  ctx.restore();
-}
+    // 3. Curatorial Venetian Gold Glaze (Soft Warm Filter)
+    ctx.globalCompositeOperation = 'soft-light';
+    ctx.fillStyle = 'rgba(223, 186, 90, 0.16)';
+    ctx.fillRect(px, py, pw, ph);
 
-// Plate 3: XDROP — Cascading Alpine Falls & Crystal Basin
-function drawCascadeFalls(ctx, x, y, w, h) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
+    // 4. Archival Edge Vignette (Plate Inset Depth)
+    ctx.globalCompositeOperation = 'source-over';
+    const vig = ctx.createRadialGradient(
+      px + pw * 0.5, py + ph * 0.5, Math.min(pw, ph) * 0.38,
+      px + pw * 0.5, py + ph * 0.5, Math.min(pw, ph) * 0.72
+    );
+    vig.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    vig.addColorStop(1, isLight ? 'rgba(90, 68, 42, 0.28)' : 'rgba(8, 6, 4, 0.52)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(px, py, pw, ph);
 
-  // Sky: Crisp Azure Mountain Morning Sky
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#3E688A');
-  sky.addColorStop(0.35, '#6896BA');
-  sky.addColorStop(0.65, '#BFD9EB');
-  sky.addColorStop(0.85, '#E5F1F8');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
-
-  // Towering Granite Canyon Cliffs
-  ctx.fillStyle = '#2C353D';
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x + w * 0.38, y);
-  ctx.lineTo(x + w * 0.42, y + h * 0.55);
-  ctx.lineTo(x, y + h * 0.65);
-  ctx.fill();
-
-  ctx.fillStyle = '#37424C';
-  ctx.beginPath();
-  ctx.moveTo(x + w, y);
-  ctx.lineTo(x + w * 0.58, y);
-  ctx.lineTo(x + w * 0.54, y + h * 0.55);
-  ctx.lineTo(x + w, y + h * 0.62);
-  ctx.fill();
-
-  // Cascading Torrential Waterfall
-  const fallGrad = ctx.createLinearGradient(x + w * 0.45, y, x + w * 0.52, y + h * 0.75);
-  fallGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-  fallGrad.addColorStop(0.5, 'rgba(230, 245, 252, 0.92)');
-  fallGrad.addColorStop(1, 'rgba(215, 240, 250, 0.88)');
-  ctx.fillStyle = fallGrad;
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.46, y);
-  ctx.lineTo(x + w * 0.52, y);
-  ctx.lineTo(x + w * 0.56, y + h * 0.72);
-  ctx.lineTo(x + w * 0.42, y + h * 0.72);
-  ctx.closePath();
-  ctx.fill();
-
-  // Water Foaming Streaks in Falls
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-  ctx.lineWidth = 1.8;
-  for (let f = 0; f < 8; f++) {
-    const fx = x + w * 0.45 + f * 10;
-    ctx.beginPath();
-    ctx.moveTo(fx, y + 20);
-    ctx.lineTo(fx + Math.sin(f * 1.5) * 6, y + h * 0.70);
-    ctx.stroke();
-  }
-
-  // Billowing White Mist Cloud at Waterfall Base
-  const mist = ctx.createRadialGradient(x + w * 0.49, y + h * 0.72, 15, x + w * 0.49, y + h * 0.72, 130);
-  mist.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-  mist.addColorStop(0.4, 'rgba(240, 250, 255, 0.75)');
-  mist.addColorStop(0.8, 'rgba(230, 245, 255, 0.3)');
-  mist.addColorStop(1, 'rgba(230, 245, 255, 0)');
-  ctx.fillStyle = mist;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.49, y + h * 0.72, 130, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Subtle Morning Rainbow Arc in Waterfall Mist
-  ctx.save();
-  ctx.strokeStyle = 'rgba(255, 215, 120, 0.35)';
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.52, y + h * 0.74, 90, Math.PI * 1.05, Math.PI * 1.65);
-  ctx.stroke();
-  ctx.strokeStyle = 'rgba(120, 220, 200, 0.25)';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.52, y + h * 0.74, 95, Math.PI * 1.05, Math.PI * 1.65);
-  ctx.stroke();
-  ctx.restore();
-
-  // Crystalline Turquoise Glacial Basin
-  const pool = ctx.createLinearGradient(x, y + h * 0.72, x, y + h);
-  pool.addColorStop(0, '#1E5868');
-  pool.addColorStop(0.4, '#2B7588');
-  pool.addColorStop(0.8, '#184755');
-  pool.addColorStop(1, '#0F303B');
-  ctx.fillStyle = pool;
-  ctx.fillRect(x, y + h * 0.72, w, h * 0.28);
-
-  // River Stones and Mountain Ferns in Foreground
-  ctx.fillStyle = '#18241D';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.88);
-  ctx.bezierCurveTo(x + w * 0.25, y + h * 0.82, x + w * 0.75, y + h * 0.94, x + w, y + h * 0.86);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // River Irises / Fern fronds
-  ctx.fillStyle = '#2D6B42';
-  for (let fn = 0; fn < 12; fn++) {
-    const fnX = x + 35 + fn * 24;
-    const fnY = y + h * 0.92;
-    ctx.beginPath();
-    ctx.moveTo(fnX, fnY);
-    ctx.quadraticCurveTo(fnX - 12, fnY - 30, fnX - 4, fnY - 55);
-    ctx.quadraticCurveTo(fnX + 4, fnY - 30, fnX, fnY);
-    ctx.fill();
-  }
-
-  ctx.restore();
-}
-
-// Plate 4: XOPPOR AI — Alpine Summit at Dawn & Sea of Valley Clouds
-function drawSummitDawn(ctx, x, y, w, h) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  // Sky: Radiant High Alpine Sunrise Gradient
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#2D2845');
-  sky.addColorStop(0.28, '#6B4A68');
-  sky.addColorStop(0.55, '#BA6E65');
-  sky.addColorStop(0.72, '#ECA271');
-  sky.addColorStop(0.88, '#FDE3A2');
-  sky.addColorStop(1, '#FFF5D0');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
-
-  // Rising Sun Disc
-  ctx.save();
-  const sunX = x + w * 0.65;
-  const sunY = y + h * 0.38;
-  const sunGlow = ctx.createRadialGradient(sunX, sunY, 8, sunX, sunY, 150);
-  sunGlow.addColorStop(0, '#FFFFFF');
-  sunGlow.addColorStop(0.25, 'rgba(255, 238, 175, 0.85)');
-  sunGlow.addColorStop(0.65, 'rgba(245, 175, 100, 0.35)');
-  sunGlow.addColorStop(1, 'rgba(235, 130, 80, 0)');
-  ctx.fillStyle = sunGlow;
-  ctx.beginPath();
-  ctx.arc(sunX, sunY, 150, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Distant Jagged Alpine Peaks piercing the horizon
-  ctx.fillStyle = '#45384D';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.48);
-  ctx.lineTo(x + w * 0.16, y + h * 0.32);
-  ctx.lineTo(x + w * 0.28, y + h * 0.44);
-  ctx.lineTo(x + w * 0.45, y + h * 0.26);
-  ctx.lineTo(x + w * 0.62, y + h * 0.42);
-  ctx.lineTo(x + w * 0.80, y + h * 0.29);
-  ctx.lineTo(x + w * 0.94, y + h * 0.40);
-  ctx.lineTo(x + w, y + h * 0.36);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Rose-gold morning alpenglow on snow peaks
-  ctx.fillStyle = 'rgba(255, 235, 215, 0.85)';
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.45, y + h * 0.26);
-  ctx.lineTo(x + w * 0.39, y + h * 0.37);
-  ctx.lineTo(x + w * 0.45, y + h * 0.33);
-  ctx.lineTo(x + w * 0.52, y + h * 0.38);
-  ctx.fill();
-
-  // Sea of Golden Valley Clouds (Mer de Nuages)
-  const clouds = ctx.createLinearGradient(x, y + h * 0.46, x, y + h * 0.76);
-  clouds.addColorStop(0, 'rgba(255, 245, 230, 0.95)');
-  clouds.addColorStop(0.4, 'rgba(245, 215, 190, 0.85)');
-  clouds.addColorStop(0.8, 'rgba(215, 175, 170, 0.65)');
-  clouds.addColorStop(1, 'rgba(165, 130, 150, 0.2)');
-  ctx.fillStyle = clouds;
-
-  for (let c = 0; c < 9; c++) {
-    const cx = x + c * (w / 7.5);
-    const cy = y + h * 0.54 + Math.sin(c * 1.2) * 22;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, 95, 42, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Massive Mountain Summit Crag in Foreground
-  ctx.fillStyle = '#251E28';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.72);
-  ctx.lineTo(x + w * 0.35, y + h * 0.60);
-  ctx.lineTo(x + w * 0.58, y + h * 0.76);
-  ctx.lineTo(x + w * 0.85, y + h * 0.68);
-  ctx.lineTo(x + w, y + h * 0.82);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Lichen and stone texture on summit rocks
-  ctx.fillStyle = '#C78C48';
-  for (let l = 0; l < 18; l++) {
-    const lx = x + w * 0.05 + l * 42;
-    const ly = y + h * 0.75 + Math.sin(l * 1.8) * 25;
-    ctx.beginPath();
-    ctx.arc(lx, ly, 4 + (l % 4) * 2, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Soaring Mountain Eagle / Falcon riding the morning thermals
-  ctx.save();
-  ctx.strokeStyle = '#18121C';
-  ctx.lineWidth = 3.5;
-  ctx.lineCap = 'round';
-  const ex = x + w * 0.38;
-  const ey = y + h * 0.36;
-  ctx.beginPath();
-  ctx.moveTo(ex - 28, ey + 4);
-  ctx.quadraticCurveTo(ex - 12, ey - 10, ex, ey);
-  ctx.quadraticCurveTo(ex + 12, ey - 10, ex + 28, ey + 4);
-  ctx.stroke();
-  ctx.restore();
-
-  ctx.restore();
-}
-
-// Plate 5: VAULTOP — Tuscan Sunset, Rolling Cypress Hills & Olive Orchards
-function drawTuscanLandscape(ctx, x, y, w, h) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  // Sky: Warm Tuscan sunset gradient
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#56728C');
-  sky.addColorStop(0.32, '#D8986E');
-  sky.addColorStop(0.55, '#F5CD8A');
-  sky.addColorStop(0.72, '#FFF1D0');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
-
-  // Glowing Sun Disc
-  const sun = ctx.createRadialGradient(x + w * 0.68, y + h * 0.36, 4, x + w * 0.68, y + h * 0.36, 130);
-  sun.addColorStop(0, 'rgba(255, 255, 245, 0.98)');
-  sun.addColorStop(0.28, 'rgba(255, 225, 140, 0.65)');
-  sun.addColorStop(1, 'rgba(255, 200, 100, 0)');
-  ctx.fillStyle = sun;
-  ctx.beginPath();
-  ctx.arc(x + w * 0.68, y + h * 0.36, 130, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Distant Mountain Ridge 1 (Soft violet atmospheric haze)
-  ctx.fillStyle = '#8F7A89';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.48);
-  ctx.bezierCurveTo(x + w * 0.25, y + h * 0.43, x + w * 0.5, y + h * 0.51, x + w * 0.75, y + h * 0.44);
-  ctx.bezierCurveTo(x + w * 0.88, y + h * 0.41, x + w * 0.95, y + h * 0.46, x + w, y + h * 0.44);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Distant Ridge 2 (Misty terracotta lavender)
-  ctx.fillStyle = '#A4887A';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.53);
-  ctx.bezierCurveTo(x + w * 0.3, y + h * 0.49, x + w * 0.6, y + h * 0.57, x + w, y + h * 0.51);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Rolling Tuscan Hill 1 (Golden Ochre Earth)
-  ctx.fillStyle = '#C69446';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.61);
-  ctx.bezierCurveTo(x + w * 0.2, y + h * 0.55, x + w * 0.45, y + h * 0.67, x + w * 0.7, y + h * 0.59);
-  ctx.bezierCurveTo(x + w * 0.85, y + h * 0.54, x + w * 0.95, y + h * 0.61, x + w, y + h * 0.59);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Rolling Tuscan Hill 2 (Warm Olive & Terracotta)
-  ctx.fillStyle = '#7B8446';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.73);
-  ctx.bezierCurveTo(x + w * 0.35, y + h * 0.65, x + w * 0.7, y + h * 0.75, x + w, y + h * 0.67);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Foreground Hill (Rich Tuscan Terracotta Earth)
-  ctx.fillStyle = '#623322';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.85);
-  ctx.bezierCurveTo(x + w * 0.25, y + h * 0.77, x + w * 0.6, y + h * 0.87, x + w, y + h * 0.79);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Cypress Trees Helper
-  function drawCypress(cx, cy, treeH, treeW) {
-    ctx.save();
-    ctx.fillStyle = '#172415';
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - treeH);
-    ctx.bezierCurveTo(cx - treeW, cy - treeH * 0.6, cx - treeW * 0.9, cy - treeH * 0.2, cx - treeW * 0.4, cy);
-    ctx.lineTo(cx + treeW * 0.4, cy);
-    ctx.bezierCurveTo(cx + treeW * 0.9, cy - treeH * 0.2, cx + treeW, cy - treeH * 0.6, cx, cy - treeH);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  // Draw groves of Cypress trees across hill ridges
-  const cypresses = [
-    [x + w * 0.18, y + h * 0.60, 95, 15],
-    [x + w * 0.21, y + h * 0.59, 108, 16],
-    [x + w * 0.235, y + h * 0.60, 85, 13],
-    [x + w * 0.52, y + h * 0.66, 75, 12],
-    [x + w * 0.545, y + h * 0.65, 88, 14],
-    [x + w * 0.78, y + h * 0.71, 120, 19],
-    [x + w * 0.81, y + h * 0.70, 135, 21],
-    [x + w * 0.84, y + h * 0.72, 105, 17],
-    [x + w * 0.08, y + h * 0.83, 140, 23],
-    [x + w * 0.11, y + h * 0.82, 160, 25],
-    [x + w * 0.14, y + h * 0.84, 125, 20],
-  ];
-  cypresses.forEach(([cx, cy, th, tw]) => drawCypress(cx, cy, th, tw));
-
-  // Golden atmospheric valley mist
-  const mist = ctx.createLinearGradient(x, y + h * 0.54, x, y + h * 0.84);
-  mist.addColorStop(0, 'rgba(255, 235, 190, 0.28)');
-  mist.addColorStop(0.5, 'rgba(255, 220, 160, 0.16)');
-  mist.addColorStop(1, 'rgba(255, 210, 140, 0)');
-  ctx.fillStyle = mist;
-  ctx.fillRect(x, y + h * 0.52, w, h * 0.35);
-
-  ctx.restore();
-}
-
-// Plate 6: CODEX CLIENT — Wild Alpine Herbarium & Edelweiss Meadow
-function drawAlpineBotanicalLandscape(ctx, x, y, w, h) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-
-  // Sky: Crisp Alpine Morning Gradient
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#566E7A');
-  sky.addColorStop(0.35, '#8EA8B6');
-  sky.addColorStop(0.65, '#D5E4EC');
-  sky.addColorStop(1, '#EEF5F8');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
-
-  // Jagged Alpine Peaks
-  ctx.fillStyle = '#3E4954';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.52);
-  ctx.lineTo(x + w * 0.22, y + h * 0.23); // Summit 1
-  ctx.lineTo(x + w * 0.38, y + h * 0.39);
-  ctx.lineTo(x + w * 0.58, y + h * 0.17); // Highest summit
-  ctx.lineTo(x + w * 0.78, y + h * 0.37);
-  ctx.lineTo(x + w * 0.92, y + h * 0.25);
-  ctx.lineTo(x + w, y + h * 0.37);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Snow on Peaks
-  ctx.fillStyle = 'rgba(250, 252, 255, 0.92)';
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.22, y + h * 0.23);
-  ctx.lineTo(x + w * 0.15, y + h * 0.34);
-  ctx.lineTo(x + w * 0.22, y + h * 0.29);
-  ctx.lineTo(x + w * 0.28, y + h * 0.33);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(x + w * 0.58, y + h * 0.17);
-  ctx.lineTo(x + w * 0.49, y + h * 0.30);
-  ctx.lineTo(x + w * 0.58, y + h * 0.25);
-  ctx.lineTo(x + w * 0.67, y + h * 0.32);
-  ctx.fill();
-
-  // Alpine Meltwater Lake (Reflective turquoise)
-  const lake = ctx.createLinearGradient(x, y + h * 0.53, x, y + h * 0.72);
-  lake.addColorStop(0, '#265C64');
-  lake.addColorStop(0.5, '#377780');
-  lake.addColorStop(1, '#569EA8');
-  ctx.fillStyle = lake;
-  ctx.fillRect(x, y + h * 0.53, w, h * 0.19);
-
-  // Alpine Meadow Plateau (Foreground)
-  ctx.fillStyle = '#263E2D';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.70);
-  ctx.bezierCurveTo(x + w * 0.35, y + h * 0.63, x + w * 0.7, y + h * 0.73, x + w, y + h * 0.67);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Botanical Herbarium: Wild Fern Fronds
-  function drawFernFrond(fx, fy, angle, len) {
-    ctx.save();
-    ctx.translate(fx, fy);
-    ctx.rotate(angle);
-    ctx.strokeStyle = '#436B4D';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(len * 0.5, -20, len, 0);
-    ctx.stroke();
-
-    ctx.fillStyle = '#5A8A65';
-    for (let p = 15; p < len - 10; p += 14) {
-      ctx.beginPath();
-      ctx.ellipse(p, -8, 6, 2.5, -0.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(p, 8, 6, 2.5, 0.4, 0, Math.PI * 2);
-      ctx.fill();
+    // 5. Delicate Linen Grain Overlay
+    ctx.fillStyle = 'rgba(255, 245, 225, 0.038)';
+    for (let i = 0; i < 900; i++) {
+      const rx = px + Math.random() * pw;
+      const ry = py + Math.random() * ph;
+      ctx.fillRect(rx, ry, 1.2, 1.2);
     }
+
     ctx.restore();
-  }
-
-  drawFernFrond(x + w * 0.15, y + h * 0.88, -0.6, 120);
-  drawFernFrond(x + w * 0.22, y + h * 0.89, -0.3, 140);
-  drawFernFrond(x + w * 0.82, y + h * 0.88, 0.4, 130);
-  drawFernFrond(x + w * 0.75, y + h * 0.90, 0.65, 110);
-
-  // Alpine Edelweiss Blossoms
-  function drawEdelweiss(ex, ey, sz) {
+  } else {
+    // Elegant fallback plate with gold atelier emblem
     ctx.save();
-    ctx.fillStyle = '#F4F7F2';
-    for (let b = 0; b < 8; b++) {
-      const rot = (b / 8) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.ellipse(
-        ex + Math.cos(rot) * (sz * 0.55),
-        ey + Math.sin(rot) * (sz * 0.55),
-        sz * 0.55,
-        sz * 0.22,
-        rot,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-    }
-    // Golden Stamen Center
     ctx.fillStyle = '#DFBA5A';
-    for (let st = 0; st < 6; st++) {
-      const stAng = (st / 6) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(ex + Math.cos(stAng) * 4, ey + Math.sin(stAng) * 4, 2.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.font = '300 22px "Cinzel", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('✦   CODEX ATELIER ARCHIVE   ✦', px + pw * 0.5, py + ph * 0.48);
+    ctx.font = 'italic 300 18px "Cormorant Garamond", serif';
+    ctx.fillStyle = '#A89880';
+    ctx.fillText('Mounting Curatorial Plate...', px + pw * 0.5, py + ph * 0.54);
     ctx.restore();
   }
 
-  drawEdelweiss(x + w * 0.32, y + h * 0.82, 22);
-  drawEdelweiss(x + w * 0.38, y + h * 0.85, 26);
-  drawEdelweiss(x + w * 0.68, y + h * 0.83, 24);
-
-  ctx.restore();
-}
-
-// Plate 7: YT MEDIA — Sunlit Forest Glade & Wild Flax Field
-function drawFlaxFieldLandscape(ctx, x, y, w, h) {
+  // 6. Radiant Venetian Gold Bevel Frame around Thumbnail Plate
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
+  ctx.strokeStyle = '#DFBA5A';
+  ctx.lineWidth = 2.6;
+  ctx.strokeRect(px, py, pw, ph);
 
-  // Sky: Summer afternoon sky with clouds
-  const sky = ctx.createLinearGradient(x, y, x, y + h);
-  sky.addColorStop(0, '#568AB6');
-  sky.addColorStop(0.42, '#9EC5E2');
-  sky.addColorStop(0.68, '#E2EFF7');
-  ctx.fillStyle = sky;
-  ctx.fillRect(x, y, w, h);
+  // Delicate inner gold hairline
+  ctx.strokeStyle = 'rgba(223, 186, 90, 0.65)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
 
-  // Soft cumulus clouds
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-  const clouds = [
-    [x + w * 0.25, y + h * 0.22, 95, 42],
-    [x + w * 0.32, y + h * 0.19, 115, 52],
-    [x + w * 0.72, y + h * 0.27, 125, 46],
-    [x + w * 0.82, y + h * 0.25, 98, 40],
+  // Corner decorative rosettes
+  const corners = [
+    [px + 6, py + 6],
+    [px + pw - 6, py + 6],
+    [px + 6, py + ph - 6],
+    [px + pw - 6, py + ph - 6],
   ];
-  clouds.forEach(([cx, cy, rx, ry]) => {
+  ctx.fillStyle = '#DFBA5A';
+  corners.forEach(([cx, cy]) => {
     ctx.beginPath();
-    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
     ctx.fill();
   });
-
-  // Distant Farmhouse & Tree Line
-  ctx.fillStyle = '#4D6B42';
-  ctx.beginPath();
-  ctx.moveTo(x, y + h * 0.51);
-  ctx.bezierCurveTo(x + w * 0.35, y + h * 0.48, x + w * 0.7, y + h * 0.53, x + w, y + h * 0.50);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.fill();
-
-  // Flax Field Midground (Vibrant Azure & Meadow Green)
-  const fieldGrad = ctx.createLinearGradient(x, y + h * 0.51, x, y + h);
-  fieldGrad.addColorStop(0, '#477552');
-  fieldGrad.addColorStop(0.35, '#528BAA'); // Sea of blue flax blossoms
-  fieldGrad.addColorStop(0.7, '#395E3F');
-  fieldGrad.addColorStop(1, '#27422C');
-  ctx.fillStyle = fieldGrad;
-  ctx.fillRect(x, y + h * 0.51, w, h * 0.49);
-
-  // Stippled blue flax blossoms across the midground
-  for (let i = 0; i < 650; i++) {
-    const fx = x + Math.random() * w;
-    const fy = y + h * 0.52 + Math.random() * (h * 0.32);
-    const rad = 1.5 + (fy - (y + h * 0.52)) * 0.016;
-    ctx.fillStyle = (i % 4 === 0) ? '#D8E8F5' : ((i % 3 === 0) ? '#629BC2' : '#7CB1D4');
-    ctx.beginPath();
-    ctx.arc(fx, fy, rad, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Botanical Foreground: Delicate Flax Stalks with Azure Blossoms
-  function drawFlaxStalk(baseX, baseY, targetX, targetY) {
-    ctx.save();
-    ctx.strokeStyle = '#3E663B';
-    ctx.lineWidth = 2.4;
-    ctx.beginPath();
-    ctx.moveTo(baseX, baseY);
-    ctx.quadraticCurveTo((baseX + targetX) / 2 + 15, (baseY + targetY) / 2, targetX, targetY);
-    ctx.stroke();
-
-    // 5-petaled Blue Flax Flower
-    ctx.fillStyle = '#6BA4CC';
-    for (let p = 0; p < 5; p++) {
-      const pAngle = (p / 5) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.ellipse(
-        targetX + Math.cos(pAngle) * 9,
-        targetY + Math.sin(pAngle) * 9,
-        9,
-        5.5,
-        pAngle,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-    }
-    // White eye
-    ctx.fillStyle = '#FAF7F0';
-    ctx.beginPath();
-    ctx.arc(targetX, targetY, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  drawFlaxStalk(x + w * 0.12, y + h, x + w * 0.16, y + h * 0.72);
-  drawFlaxStalk(x + w * 0.22, y + h, x + w * 0.26, y + h * 0.68);
-  drawFlaxStalk(x + w * 0.78, y + h, x + w * 0.74, y + h * 0.70);
-  drawFlaxStalk(x + w * 0.88, y + h, x + w * 0.84, y + h * 0.74);
+  ctx.restore();
 
   ctx.restore();
 }
@@ -936,6 +213,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'x-music',
     volumeNumber: 'I',
+    thumbnail: '/gallery/Xmusic-Logo.png',
     title: 'XMUSIC',
     subtitle: 'Native In-Game Audio & Streaming Engine',
     author: 'Aditya Rathore',
@@ -963,7 +241,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -984,17 +262,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawNocturneLake(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'dark');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1092,6 +360,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'framegit',
     volumeNumber: 'II',
+    thumbnail: '/gallery/FreameGIT-logo.png',
     title: 'FRAMEGIT',
     subtitle: 'Content-Addressed Version Control for Creative Video Timelines',
     author: 'Aditya Rathore',
@@ -1118,7 +387,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1139,17 +408,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawMatsuPineLandscape(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'dark');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1247,6 +506,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'xdrop',
     volumeNumber: 'III',
+    thumbnail: '/gallery/Xdrop-logo.png',
     title: 'XDROP',
     subtitle: 'Universal Social Media & Web Asset Importer for NLE Timelines',
     author: 'Aditya Rathore',
@@ -1273,7 +533,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1294,17 +554,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawCascadeFalls(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'dark');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1402,6 +652,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'xoppor-ai',
     volumeNumber: 'IV',
+    thumbnail: '/gallery/Xoppor-logo.png',
     title: 'XOPPOR AI',
     subtitle: 'Autonomous Multi-Platform Opportunity Radar & Neural Evaluator',
     author: 'Aditya Rathore',
@@ -1428,7 +679,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1449,17 +700,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawSummitDawn(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'dark');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1557,6 +798,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'vaultop-tournaments',
     volumeNumber: 'V',
+    thumbnail: '/gallery/vault-logo.png',
     title: 'VAULTOP',
     subtitle: 'Official Competitive Tournament Client Mod for Minecraft',
     author: 'Aditya Rathore',
@@ -1583,7 +825,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1604,17 +846,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawTuscanLandscape(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'light');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1712,6 +944,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'codex-client',
     volumeNumber: 'VI',
+    thumbnail: '/gallery/CodeX-logo.png',
     title: 'CODEX CLIENT',
     subtitle: 'Fabric 1.21.4 Performance & Modular Utility Client',
     author: 'Aditya Rathore',
@@ -1739,7 +972,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1760,17 +993,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawAlpineBotanicalLandscape(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'light');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;
@@ -1868,6 +1091,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'yt-media-downloader',
     volumeNumber: 'VII',
+    thumbnail: '/gallery/YT-media-logo.png',
     title: 'YT MEDIA',
     subtitle: 'High-Fidelity Multi-Threaded Desktop Stream Harvester',
     author: 'Aditya Rathore',
@@ -1894,7 +1118,7 @@ export const MONOGRAPHS_DATA = [
     spineBg: '#C8B093',
     spineInk: '#18120B',
     spineFont: '600 36px "Bodoni Moda", serif',
-    front: (ctx, w, h) => {
+    front: (ctx, w, h, img) => {
       // Warm Antique Fawn & Hazelnut Cloth Ground ("a bit little brown side")
       const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#E8D7C2');
@@ -1915,17 +1139,7 @@ export const MONOGRAPHS_DATA = [
       const ph = 760;
       const px = 75;
       const py = 115;
-      drawFlaxFieldLandscape(ctx, px, py, pw, ph);
-
-      // Gilded Bevel Frame around Landscape
-      ctx.save();
-      ctx.strokeStyle = '#DFBA5A';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(px, py, pw, ph);
-      ctx.strokeStyle = 'rgba(223, 186, 90, 0.55)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-      ctx.restore();
+      drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, 'dark');
 
       // Lower Monograph Block: Typography
       const textCenterY = py + ph + 130;

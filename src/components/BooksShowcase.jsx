@@ -24,6 +24,8 @@ function ChevronRight() {
 const OPEN_BTN_OFF = ['opacity-0', 'scale-[0.94]'];
 const OPEN_BTN_ON = ['opacity-100', 'scale-100'];
 
+const globalImageCache = new Map();
+
 export function BooksShowcase({
   books = MONOGRAPHS_DATA,
   heroTitle = 'Projects',
@@ -54,6 +56,18 @@ export function BooksShowcase({
   const [activeNature, setActiveNature] = useState(initialCenter?.natureBlend ?? 0.0);
   const [envDimmed, setEnvDimmed] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Preload all authentic project thumbnail images into memory
+  useEffect(() => {
+    books.forEach((b) => {
+      if (b.thumbnail && !globalImageCache.has(b.thumbnail)) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = b.thumbnail;
+        globalImageCache.set(b.thumbnail, img);
+      }
+    });
+  }, [books]);
 
   // Hero word entrance
   useEffect(() => {
@@ -751,13 +765,51 @@ export function BooksShowcase({
       const mBack = std({ bumpMap: clothBump, bumpScale: 0.005, roughness: 0.84, envMapIntensity: 0.16 });
       const mSpine = std({ bumpMap: clothBump, bumpScale: 0.006, roughness: 0.82, envMapIntensity: 0.18 });
 
-      loadOrPaint(mFront, cfg.images?.front ?? cfg.coverURL ?? null, () => {
-        const c = mkCanvas(1024, 1536);
-        const ctx = c.getContext('2d');
-        if (cfg.front) cfg.front(ctx, 1024, 1536);
-        else paintDefaultFront(ctx, 1024, 1536, { title: cfg.title, author: cfg.author, bg: cfg.spineBg ?? cfg.backBg ?? '#D8C2A8' });
-        return c;
-      });
+      // Dynamic front cover texture supporting authentic filtered project thumbnail logos
+      const frontCanvas = mkCanvas(1024, 1536);
+      const frontCtx = frontCanvas.getContext('2d');
+      const frontTex = tex(frontCanvas);
+      mFront.map = frontTex;
+
+      const repaintFront = (img) => {
+        frontCtx.clearRect(0, 0, 1024, 1536);
+        if (cfg.front) {
+          cfg.front(frontCtx, 1024, 1536, img);
+        } else {
+          paintDefaultFront(frontCtx, 1024, 1536, {
+            title: cfg.title,
+            author: cfg.author,
+            bg: cfg.spineBg ?? cfg.backBg ?? '#D8C2A8',
+          });
+        }
+        frontTex.needsUpdate = true;
+        mFront.needsUpdate = true;
+      };
+
+      if (cfg.thumbnail) {
+        let cached = globalImageCache.get(cfg.thumbnail);
+        if (cached && (cached.complete || cached.naturalWidth > 0)) {
+          repaintFront(cached);
+        } else {
+          repaintFront(null);
+          if (!cached) {
+            cached = new Image();
+            cached.crossOrigin = 'anonymous';
+            globalImageCache.set(cfg.thumbnail, cached);
+            cached.src = cfg.thumbnail;
+          }
+          cached.addEventListener(
+            'load',
+            () => {
+              if (cancelled) return;
+              repaintFront(cached);
+            },
+            { once: true }
+          );
+        }
+      } else {
+        repaintFront(null);
+      }
       loadOrPaint(mBack, cfg.images?.back ?? null, () => {
         const c = mkCanvas(1024, 1536);
         const ctx = c.getContext('2d');
@@ -2175,29 +2227,45 @@ export function BooksShowcase({
             panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
           } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
         >
-          {/* Curatorial Header: Volume Badge & Edition Metadata */}
-          <div className={`flex flex-wrap items-center gap-2.5 mb-2.5 pointer-events-auto ${dpChild(25)}`}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79238]/20 border border-[#C79238]/50 text-[#ECC76F] font-cinzel text-[10.5px] tracking-[0.22em] font-bold uppercase backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
-              <span className="text-[9px]">✦</span> VOL. {selectedCfg?.volumeNumber || 'I'}
-            </span>
-            {selectedCfg?.edition && (
-              <span className="px-3 py-1 rounded-full bg-[#181410]/75 border border-[#DFBA5A]/25 text-[#E6DAC8] font-sans text-[11px] font-medium tracking-wide backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
-                {selectedCfg.edition}
-              </span>
+          {/* Curatorial Header: Thumbnail Emblem + Volume Badges + Title */}
+          <div className="flex items-start gap-4 sm:gap-5 mb-2.5">
+            {selectedCfg?.thumbnail && (
+              <div
+                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-[#DFBA5A]/80 shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
+              >
+                <img
+                  src={selectedCfg.thumbnail}
+                  alt={selectedCfg.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                />
+              </div>
             )}
-            {selectedCfg?.year && (
-              <span className="font-serif italic text-[12px] text-[#A89880] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-                {selectedCfg.year}
-              </span>
-            )}
-          </div>
+            <div className="flex-1 min-w-0">
+              {/* Volume Badge & Edition Metadata */}
+              <div className={`flex flex-wrap items-center gap-2 mb-2 pointer-events-auto ${dpChild(35)}`}>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79238]/20 border border-[#C79238]/50 text-[#ECC76F] font-cinzel text-[10.5px] tracking-[0.22em] font-bold uppercase backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
+                  <span className="text-[9px]">✦</span> VOL. {selectedCfg?.volumeNumber || 'I'}
+                </span>
+                {selectedCfg?.edition && (
+                  <span className="px-3 py-1 rounded-full bg-[#181410]/75 border border-[#DFBA5A]/25 text-[#E6DAC8] font-sans text-[11px] font-medium tracking-wide backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
+                    {selectedCfg.edition}
+                  </span>
+                )}
+                {selectedCfg?.year && (
+                  <span className="font-serif italic text-[12px] text-[#A89880] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                    {selectedCfg.year}
+                  </span>
+                )}
+              </div>
 
-          {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
-          <h2
-            className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(32px,4.2vw,62px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
-          >
-            {selectedCfg?.title}
-          </h2>
+              {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
+              <h2
+                className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(28px,3.8vw,56px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
+              >
+                {selectedCfg?.title}
+              </h2>
+            </div>
+          </div>
 
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
