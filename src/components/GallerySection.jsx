@@ -1,13 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TOP_GALLERY_PLATES, BOTTOM_GALLERY_PLATES } from '../data/galleryData';
+import { getPreloadedVideoUrl } from '../lib/assetPreloader';
 import soundManager from '../lib/soundManager';
-import {
-  registerCanvas,
-  unregisterCanvas,
-  setCanvasVisible,
-  setSectionActive,
-  getVideoBlobUrl,
-} from '../lib/videoPool';
 
 // Fine-art Renaissance corner filigree bracket
 const CornerFiligree = ({ className = '' }) => (
@@ -24,57 +18,87 @@ const CornerFiligree = ({ className = '' }) => (
   </svg>
 );
 
-// Canvas Card: samples frames from the shared video pool via drawImage()
-// No individual <video> decoders — just a lightweight <canvas> painted by the global RAF loop
-function GalleryCanvasCard({ src, className = '' }) {
-  const canvasRef = useRef(null);
+// Dedicated Video Card Component ensuring 100% reliable continuous 60fps playback from in-memory Blobs
+// Automatically pauses off-screen cards to release GPU video decoders, eliminating all lag
+function GalleryVideoCard({ src, className = '' }) {
+  const videoRef = useRef(null);
   const containerRef = useRef(null);
-  const entryRef = useRef(null);
+  const resolvedSrc = getPreloadedVideoUrl(src);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const video = videoRef.current;
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!video || !container) return;
 
-    // Register this canvas with the shared pool
-    const entry = registerCanvas(canvas, src);
-    entryRef.current = entry;
+    // Strict DOM properties for instant unblocked playback at full normal speed
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.loop = true;
+    video.playbackRate = 1.0;
+    video.defaultPlaybackRate = 1.0;
 
-    // IntersectionObserver tells the pool which canvases to paint
-    // Generous horizontal margin (400px) ensures frames are actively rendering before appearing on screen
+    // Smart viewport observer: only decode & play videos that are in view!
+    // Off-screen cards are immediately paused to free hardware decoders for active cards.
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) {
-          setCanvasVisible(entry, e.isIntersecting);
-        }
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.muted = true;
+            video.playbackRate = 1.0;
+            const p = video.play();
+            if (p !== undefined) {
+              p.catch(() => {});
+            }
+          } else {
+            // Free GPU decoder context when rolled off-screen
+            video.pause();
+          }
+        });
       },
-      { rootMargin: '100px 400px 100px 400px', threshold: 0 }
+      {
+        root: null, // viewport
+        rootMargin: '120px 250px 120px 250px', // start decoding right before entering view
+        threshold: 0,
+      }
     );
 
     observer.observe(container);
 
     return () => {
       observer.disconnect();
-      unregisterCanvas(entry);
-      entryRef.current = null;
+      video.pause();
     };
-  }, [src]);
+  }, [resolvedSrc]);
 
   return (
     <div ref={containerRef} className="w-full h-full">
-      <canvas ref={canvasRef} className={className} />
+      <video
+        ref={videoRef}
+        src={resolvedSrc}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        disableRemotePlayback
+        tabIndex={-1}
+        onLoadedData={() => {
+          if (videoRef.current) {
+            videoRef.current.playbackRate = 1.0;
+            const p = videoRef.current.play();
+            if (p !== undefined) p.catch(() => {});
+          }
+        }}
+        className={className}
+      />
     </div>
   );
 }
 
 export default function GallerySection({ active = true, onNext, onPrev }) {
   const [selectedPlate, setSelectedPlate] = useState(null);
-
-  // Control the shared video pool: play/pause all decoders based on section visibility
-  useEffect(() => {
-    setSectionActive(active);
-    return () => setSectionActive(false);
-  }, [active]);
 
   // When user interacts, ensure video autoplay permissions are active
   useEffect(() => {
@@ -102,7 +126,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
     setSelectedPlate(null);
   };
 
-  // Render an individual prominent 16:9 video gallery card (canvas-based)
+  // Render an individual prominent 16:9 video gallery card
   const renderCard = (card, keyPrefix) => (
     <div
       key={`${keyPrefix}-${card.id}`}
@@ -111,11 +135,11 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
     >
       {/* Artwork Video Plate with genuine 16:9 widescreen video dimensions */}
       <div 
-        className={`relative overflow-hidden rounded-xs border bg-[#151413] ${card.frameBorder} transform-gpu aspect-video`}
+        className={`relative overflow-hidden rounded-xs border bg-[#151413] ${card.frameBorder} ${card.imgSize} shrink-0 transform-gpu`}
       >
-        <GalleryCanvasCard
+        <GalleryVideoCard
           src={card.video}
-          className={`${card.imgSize} object-cover block pointer-events-none`}
+          className="w-full h-full object-cover block pointer-events-none"
         />
       </div>
 
@@ -333,13 +357,8 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
               {/* Artwork Plate with Venetian Gold Foil Inset */}
               <div className="relative overflow-hidden rounded-md border border-[#DFBA5A] bg-[#151413] shadow-lg aspect-video">
                 {selectedPlate.video ? (
-                  <video
-                    src={getVideoBlobUrl(selectedPlate.video)}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls
+                  <GalleryVideoCard
+                    src={selectedPlate.video}
                     className="w-full h-full object-cover block"
                   />
                 ) : (

@@ -70,17 +70,14 @@ export default function AtelierLoader({ onLoaded }) {
 
     async function preprocessAndLoadEverything() {
       const startTime = performance.now();
-      const minDuration = 1200; // refined duration: serene, readable, yet fast and snappy
+      const minDuration = 1400; // serene atelier presentation
 
-      // 1. Preload 100% of all critical textures, 7 gallery videos as Blobs into RAM, fonts, and audio
-      await preloadAllSiteAssets((pct) => {
+      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 7 videos into RAM
+      await preloadAllSiteAssets((p) => {
         if (!isCancelled) {
-          setProgress(pct);
+          setProgress(p);
         }
       });
-
-      if (isCancelled) return;
-      setProgress(100);
 
       // 2. Ensure minimum duration has also passed
       const elapsed = performance.now() - startTime;
@@ -166,18 +163,26 @@ export default function AtelierLoader({ onLoaded }) {
           </span>
         </div>
 
-        {/* Delicate Golden Tapered Hairline Progress Track */}
-        <div className="w-32 sm:w-44 my-4 sm:my-5 flex flex-col items-center gap-1.5">
+        {/* Dynamic Progress Indicator (Full Buffering into RAM) */}
+        <div className="w-44 sm:w-56 mt-4 flex flex-col items-center gap-1.5">
           <div className="w-full h-[2px] bg-[#DFBA5A]/20 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#C79238] via-[#DFBA5A] to-[#C79238] transition-all duration-200 ease-out"
+              className="h-full bg-gradient-to-r from-[#C79238] to-[#DFBA5A] transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="font-cinzel text-[9.5px] sm:text-[10px] tracking-[0.28em] text-[#8C6422] font-semibold select-none">
-            {progress}%
+          <span className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.24em] text-[#8C6422] font-semibold opacity-85">
+            {progress < 100 ? `BUFFERING ARCHIVES · ${progress}%` : 'EXPERIENCE READY'}
           </span>
         </div>
+
+        {/* Delicate Golden Tapered Hairline Divider */}
+        <div
+          className="w-16 sm:w-20 h-[1.5px] my-5 sm:my-7 rounded-full opacity-65"
+          style={{
+            background: 'linear-gradient(to right, transparent, #DFBA5A, transparent)',
+          }}
+        />
 
         {/* Bottom of it: The Curated Quote with Gold Leaf Highlight */}
         <blockquote className="w-full">

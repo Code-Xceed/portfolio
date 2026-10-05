@@ -1,6 +1,5 @@
 // Centralized High-Performance Asset Preloader & Image Store
 import soundManager from './soundManager';
-import { preloadAllPoolVideos, CRITICAL_GALLERY_VIDEOS } from './videoPool';
 
 const projectImageStore = new Map();
 
@@ -64,6 +63,17 @@ export function getProjectImage(url, onLoaded) {
   return null;
 }
 
+// Video In-Memory Blob URL Store (Guarantees zero network latency and silky-smooth 60fps playback)
+const videoBlobStore = new Map();
+
+/**
+ * Returns the in-memory Blob URL for a preloaded video, falling back to the original URL.
+ */
+export function getPreloadedVideoUrl(url) {
+  if (!url) return url;
+  return videoBlobStore.get(url) || url;
+}
+
 export const CRITICAL_PRELOAD_ASSETS = [
   // 1. Hero & Nature Environments
   '/alpine-sanctuary-reference.jpg',
@@ -101,18 +111,90 @@ export const CRITICAL_PRELOAD_ASSETS = [
   '/gallery/YT-media-logo.png',
 ];
 
-export const CRITICAL_PRELOAD_VIDEOS = CRITICAL_GALLERY_VIDEOS;
+export const CRITICAL_PRELOAD_VIDEOS = [
+  '/gallery/videos/Debatable.mp4',
+  '/gallery/videos/GixelMC.mp4',
+  '/gallery/videos/HelxStudio.mp4',
+  '/gallery/videos/Mahindra.mp4',
+  '/gallery/videos/Portfolio-template.mp4',
+  '/gallery/videos/Portfolio-template2.mp4',
+  '/gallery/videos/Xmusic.mp4',
+];
+
+/**
+ * Downloads a video 100% into memory as a Blob, generates an object URL,
+ * and primes the browser video decoder so playback is instantaneous with 0 buffering lag.
+ */
+export async function preloadVideoFully(url, onComplete) {
+  if (typeof fetch === 'undefined') {
+    onComplete?.();
+    return url;
+  }
+  if (videoBlobStore.has(url)) {
+    onComplete?.();
+    return videoBlobStore.get(url);
+  }
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    videoBlobStore.set(url, blobUrl);
+
+    // Decoder priming: load metadata and first frame into memory
+    if (typeof document !== 'undefined') {
+      await new Promise((resolve) => {
+        const v = document.createElement('video');
+        v.preload = 'auto';
+        v.muted = true;
+        v.playsInline = true;
+
+        const done = () => {
+          v.removeEventListener('loadeddata', done);
+          v.removeEventListener('canplay', done);
+          v.removeEventListener('error', done);
+          v.removeAttribute('src');
+          v.load();
+          resolve();
+        };
+
+        v.addEventListener('loadeddata', done, { once: true });
+        v.addEventListener('canplay', done, { once: true });
+        v.addEventListener('error', done, { once: true });
+        v.src = blobUrl;
+        v.load();
+
+        setTimeout(done, 1500);
+      });
+    }
+
+    onComplete?.();
+    return blobUrl;
+  } catch (e) {
+    console.warn('Video preload fallback for:', url, e);
+    onComplete?.();
+    return url;
+  }
+}
+
+export const preloadVideo = preloadVideoFully;
 
 /**
  * Preloads and GPU-decodes an image asset into memory.
  */
-export function preloadImage(src) {
+export function preloadImage(src, onComplete) {
   return new Promise((resolve) => {
+    const finish = (result) => {
+      onComplete?.();
+      resolve(result);
+    };
+
     // If it's a project thumbnail logo, route through getProjectImage so the store is warmed up
     if (src.startsWith('/gallery/') && src.endsWith('.png')) {
-      const existing = getProjectImage(src, () => resolve());
+      const existing = getProjectImage(src, () => finish(existing));
       if (existing) {
-        resolve();
+        finish(existing);
         return;
       }
     }
@@ -126,19 +208,19 @@ export function preloadImage(src) {
     if (typeof img.decode === 'function') {
       img
         .decode()
-        .then(() => resolve(img))
+        .then(() => finish(img))
         .catch(() => {
-          if (img.complete) resolve(img);
+          if (img.complete) finish(img);
           else {
-            img.onload = () => resolve(img);
-            img.onerror = () => resolve(img);
+            img.onload = () => finish(img);
+            img.onerror = () => finish(img);
           }
         });
     } else {
-      if (img.complete) resolve(img);
+      if (img.complete) finish(img);
       else {
-        img.onload = () => resolve(img);
-        img.onerror = () => resolve(img);
+        img.onload = () => finish(img);
+        img.onerror = () => finish(img);
       }
     }
   });
@@ -146,38 +228,39 @@ export function preloadImage(src) {
 
 /**
  * Master preloader executed during AtelierLoader presentation.
- * Preloads all 27 critical textures, 7 gallery videos (100% as Blobs in RAM),
- * Google fonts, Web Audio effects, and background ambient score.
- *
- * @param {Function} onProgress Optional callback receiving (percentage: number)
+ * Preloads all 27 critical textures, 7 gallery videos (100% in RAM), Google fonts, Web Audio effects, and background ambient score.
+ * Reports real-time percentage progress (0 to 100).
  */
 export async function preloadAllSiteAssets(onProgress) {
   let imagesLoaded = 0;
+  let videosLoaded = 0;
+
   const totalImages = CRITICAL_PRELOAD_ASSETS.length;
-  let videoPercent = 0;
+  const totalVideos = CRITICAL_PRELOAD_VIDEOS.length;
 
   const updateProgress = () => {
-    if (!onProgress) return;
-    const imageProgress = (imagesLoaded / totalImages) * 40; // 40% weight
-    const videoProgress = (videoPercent / 100) * 50;         // 50% weight for videos (heavy assets)
-    const baseProgress = 10;                                 // 10% base for fonts & audio
-    const total = Math.min(100, Math.round(baseProgress + imageProgress + videoProgress));
-    onProgress(total);
+    // 70% weight to videos (since they comprise ~20MB of high-fidelity 60fps media)
+    // 20% weight to images
+    // 10% weight to fonts & audio
+    const videoRatio = totalVideos > 0 ? videosLoaded / totalVideos : 1;
+    const imageRatio = totalImages > 0 ? imagesLoaded / totalImages : 1;
+    const calculated = Math.round(videoRatio * 70 + imageRatio * 20 + 10);
+    onProgress?.(Math.min(99, Math.max(5, calculated)));
   };
 
-  const imagePromises = CRITICAL_PRELOAD_ASSETS.map(async (src) => {
-    try {
-      await preloadImage(src);
-    } finally {
+  const imagePromises = CRITICAL_PRELOAD_ASSETS.map((src) =>
+    preloadImage(src, () => {
       imagesLoaded++;
       updateProgress();
-    }
-  });
+    })
+  );
 
-  const videoPromise = preloadAllPoolVideos(CRITICAL_GALLERY_VIDEOS, (pct) => {
-    videoPercent = pct;
-    updateProgress();
-  });
+  const videoPromises = CRITICAL_PRELOAD_VIDEOS.map((src) =>
+    preloadVideoFully(src, () => {
+      videosLoaded++;
+      updateProgress();
+    })
+  );
 
   const fontPromise = (async () => {
     if (typeof document !== 'undefined' && document.fonts) {
@@ -212,14 +295,15 @@ export async function preloadAllSiteAssets(onProgress) {
 
   const allAssets = Promise.all([
     Promise.allSettled(imagePromises),
-    videoPromise,
+    Promise.allSettled(videoPromises),
     fontPromise,
     windowLoadPromise,
     sfxPromise,
   ]);
 
-  // Generous safety timeout: never block indefinitely, but allow enough time for full 52MB load
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 15000));
+  // Generous timeout (25s) to guarantee high-res videos finish downloading fully
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 25000));
   await Promise.race([allAssets, safetyTimeout]);
-  if (onProgress) onProgress(100);
+
+  onProgress?.(100);
 }
