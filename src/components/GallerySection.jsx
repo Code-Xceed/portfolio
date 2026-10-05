@@ -35,29 +35,45 @@ export default function GallerySection() {
     <div
       key={`${keyPrefix}-${card.id}`}
       onClick={() => handleCardClick(card)}
-      className={`inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer group/card select-none transition-transform duration-300 ${card.verticalOffset}`}
+      className={`inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none ${card.verticalOffset}`}
     >
-      {/* Artwork Image Plate with substantial, prominent dimensions */}
+      {/* Artwork Video Plate with substantial, prominent dimensions */}
       <div 
-        className={`relative overflow-hidden rounded-xs border bg-[#FAF6EE] ${card.frameBorder} transition-all duration-300 group-hover/card:border-[#C79238] group-hover/card:shadow-[0_12px_36px_rgba(199,146,56,0.30)]`}
+        className={`relative overflow-hidden rounded-xs border bg-[#FAF6EE] ${card.frameBorder} transform-gpu`}
       >
-        <img
-          src={card.image}
-          alt={card.title}
-          className={`${card.imgSize} object-cover transition-transform duration-700 ease-out group-hover/card:scale-104`}
-          loading="eager"
-          decoding="async"
-        />
+        {card.video ? (
+          <video
+            src={card.video}
+            poster={card.image}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+            tabIndex={-1}
+            className={`${card.imgSize} object-cover block pointer-events-none`}
+          />
+        ) : (
+          <img
+            src={card.image}
+            alt={card.title}
+            className={`${card.imgSize} object-cover block pointer-events-none`}
+            loading="eager"
+            decoding="async"
+          />
+        )}
       </div>
 
-      {/* Beside Image: 3 Lines of Clear Editorial Typography */}
+      {/* Beside Video: 3 Lines of Clear Editorial Typography */}
       <div className="flex flex-col items-start text-left min-w-[150px] max-w-[210px] sm:max-w-[260px]">
         {/* 1. Italic Serif Kicker */}
         <span className="font-serif italic text-[12.5px] sm:text-[14px] md:text-[15px] text-[#8C6422] tracking-wide leading-tight">
           {card.kicker}
         </span>
         {/* 2. Bold/Display Serif Title */}
-        <h4 className="font-bodoni font-normal text-[17px] sm:text-[21px] md:text-[24px] text-[#151413] tracking-[-0.015em] leading-snug mt-1 group-hover/card:text-[#8C6422] transition-colors">
+        <h4 className="font-bodoni font-normal text-[17px] sm:text-[21px] md:text-[24px] text-[#151413] tracking-[-0.015em] leading-snug mt-1 transition-colors">
           {card.title}
         </h4>
         {/* 3. Caption */}
@@ -174,7 +190,7 @@ export default function GallerySection() {
         aria-label="Upper Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="gallery-stream flex w-max animate-gallery-flow will-change-transform">
+        <div className="gallery-stream flex w-max animate-gallery-flow will-change-transform transform-gpu">
           {/* Set 1 */}
           <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18">
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u1'))}
@@ -216,7 +232,7 @@ export default function GallerySection() {
         aria-label="Lower Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="gallery-stream flex w-max animate-gallery-flow-slower will-change-transform">
+        <div className="gallery-stream flex w-max animate-gallery-flow-slower will-change-transform transform-gpu">
           {/* Set 1 */}
           <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18">
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l1'))}
@@ -263,11 +279,23 @@ export default function GallerySection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               {/* Artwork Plate with Venetian Gold Foil Inset */}
               <div className="relative overflow-hidden rounded-md border border-[#DFBA5A] bg-[#FAF6EE] shadow-lg">
-                <img
-                  src={selectedPlate.image}
-                  alt={selectedPlate.title}
-                  className="w-full h-auto max-h-[380px] object-cover"
-                />
+                {selectedPlate.video ? (
+                  <video
+                    src={selectedPlate.video}
+                    poster={selectedPlate.image}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-auto max-h-[380px] object-cover block"
+                  />
+                ) : (
+                  <img
+                    src={selectedPlate.image}
+                    alt={selectedPlate.title}
+                    className="w-full h-auto max-h-[380px] object-cover"
+                  />
+                )}
               </div>
 
               {/* Curatorial Details */}

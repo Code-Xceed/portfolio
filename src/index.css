@@ -196,16 +196,16 @@
 }
 
 .animate-soundbar-1 {
-  animation: atelierSoundbar1 0.95s steps(23, end) infinite;
+  animation: atelierSoundbar1 0.95s ease-in-out infinite;
 }
 .animate-soundbar-2 {
-  animation: atelierSoundbar2 0.80s steps(19, end) infinite 0.12s;
+  animation: atelierSoundbar2 0.80s ease-in-out infinite 0.12s;
 }
 .animate-soundbar-3 {
-  animation: atelierSoundbar3 1.10s steps(26, end) infinite 0.25s;
+  animation: atelierSoundbar3 1.10s ease-in-out infinite 0.25s;
 }
 .animate-soundbar-4 {
-  animation: atelierSoundbar4 0.88s steps(21, end) infinite 0.38s;
+  animation: atelierSoundbar4 0.88s ease-in-out infinite 0.38s;
 }
 
 /* Curatorial Dossier Modal Entrance Animation */
@@ -234,10 +234,19 @@
   }
 }
 
+.gallery-stream {
+  contain: layout paint;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 .animate-gallery-flow {
   animation: galleryFlowLeft 46s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -246,13 +255,9 @@
   animation: galleryFlowLeft 54s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-}
-
-/* Pause flow smoothly on track hover so viewer can inspect artwork */
-.gallery-stream:hover {
-  animation-play-state: paused !important;
 }
 
 /* Monumental Gallery Title Gold Sheen (Silky Smooth 60fps+) */

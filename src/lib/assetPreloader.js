@@ -100,6 +100,52 @@ export const CRITICAL_PRELOAD_ASSETS = [
   '/gallery/YT-media-logo.png',
 ];
 
+export const CRITICAL_PRELOAD_VIDEOS = [
+  '/gallery/gallary video/Debatable.mp4',
+  '/gallery/gallary video/GixelMC.mp4',
+  '/gallery/gallary video/HelxStudio.mp4',
+  '/gallery/gallary video/Mahindra.mp4',
+  '/gallery/gallary video/Portfolio-template.mp4',
+  '/gallery/gallary video/Portfolio-template2.mp4',
+  '/gallery/gallary video/Xmusic.mp4',
+];
+
+/**
+ * Preloads and warms up a video element so the first frame is buffered before reveal.
+ */
+export function preloadVideo(src) {
+  return new Promise((resolve) => {
+    if (typeof document === 'undefined') {
+      resolve();
+      return;
+    }
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.muted = true;
+    video.playsInline = true;
+
+    let settled = false;
+    const finish = () => {
+      if (!settled) {
+        settled = true;
+        video.onloadeddata = null;
+        video.oncanplay = null;
+        video.onerror = finish;
+        resolve(video);
+      }
+    };
+
+    video.onloadeddata = finish;
+    video.oncanplay = finish;
+    video.onerror = finish;
+    // Fast fallback timer so preloader never stalls on slower networks
+    setTimeout(finish, 3500);
+
+    video.src = src;
+    video.load();
+  });
+}
+
 /**
  * Preloads and GPU-decodes an image asset into memory.
  */
@@ -143,10 +189,11 @@ export function preloadImage(src) {
 
 /**
  * Master preloader executed during AtelierLoader presentation.
- * Preloads all 27 critical textures, Google fonts, Web Audio effects, and background ambient score.
+ * Preloads all 27 critical textures, 7 gallery videos, Google fonts, Web Audio effects, and background ambient score.
  */
 export async function preloadAllSiteAssets() {
   const imagePromises = CRITICAL_PRELOAD_ASSETS.map(preloadImage);
+  const videoPromises = CRITICAL_PRELOAD_VIDEOS.map(preloadVideo);
 
   const fontPromise = (async () => {
     if (typeof document !== 'undefined' && document.fonts) {
@@ -182,6 +229,7 @@ export async function preloadAllSiteAssets() {
 
   const allAssets = Promise.all([
     Promise.allSettled(imagePromises),
+    Promise.allSettled(videoPromises),
     fontPromise,
     windowLoadPromise,
     sfxPromise,
