@@ -224,40 +224,24 @@
   animation: fadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Infinite Archival Gallery Stream (Right to Left) */
-@keyframes galleryFlowLeft {
-  0% {
+/* Mathematically Seamless Infinite Marquee Loop (100% Glitchless 0px Jump) */
+@keyframes marqueeScroll {
+  from {
     transform: translate3d(0, 0, 0);
   }
-  100% {
-    transform: translate3d(-50%, 0, 0);
+  to {
+    transform: translate3d(-100%, 0, 0);
   }
 }
 
-.gallery-stream {
-  contain: layout paint;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+.animate-marquee-flow {
+  animation: marqueeScroll 42s linear infinite;
+  will-change: transform;
 }
 
-.animate-gallery-flow {
-  animation: galleryFlowLeft 46s linear infinite;
+.animate-marquee-flow-slower {
+  animation: marqueeScroll 50s linear infinite;
   will-change: transform;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.animate-gallery-flow-slower {
-  animation: galleryFlowLeft 54s linear infinite;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 /* Monumental Gallery Title Gold Sheen (Silky Smooth 60fps+) */

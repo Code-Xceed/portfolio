@@ -142,31 +142,8 @@ export async function preloadVideoFully(url, onComplete) {
     const blobUrl = URL.createObjectURL(blob);
     videoBlobStore.set(url, blobUrl);
 
-    // Decoder priming: load metadata and first frame into memory
-    if (typeof document !== 'undefined') {
-      await new Promise((resolve) => {
-        const v = document.createElement('video');
-        v.preload = 'auto';
-        v.muted = true;
-        v.playsInline = true;
-
-        const done = () => {
-          v.removeEventListener('loadeddata', done);
-          v.removeEventListener('canplay', done);
-          v.removeEventListener('error', done);
-          v.removeAttribute('src');
-          v.load();
-          resolve();
-        };
-
-        v.addEventListener('loadeddata', done, { once: true });
-        v.addEventListener('canplay', done, { once: true });
-        v.addEventListener('error', done, { once: true });
-        v.src = blobUrl;
-        v.load();
-
-        setTimeout(done, 1500);
-      });
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('videos-preloaded', { detail: { url, blobUrl } }));
     }
 
     onComplete?.();

@@ -19,18 +19,28 @@ const CornerFiligree = ({ className = '' }) => (
 );
 
 // Dedicated Video Card Component ensuring 100% reliable continuous 60fps playback from in-memory Blobs
-// Automatically pauses off-screen cards to release GPU video decoders, eliminating all lag
 function GalleryVideoCard({ src, className = '' }) {
   const videoRef = useRef(null);
-  const containerRef = useRef(null);
-  const resolvedSrc = getPreloadedVideoUrl(src);
+  const [currentSrc, setCurrentSrc] = useState(() => getPreloadedVideoUrl(src));
 
+  // Reactively receive the in-memory Blob URL as soon as preloading completes
+  useEffect(() => {
+    const handlePreloaded = () => {
+      const resolved = getPreloadedVideoUrl(src);
+      if (resolved && resolved !== currentSrc) {
+        setCurrentSrc(resolved);
+      }
+    };
+    handlePreloaded();
+    window.addEventListener('videos-preloaded', handlePreloaded);
+    return () => window.removeEventListener('videos-preloaded', handlePreloaded);
+  }, [src, currentSrc]);
+
+  // Ensure unblocked native 60fps autoplay at exact 1.0 normal speed
   useEffect(() => {
     const video = videoRef.current;
-    const container = containerRef.current;
-    if (!video || !container) return;
+    if (!video) return;
 
-    // Strict DOM properties for instant unblocked playback at full normal speed
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -38,44 +48,20 @@ function GalleryVideoCard({ src, className = '' }) {
     video.playbackRate = 1.0;
     video.defaultPlaybackRate = 1.0;
 
-    // Smart viewport observer: only decode & play videos that are in view!
-    // Off-screen cards are immediately paused to free hardware decoders for active cards.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video.muted = true;
-            video.playbackRate = 1.0;
-            const p = video.play();
-            if (p !== undefined) {
-              p.catch(() => {});
-            }
-          } else {
-            // Free GPU decoder context when rolled off-screen
-            video.pause();
-          }
-        });
-      },
-      {
-        root: null, // viewport
-        rootMargin: '120px 250px 120px 250px', // start decoding right before entering view
-        threshold: 0,
-      }
-    );
-
-    observer.observe(container);
-
-    return () => {
-      observer.disconnect();
-      video.pause();
+    const startPlayback = () => {
+      video.playbackRate = 1.0;
+      const p = video.play();
+      if (p !== undefined) p.catch(() => {});
     };
-  }, [resolvedSrc]);
+
+    startPlayback();
+  }, [currentSrc]);
 
   return (
-    <div ref={containerRef} className="w-full h-full">
+    <div className="w-full h-full">
       <video
         ref={videoRef}
-        src={resolvedSrc}
+        src={currentSrc}
         autoPlay
         loop
         muted
@@ -84,12 +70,13 @@ function GalleryVideoCard({ src, className = '' }) {
         disablePictureInPicture
         disableRemotePlayback
         tabIndex={-1}
-        onLoadedData={() => {
-          if (videoRef.current) {
-            videoRef.current.playbackRate = 1.0;
-            const p = videoRef.current.play();
-            if (p !== undefined) p.catch(() => {});
-          }
+        onLoadedData={(e) => {
+          e.target.playbackRate = 1.0;
+          e.target.play().catch(() => {});
+        }}
+        onCanPlay={(e) => {
+          e.target.playbackRate = 1.0;
+          e.target.play().catch(() => {});
         }}
         className={className}
       />
@@ -267,13 +254,13 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
         aria-label="Upper Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="gallery-stream flex w-max animate-gallery-flow will-change-transform transform-gpu">
+        <div className="flex w-max">
           {/* Set 1 */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18">
+          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow">
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u1'))}
           </div>
           {/* Set 2 (Exact clone matching gap width for 100% glitchless loop) */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18" aria-hidden="true">
+          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow" aria-hidden="true">
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u2'))}
           </div>
         </div>
@@ -309,13 +296,13 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
         aria-label="Lower Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="gallery-stream flex w-max animate-gallery-flow-slower will-change-transform transform-gpu">
+        <div className="flex w-max">
           {/* Set 1 */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18">
+          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow-slower">
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l1'))}
           </div>
           {/* Set 2 (Exact clone matching gap width for 100% glitchless loop) */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18" aria-hidden="true">
+          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow-slower" aria-hidden="true">
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l2'))}
           </div>
         </div>
