@@ -652,7 +652,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'xoppor-ai',
     volumeNumber: 'IV',
-    thumbnail: '/gallery/Xoppor-logo.png',
+    thumbnail: '/gallery/Xoppor-AI.png',
     title: 'XOPPOR AI',
     subtitle: 'Autonomous Multi-Platform Opportunity Radar & Neural Evaluator',
     author: 'Aditya Rathore',
