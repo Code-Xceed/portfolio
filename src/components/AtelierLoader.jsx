@@ -1,17 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-
 import soundManager from '../lib/soundManager';
-
-// All heavy visual and texture assets required for the 3D WebGL and editorial experience
-const CRITICAL_IMAGE_ASSETS = [
-  '/alpine-sanctuary-reference.jpg',
-  '/alpine-sanctuary-mobile.jpg',
-  '/Crumpled Paper Animated Cursor--cursor--SweezyCursors.png',
-  '/Crumpled Paper Animated Cursor--pointer--SweezyCursors.png',
-  '/hero-painting.jpg',
-  '/hero-canvas-impasto.jpg',
-  '/dark-hero-painting.jpg',
-];
+import { preloadAllSiteAssets } from '../lib/assetPreloader';
 
 // Curated philosophical & calming atelier quotes with bespoke highlight segments
 const ATELIER_QUOTES = [
@@ -80,78 +69,18 @@ export default function AtelierLoader({ onLoaded }) {
 
     async function preprocessAndLoadEverything() {
       const startTime = performance.now();
-      const minDuration = 1100; // refined duration: serene, readable, yet fast and snappy
+      const minDuration = 1200; // refined duration: serene, readable, yet fast and snappy
 
-      // 1. Preload & GPU-decode every critical high-res texture and artwork
-      const imagePromises = CRITICAL_IMAGE_ASSETS.map((src) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = src;
+      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, and audio track
+      await preloadAllSiteAssets();
 
-          // img.decode() decodes the image in the background GPU memory
-          if (typeof img.decode === 'function') {
-            img.decode()
-              .then(resolve)
-              .catch(() => {
-                if (img.complete) resolve();
-                else {
-                  img.onload = resolve;
-                  img.onerror = resolve;
-                }
-              });
-          } else {
-            if (img.complete) resolve();
-            else {
-              img.onload = resolve;
-              img.onerror = resolve;
-            }
-          }
-        });
-      });
-
-      // 2. Wait for all Google Web Fonts to fully load and compile
-      const fontPromise = (async () => {
-        if (document.fonts && document.fonts.ready) {
-          try {
-            await document.fonts.ready;
-          } catch (e) {
-            // non-blocking fallback
-          }
-        }
-      })();
-
-      // 3. Wait for Window / Document load event
-      const windowLoadPromise = new Promise((resolve) => {
-        if (document.readyState === 'complete') {
-          resolve();
-        } else {
-          window.addEventListener('load', resolve, { once: true });
-        }
-      });
-
-      // 4. Preload and decode all audio sound effects in memory
-      const sfxPromise = soundManager.preloadAll();
-
-      // 5. Combined asset gate with safety timeout
-      const allAssetsGate = Promise.all([
-        Promise.allSettled(imagePromises),
-        fontPromise,
-        windowLoadPromise,
-        sfxPromise,
-      ]);
-
-      const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 6000));
-
-      // Wait until ALL real assets are preprocessed & loaded (or safety timeout reached)
-      await Promise.race([allAssetsGate, safetyTimeout]);
-
-      // 5. Ensure minimum duration has also passed
+      // 2. Ensure minimum duration has also passed
       const elapsed = performance.now() - startTime;
       if (elapsed < minDuration) {
         await new Promise((resolve) => setTimeout(resolve, minDuration - elapsed));
       }
 
-      // 6. Guarantee that the browser paints the underlying WebGL & canvas pipeline
+      // 3. Guarantee that the browser paints the underlying WebGL & canvas pipeline
       await new Promise((resolve) => {
         requestAnimationFrame(() => {
           requestAnimationFrame(resolve);
@@ -160,7 +89,7 @@ export default function AtelierLoader({ onLoaded }) {
 
       if (isCancelled) return;
 
-      // 7. Assets and underlying scene are 100% ready — unlock audio and trigger immediate crossfade
+      // 4. Assets and underlying scene are 100% ready — unlock audio and trigger immediate crossfade
       soundManager.unlock();
       setIsFading(true);
       onLoaded?.();

@@ -101,7 +101,7 @@ export default function CustomCursor() {
       }
     };
 
-    // 24 FPS Film Cadence Cursor Render Loop
+    // Ultra-smooth native refresh rate cursor tracking loop (60Hz / 120Hz / 144Hz+)
     let cursorRaf = 0;
     const renderCursorFrame = () => {
       if (containerRef.current && isVisibleRef.current && posRef.current.x >= 0) {
@@ -111,7 +111,7 @@ export default function CustomCursor() {
     };
     cursorRaf = requestAnimationFrame(renderCursorFrame);
 
-    // Fast pointer move listener (buffers coordinates for 24fps film render tick)
+    // Instant pointer move listener with zero latency
     const onPointerMove = (e) => {
       const x = e.clientX;
       const y = e.clientY;
@@ -121,8 +121,10 @@ export default function CustomCursor() {
         isVisibleRef.current = true;
         if (containerRef.current) {
           containerRef.current.style.opacity = '1';
-          containerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         }
+      }
+      if (containerRef.current) {
+        containerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
 
       const isHoveringInteractive = checkInteractive(e.target);

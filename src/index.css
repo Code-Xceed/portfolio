@@ -106,14 +106,14 @@
 }
 
 .animate-glaze-slow {
-  animation: floatGlaze 22s steps(528, end) infinite;
+  animation: floatGlaze 22s ease-in-out infinite;
 }
 
 .animate-glaze-reverse {
-  animation: floatGlaze 28s steps(672, end) infinite reverse;
+  animation: floatGlaze 28s ease-in-out infinite reverse;
 }
 
-/* Liquid Venetian Gold Shimmer for Loading Typography (Locked 24fps) */
+/* Liquid Venetian Gold Shimmer for Loading Typography (Silky Smooth 60fps+) */
 @keyframes shimmerText {
   0% {
     background-position: 150% 0;
@@ -129,7 +129,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmerText 3.4s steps(82, end) infinite;
+  animation: shimmerText 3.4s ease-in-out infinite;
 }
 
 /* Hairline dividers that mimic pencil markings on canvas */
@@ -235,7 +235,7 @@
 }
 
 .animate-gallery-flow {
-  animation: galleryFlowLeft 46s steps(1104, end) infinite;
+  animation: galleryFlowLeft 46s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -243,7 +243,7 @@
 }
 
 .animate-gallery-flow-slower {
-  animation: galleryFlowLeft 54s steps(1296, end) infinite;
+  animation: galleryFlowLeft 54s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -255,7 +255,7 @@
   animation-play-state: paused !important;
 }
 
-/* Monumental Gallery Title Gold Sheen (Locked 24fps) */
+/* Monumental Gallery Title Gold Sheen (Silky Smooth 60fps+) */
 @keyframes galleryTextGlint {
   0% {
     background-position: 250% 0;
@@ -283,7 +283,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: galleryTextGlint 12s steps(288, end) infinite;
+  animation: galleryTextGlint 12s ease-in-out infinite;
 }
 
 

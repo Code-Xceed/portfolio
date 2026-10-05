@@ -24,65 +24,7 @@ function ChevronRight() {
 const OPEN_BTN_OFF = ['opacity-0', 'scale-[0.94]'];
 const OPEN_BTN_ON = ['opacity-100', 'scale-100'];
 
-// Bulletproof project thumbnail image cache
-const projectImageStore = new Map();
-
-function getProjectImage(url, onLoaded) {
-  if (!url) return null;
-
-  let entry = projectImageStore.get(url);
-  if (!entry) {
-    const img = new Image();
-    // Do NOT set crossOrigin on local same-origin assets (/gallery/...) to prevent CORS blockage
-    if (/^https?:\/\//i.test(url)) {
-      img.crossOrigin = 'anonymous';
-    }
-    entry = {
-      img,
-      loaded: false,
-      listeners: new Set(),
-    };
-    projectImageStore.set(url, entry);
-
-    const handleSuccess = () => {
-      if (img.naturalWidth > 0) {
-        entry.loaded = true;
-        entry.listeners.forEach((cb) => {
-          try {
-            cb(img);
-          } catch (e) {
-            console.error(e);
-          }
-        });
-        entry.listeners.clear();
-      }
-    };
-
-    img.onload = handleSuccess;
-    img.onerror = (err) => {
-      console.warn('Failed to load project image:', url, err);
-      if (img.crossOrigin) {
-        img.crossOrigin = null;
-        img.src = url;
-      }
-    };
-
-    img.src = url;
-    if (img.complete && img.naturalWidth > 0) {
-      entry.loaded = true;
-    }
-  }
-
-  if (entry.loaded && entry.img.naturalWidth > 0) {
-    return entry.img;
-  }
-
-  if (onLoaded) {
-    entry.listeners.add(onLoaded);
-  }
-
-  return null;
-}
+import { getProjectImage } from '@/lib/assetPreloader';
 
 export function BooksShowcase({
   books = MONOGRAPHS_DATA,

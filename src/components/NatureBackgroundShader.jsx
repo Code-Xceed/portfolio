@@ -418,16 +418,21 @@ export default function NatureBackgroundShader({
 
       const img = new Image();
       const res = [1920, 1080];
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        res[0] = img.width;
-        res[1] = img.height;
-        gl.activeTexture(gl.TEXTURE0 + unit);
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      const upload = () => {
+        if (img.naturalWidth > 0) {
+          res[0] = img.naturalWidth;
+          res[1] = img.naturalHeight;
+          gl.activeTexture(gl.TEXTURE0 + unit);
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+        }
       };
+      img.onload = upload;
       img.src = src;
+      if (img.complete && img.naturalWidth > 0) {
+        upload();
+      }
       return { tex, res };
     }
 

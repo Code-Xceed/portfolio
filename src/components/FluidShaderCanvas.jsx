@@ -259,20 +259,25 @@ export default function FluidShaderCanvas({
     const imageTexture = gl.createTexture();
     const image = new Image();
     let imageResolution = isMobileViewport() ? [508, 1024] : [1920, 1080];
-    image.crossOrigin = 'anonymous';
 
     const loadTexture = (src) => {
-      image.onload = () => {
-        imageResolution = [image.width, image.height];
-        gl.bindTexture(gl.TEXTURE_2D, imageTexture);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      const upload = () => {
+        if (image.naturalWidth > 0) {
+          imageResolution = [image.naturalWidth, image.naturalHeight];
+          gl.bindTexture(gl.TEXTURE_2D, imageTexture);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
       };
+      image.onload = upload;
       image.src = src;
+      if (image.complete && image.naturalWidth > 0) {
+        upload();
+      }
     };
     loadTexture(activeImageSrc);
 
