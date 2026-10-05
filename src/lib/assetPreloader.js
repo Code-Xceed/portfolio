@@ -111,39 +111,20 @@ export const CRITICAL_PRELOAD_VIDEOS = [
 ];
 
 /**
- * Preloads and warms up a video element so the first frame is buffered before reveal.
+ * Pre-fetches the initial video segment into browser cache without occupying persistent socket connections.
  */
-export function preloadVideo(src) {
-  return new Promise((resolve) => {
-    if (typeof document === 'undefined') {
-      resolve();
-      return;
+export async function preloadVideo(src) {
+  if (typeof fetch === 'undefined') return;
+  try {
+    const res = await fetch(src, { headers: { Range: 'bytes=0-262144' } });
+    if (res && res.body) {
+      const reader = res.body.getReader();
+      await reader.read();
+      reader.cancel();
     }
-    const video = document.createElement('video');
-    video.preload = 'auto';
-    video.muted = true;
-    video.playsInline = true;
-
-    let settled = false;
-    const finish = () => {
-      if (!settled) {
-        settled = true;
-        video.onloadeddata = null;
-        video.oncanplay = null;
-        video.onerror = finish;
-        resolve(video);
-      }
-    };
-
-    video.onloadeddata = finish;
-    video.oncanplay = finish;
-    video.onerror = finish;
-    // Fast fallback timer so preloader never stalls on slower networks
-    setTimeout(finish, 3500);
-
-    video.src = src;
-    video.load();
-  });
+  } catch (e) {
+    // Non-blocking cache priming
+  }
 }
 
 /**

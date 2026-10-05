@@ -50,8 +50,9 @@ export default function App() {
           ({ nextSection }) => (
             <Hero onNavigateToPublications={nextSection} />
           ),
-          ({ nextSection, prevSection }) => (
+          ({ nextSection, prevSection, active }) => (
             <GallerySection 
+              active={active}
               onNext={nextSection} 
               onPrev={prevSection} 
             />

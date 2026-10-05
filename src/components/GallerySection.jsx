@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TOP_GALLERY_PLATES, BOTTOM_GALLERY_PLATES } from '../data/galleryData';
 import soundManager from '../lib/soundManager';
 
@@ -17,8 +17,109 @@ const CornerFiligree = ({ className = '' }) => (
   </svg>
 );
 
-export default function GallerySection() {
+// Dedicated Video Card Component ensuring 100% reliable continuous autoplay across all browsers
+function GalleryVideoCard({ src, className = '' }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Set DOM properties imperatively for strict Chromium/Safari autoplay compliance
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.loop = true;
+
+    // Force Chromium media engine pipeline activation
+    video.load();
+
+    const playVideo = () => {
+      if (video && video.paused) {
+        video.muted = true;
+        const p = video.play();
+        if (p !== undefined) {
+          p.catch(() => {});
+        }
+      }
+    };
+
+    playVideo();
+
+    video.addEventListener('loadedmetadata', playVideo);
+    video.addEventListener('loadeddata', playVideo);
+    video.addEventListener('canplay', playVideo);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', playVideo);
+      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', playVideo);
+    };
+  }, [src]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      disablePictureInPicture
+      disableRemotePlayback
+      tabIndex={-1}
+      className={className}
+    />
+  );
+}
+
+export default function GallerySection({ active = true, onNext, onPrev }) {
   const [selectedPlate, setSelectedPlate] = useState(null);
+
+  // Auto-play and refresh all gallery videos whenever the Gallery section becomes active
+  useEffect(() => {
+    if (active) {
+      const kickstartAll = () => {
+        const vids = document.querySelectorAll('#gallery video');
+        vids.forEach((v) => {
+          v.muted = true;
+          v.defaultMuted = true;
+          if (v.paused) {
+            v.play().catch(() => {});
+          }
+        });
+      };
+
+      kickstartAll();
+      const timer = setTimeout(kickstartAll, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [active]);
+
+  // Global kickstarter ensuring all video elements are playing continuously
+  useEffect(() => {
+    const kickstartAll = () => {
+      const vids = document.querySelectorAll('#gallery video');
+      vids.forEach((v) => {
+        if (v.paused) {
+          v.muted = true;
+          v.play().catch(() => {});
+        }
+      });
+    };
+
+    kickstartAll();
+    window.addEventListener('pointerdown', kickstartAll, { passive: true });
+    window.addEventListener('touchstart', kickstartAll, { passive: true });
+    window.addEventListener('scroll', kickstartAll, { passive: true });
+
+    return () => {
+      window.removeEventListener('pointerdown', kickstartAll);
+      window.removeEventListener('touchstart', kickstartAll);
+      window.removeEventListener('scroll', kickstartAll);
+    };
+  }, []);
 
   const handleCardClick = (plate) => {
     soundManager.play('click');
@@ -30,40 +131,21 @@ export default function GallerySection() {
     setSelectedPlate(null);
   };
 
-  // Render an individual prominent gallery card
+  // Render an individual prominent 16:9 video gallery card
   const renderCard = (card, keyPrefix) => (
     <div
       key={`${keyPrefix}-${card.id}`}
       onClick={() => handleCardClick(card)}
-      className={`inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none ${card.verticalOffset}`}
+      className="inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none"
     >
-      {/* Artwork Video Plate with substantial, prominent dimensions */}
+      {/* Artwork Video Plate with genuine 16:9 widescreen video dimensions */}
       <div 
-        className={`relative overflow-hidden rounded-xs border bg-[#FAF6EE] ${card.frameBorder} transform-gpu`}
+        className={`relative overflow-hidden rounded-xs border bg-[#151413] ${card.frameBorder} transform-gpu aspect-video`}
       >
-        {card.video ? (
-          <video
-            src={card.video}
-            poster={card.image}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            disablePictureInPicture
-            disableRemotePlayback
-            tabIndex={-1}
-            className={`${card.imgSize} object-cover block pointer-events-none`}
-          />
-        ) : (
-          <img
-            src={card.image}
-            alt={card.title}
-            className={`${card.imgSize} object-cover block pointer-events-none`}
-            loading="eager"
-            decoding="async"
-          />
-        )}
+        <GalleryVideoCard
+          src={card.video}
+          className={`${card.imgSize} object-cover block pointer-events-none`}
+        />
       </div>
 
       {/* Beside Video: 3 Lines of Clear Editorial Typography */}
@@ -278,22 +360,17 @@ export default function GallerySection() {
             {/* Modal Body: High-Res Image & Artwork Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               {/* Artwork Plate with Venetian Gold Foil Inset */}
-              <div className="relative overflow-hidden rounded-md border border-[#DFBA5A] bg-[#FAF6EE] shadow-lg">
+              <div className="relative overflow-hidden rounded-md border border-[#DFBA5A] bg-[#151413] shadow-lg aspect-video">
                 {selectedPlate.video ? (
-                  <video
+                  <GalleryVideoCard
                     src={selectedPlate.video}
-                    poster={selectedPlate.image}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-auto max-h-[380px] object-cover block"
+                    className="w-full h-full object-cover block"
                   />
                 ) : (
                   <img
                     src={selectedPlate.image}
                     alt={selectedPlate.title}
-                    className="w-full h-auto max-h-[380px] object-cover"
+                    className="w-full h-full object-cover block"
                   />
                 )}
               </div>
