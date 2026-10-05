@@ -111,16 +111,20 @@ export const CRITICAL_PRELOAD_VIDEOS = [
 ];
 
 /**
- * Pre-fetches the initial video segment into browser cache without occupying persistent socket connections.
+ * Pre-fetches the initial video segment (first ~1MB) into browser cache
+ * to ensure moov atom + first GOPs are ready for instant 1080p playback.
  */
 export async function preloadVideo(src) {
   if (typeof fetch === 'undefined') return;
   try {
-    const res = await fetch(src, { headers: { Range: 'bytes=0-262144' } });
+    const res = await fetch(src, { headers: { Range: 'bytes=0-1048575' } });
     if (res && res.body) {
+      // Consume the stream fully into browser cache
       const reader = res.body.getReader();
-      await reader.read();
-      reader.cancel();
+      while (true) {
+        const { done } = await reader.read();
+        if (done) break;
+      }
     }
   } catch (e) {
     // Non-blocking cache priming

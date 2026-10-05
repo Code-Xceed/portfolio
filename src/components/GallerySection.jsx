@@ -19,9 +19,25 @@ const CornerFiligree = ({ className = '' }) => (
 
 // Dedicated Video Card Component ensuring 100% reliable continuous 60fps playback
 // Automatically pauses off-screen cards to release GPU video decoders, eliminating all lag
-function GalleryVideoCard({ src, className = '' }) {
+// Also responds to section-level `active` prop to fully stop decoding when gallery is hidden
+function GalleryVideoCard({ src, className = '', active = true }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+  const isVisibleRef = useRef(false);
+
+  // When section becomes inactive, pause all videos to free all GPU decoders
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!active) {
+      video.pause();
+    } else if (isVisibleRef.current) {
+      video.muted = true;
+      video.playbackRate = 1.0;
+      const p = video.play();
+      if (p) p.catch(() => {});
+    }
+  }, [active]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -41,7 +57,8 @@ function GalleryVideoCard({ src, className = '' }) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          isVisibleRef.current = entry.isIntersecting;
+          if (entry.isIntersecting && active) {
             video.muted = true;
             video.playbackRate = 1.0;
             const p = video.play();
@@ -67,7 +84,7 @@ function GalleryVideoCard({ src, className = '' }) {
       observer.disconnect();
       video.pause();
     };
-  }, [src]);
+  }, [src, active]);
 
   return (
     <div ref={containerRef} className="w-full h-full">
@@ -130,6 +147,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
       >
         <GalleryVideoCard
           src={card.video}
+          active={active}
           className={`${card.imgSize} object-cover block pointer-events-none`}
         />
       </div>
