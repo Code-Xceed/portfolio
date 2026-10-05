@@ -92,7 +92,7 @@ export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dar
 
   const isLight = theme === 'light';
 
-  // 1. Museum Matting Backdrop
+  // 1. Museum Matting Backdrop (warm rich atelier obsidian or vellum)
   const bgGrad = ctx.createRadialGradient(
     px + pw * 0.5, py + ph * 0.5, 30,
     px + pw * 0.5, py + ph * 0.5, pw * 0.75
@@ -102,9 +102,9 @@ export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dar
     bgGrad.addColorStop(0.65, '#EFE7D8');
     bgGrad.addColorStop(1, '#DECDB2');
   } else {
-    bgGrad.addColorStop(0, '#161412');
-    bgGrad.addColorStop(0.55, '#0E0C0A');
-    bgGrad.addColorStop(1, '#060504');
+    bgGrad.addColorStop(0, '#241E17');
+    bgGrad.addColorStop(0.55, '#18140F');
+    bgGrad.addColorStop(1, '#0F0C09');
   }
   ctx.fillStyle = bgGrad;
   ctx.fillRect(px, py, pw, ph);
@@ -139,7 +139,7 @@ export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dar
 
     // 3. Curatorial Venetian Gold Glaze (Soft Warm Filter)
     ctx.globalCompositeOperation = 'soft-light';
-    ctx.fillStyle = 'rgba(223, 186, 90, 0.16)';
+    ctx.fillStyle = 'rgba(223, 186, 90, 0.12)';
     ctx.fillRect(px, py, pw, ph);
 
     // 4. Archival Edge Vignette (Plate Inset Depth)
@@ -149,12 +149,12 @@ export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dar
       px + pw * 0.5, py + ph * 0.5, Math.min(pw, ph) * 0.72
     );
     vig.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    vig.addColorStop(1, isLight ? 'rgba(90, 68, 42, 0.28)' : 'rgba(8, 6, 4, 0.52)');
+    vig.addColorStop(1, isLight ? 'rgba(90, 68, 42, 0.20)' : 'rgba(18, 14, 10, 0.32)');
     ctx.fillStyle = vig;
     ctx.fillRect(px, py, pw, ph);
 
     // 5. Delicate Linen Grain Overlay
-    ctx.fillStyle = 'rgba(255, 245, 225, 0.038)';
+    ctx.fillStyle = 'rgba(255, 245, 225, 0.035)';
     for (let i = 0; i < 900; i++) {
       const rx = px + Math.random() * pw;
       const ry = py + Math.random() * ph;
@@ -165,13 +165,23 @@ export function drawProjectThumbnailPlate(ctx, px, py, pw, ph, img, theme = 'dar
   } else {
     // Elegant fallback plate with gold atelier emblem
     ctx.save();
+    ctx.fillStyle = 'rgba(223, 186, 90, 0.08)';
+    ctx.beginPath();
+    ctx.arc(px + pw * 0.5, py + ph * 0.44, 96, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = '#DFBA5A';
-    ctx.font = '300 22px "Cinzel", serif';
+    ctx.font = '600 36px "Bodoni Moda", serif';
     ctx.textAlign = 'center';
-    ctx.fillText('✦   CODEX ATELIER ARCHIVE   ✦', px + pw * 0.5, py + ph * 0.48);
-    ctx.font = 'italic 300 18px "Cormorant Garamond", serif';
-    ctx.fillStyle = '#A89880';
-    ctx.fillText('Mounting Curatorial Plate...', px + pw * 0.5, py + ph * 0.54);
+    ctx.fillText('✦   CODEX ATELIER   ✦', px + pw * 0.5, py + ph * 0.44);
+
+    ctx.font = 'italic 300 24px "Cormorant Garamond", serif';
+    ctx.fillStyle = '#D6C09C';
+    ctx.fillText('Archival Monograph Publication', px + pw * 0.5, py + ph * 0.52);
+
+    ctx.font = '300 18px "Cinzel", serif';
+    ctx.fillStyle = 'rgba(223, 186, 90, 0.75)';
+    ctx.fillText('❧   CURATORIAL ARCHIVE   ☙', px + pw * 0.5, py + ph * 0.60);
     ctx.restore();
   }
 
