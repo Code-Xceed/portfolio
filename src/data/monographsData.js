@@ -935,6 +935,7 @@ export const MONOGRAPHS_DATA = [
   // 1. XMUSIC (X-Music-src) — Nocturne at Moonlit Mountain Lake
   {
     id: 'x-music',
+    volumeNumber: 'I',
     title: 'XMUSIC',
     subtitle: 'Native In-Game Audio & Streaming Engine',
     author: 'Aditya Rathore',
@@ -942,18 +943,19 @@ export const MONOGRAPHS_DATA = [
     edition: 'Fabric Monorepo · 15+ Versions Baseline',
     year: '2025',
     stars: 5,
-    desc: 'A high-performance native Minecraft music player mod engineered on Fabric. Streams crystal-clear audio from YouTube, Spotify, and local playlists directly within the world without performance overhead or alt-tab disruption. Features a monorepo architecture spanning 15+ Minecraft version baselines with custom GLSL HUD rendering.',
-    tech: ['Java 21', 'Fabric API', 'Mixins', 'Gradle Monorepo', 'WaterMedia API', 'GLSL'],
+    highlights: ['15+ Versions Monorepo', 'Zero-Lag Audio Buffering', 'Native GLSL HUD'],
+    desc: 'I built XMUSIC because alt-tabbing out of Minecraft in the middle of a build or fight just to change Spotify tracks or YouTube playlists always broke the flow. XMUSIC brings a lightweight, high-fidelity music streaming engine directly into the game. Designed as a modular monorepo supporting 15+ Minecraft releases (from 1.21 through 1.21.11 and 26.x), it manages thread-safe audio buffering so game ticks never drop, resolves YouTube and Spotify streams via WaterMedia API, and renders a sleek, non-intrusive GLSL in-game HUD.',
+    tech: ['Java 21', 'Fabric API', 'Bytecode Mixins', 'WaterMedia API', 'Gradle Monorepo', 'GLSL HUD Shaders', 'Thread-Safe Audio Buffers'],
     liveURL: 'https://github.com/Code-Xceed/X-Music-src',
     demoURL: 'https://codex-music-show.vercel.app',
     natureBlend: 0.0,
     chapters: [
-      'Native In-Game Streaming Architecture',
-      'Multi-Version Monorepo (1.21 - 26.2)',
-      'Thread-Safe Audio Buffer Management',
-      'Custom Themed HUD & In-Game GUI',
-      'WaterMedia & Source Stream Resolvers',
-      'Open-Source Distribution & Modrinth',
+      'I. Multi-Version Monorepo (1.21 – 26.x)',
+      'II. Thread-Safe Audio Buffer Pipeline',
+      'III. YouTube & Spotify Stream Resolvers',
+      'IV. Zero-Overhead Fabric Mixins',
+      'V. Custom GLSL HUD & In-Game GUI',
+      'VI. Modrinth & CurseForge Distribution',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1054,15 +1056,15 @@ export const MONOGRAPHS_DATA = [
       ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
-      ctx.fillText('“Sound in games is not background noise;', w / 2, 380);
-      ctx.fillText('it is the emotional architecture of the world.”', w / 2, 425);
+      ctx.fillText('“Game audio shouldn\'t require an alt-tab;', w / 2, 380);
+      ctx.fillText('music belongs natively inside the world.”', w / 2, 425);
 
       ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
-        'Multi-version Fabric monorepo supporting 15+ MC releases.',
-        'High-fidelity asynchronous audio streaming from YouTube & Spotify.',
-        'Zero-overhead audio thread management with bespoke UI overlay.',
+        'Multi-version Fabric monorepo supporting 15+ releases from 1.21 to 26.x.',
+        'Asynchronous thread-safe audio streaming from YouTube and Spotify.',
+        'Zero-overhead audio thread management with custom GLSL HUD overlay.',
       ];
       blurb.forEach((line, i) => {
         ctx.fillText(line, w / 2, 540 + i * 44);
@@ -1089,24 +1091,26 @@ export const MONOGRAPHS_DATA = [
   // 2. FRAMEGIT (FrameGIT) — Ancient Pine Grove & Mountain Tributaries
   {
     id: 'framegit',
+    volumeNumber: 'II',
     title: 'FRAMEGIT',
-    subtitle: 'Version Control for Creative Video Professionals',
+    subtitle: 'Content-Addressed Version Control for Creative Video Timelines',
     author: 'Aditya Rathore',
     publisher: 'FrameGit Infrastructure',
     edition: 'v1.0.0 Architecture · FastCDC + CAS Engine',
     year: '2025',
     stars: 5,
-    desc: 'Content-addressed version control built specifically for terabyte-scale creative video projects. Bridges the gap between software engineering workflows and NLE timelines, providing Git-style commit trees, non-destructive timeline rollback, and visual diffing natively inside Adobe Premiere Pro and Blackmagic DaVinci Resolve.',
-    tech: ['Node.js 22', 'Electron', 'FastCDC CAS', 'DAG Trees', 'Premiere Pro UXP', 'DaVinci Scripting'],
+    highlights: ['FastCDC Chunk Deduplication', 'Git DAG on SQLite', 'Premiere Pro & DaVinci UXP'],
+    desc: 'Video editors produce 100GB to multi-terabyte timelines where traditional Git and Git LFS completely choke—forcing teams into fragile naming habits like "final_v2_FINAL_cut.prproj". I engineered FrameGit to bring real Git DAG workflows directly into Premiere Pro and DaVinci Resolve. Using FastCDC (Content-Defined Chunking), if an editor trims a 3-second graphic in a 50GB sequence, FrameGit only hashes and syncs the changed 2MB chunk. Built with an embedded SQLite state engine, it provides visual timeline diffs, branch checkouts, and 3-way non-destructive sequence merging without editor crashes.',
+    tech: ['Node.js 22', 'Electron', 'FastCDC Chunking', 'Content-Addressed Storage (CAS)', 'DAG Commit Trees', 'SQLite (node:sqlite)', 'Premiere Pro UXP', 'DaVinci Resolve Scripting API'],
     liveURL: 'https://github.com/Code-Xceed/FrameGIT',
     natureBlend: 0.18,
     chapters: [
-      'FastCDC Content-Defined Chunking',
-      'Content-Addressed Storage (CAS)',
-      'Directed Acyclic Graph (DAG) Trees',
-      'Premiere Pro UXP & CEP Extension',
-      'DaVinci Resolve Python Scripting API',
-      'Visual Timeline Diffing & Rollback',
+      'I. FastCDC Chunking & Binary Deduplication',
+      'II. Content-Addressed Storage (CAS) Core',
+      'III. Directed Acyclic Graph (DAG) Commit Trees',
+      'IV. Embedded SQLite State Machine',
+      'V. Premiere Pro UXP & DaVinci API Hooks',
+      'VI. Visual Timeline Diff & 3-Way Merge',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1208,14 +1212,14 @@ export const MONOGRAPHS_DATA = [
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
       ctx.fillText('“Terabytes of binary cinema;', w / 2, 380);
-      ctx.fillText('now commanded with mathematical elegance.”', w / 2, 425);
+      ctx.fillText('now commanded with true Git DAG elegance.”', w / 2, 425);
 
       ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
-        'Content-Addressed Storage eliminates multi-GB duplicate renders.',
-        'Seamless integration for Adobe Premiere Pro & DaVinci Resolve.',
-        'Non-destructive visual timeline diffing with single-click rollback.',
+        'Content-Addressed Storage eliminates multi-gigabyte duplicate render copies.',
+        'Embedded SQLite state machine tracking sequences, tracks, and clip markers.',
+        'Non-destructive visual timeline diffing with single-click rollback in NLEs.',
       ];
       blurb.forEach((line, i) => {
         ctx.fillText(line, w / 2, 540 + i * 44);
@@ -1242,24 +1246,26 @@ export const MONOGRAPHS_DATA = [
   // 3. XDROP (Xdrop) — Cascading Alpine Falls & Crystal Basin
   {
     id: 'xdrop',
+    volumeNumber: 'III',
     title: 'XDROP',
-    subtitle: 'Universal Social Media & Web Asset Importer',
+    subtitle: 'Universal Social Media & Web Asset Importer for NLE Timelines',
     author: 'Aditya Rathore',
     publisher: 'CodeX Atelier Suite',
-    edition: 'Desktop Companion · DaVinci & Adobe NLEs',
+    edition: 'Desktop Companion · Resolve, Premiere & After Effects',
     year: '2025',
     stars: 5,
-    desc: 'Cross-editor companion utility that turns hours of searching, downloading, and converting into an instant 1-click workflow. Automatically detects video and audio URLs, extracts pristine streams via yt-dlp and FFmpeg, and injects them directly into active timelines and project bins across DaVinci Resolve, Premiere Pro, and After Effects.',
-    tech: ['Python', 'FastAPI', 'WebSockets', 'PyWebView', 'React', 'yt-dlp', 'FFmpeg'],
+    highlights: ['1-Click Direct Timeline Drop', 'Multi-NLE Active Detection', 'ProRes & WAV Transcoding'],
+    desc: 'Editing video always meant wasting time hopping between ad-heavy downloader websites, messy download folders, command-line FFmpeg scripts, and the NLE just to import reference footage or social media audio. I created Xdrop as a native, lightweight companion that runs right alongside DaVinci Resolve, Premiere Pro, and After Effects. You paste any link from YouTube, Instagram, X, TikTok, or Reddit; Xdrop inspects the stream, transcodes it with FFmpeg to ProRes MOV, H.264 MP4, or lossless WAV, and drops it straight into the active editor bin and timeline in a single click.',
+    tech: ['Python', 'FastAPI', 'WebSockets', 'PyWebView', 'React 18', 'TypeScript', 'yt-dlp Core', 'FFmpeg Transcoding', 'DaVinciResolveScript API', 'Adobe CEP / ExtendScript', 'SQLite'],
     liveURL: 'https://github.com/Code-Xceed/Xdrop',
     natureBlend: 0.35,
     chapters: [
-      'Universal Media URL Inspection',
-      'High-Throughput FFmpeg Transcoding',
-      'DaVinciResolveScript API Automation',
-      'Adobe ExtendScript Pipeline Integration',
-      'Reactive WebSockets HUD (PyWebView)',
-      'Direct Timeline & Bin Insertion',
+      'I. Multi-Editor Active Sensing Engine',
+      'II. Asynchronous Download & Probe Queue',
+      'III. FFmpeg ProRes & WAV Audio Pipeline',
+      'IV. DaVinciResolveScript Bin Automation',
+      'V. Adobe CEP ExtendScript Injection',
+      'VI. Reactive PyWebView & WebSocket HUD',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1360,15 +1366,15 @@ export const MONOGRAPHS_DATA = [
       ctx.fillStyle = '#18120B';
       ctx.textAlign = 'center';
       ctx.font = 'italic 300 32px "Cormorant Garamond", serif';
-      ctx.fillText('“Context switching kills creativity;', w / 2, 380);
-      ctx.fillText('drop web assets directly into your timeline.”', w / 2, 425);
+      ctx.fillText('“Context switching destroys creative flow;', w / 2, 380);
+      ctx.fillText('drop web assets directly into your bins.”', w / 2, 425);
 
       ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
-        'Native script API integration for DaVinci Resolve & Adobe.',
-        'High-performance asynchronous media extraction via yt-dlp & FFmpeg.',
-        'Floating desktop HUD built with React, WebSockets, and PyWebView.',
+        'Native scripting integration for DaVinci Resolve, Premiere Pro & After Effects.',
+        'Asynchronous media extraction with automatic ProRes and WAV transcoding.',
+        'High-density desktop HUD built with React 18, WebSockets, and PyWebView.',
       ];
       blurb.forEach((line, i) => {
         ctx.fillText(line, w / 2, 540 + i * 44);
@@ -1395,24 +1401,26 @@ export const MONOGRAPHS_DATA = [
   // 4. XOPPOR AI (Xoppor-AI) — Alpine Summit at Dawn & Sea of Clouds
   {
     id: 'xoppor-ai',
+    volumeNumber: 'IV',
     title: 'XOPPOR AI',
-    subtitle: 'Autonomous Opportunity Radar & Neural Evaluator',
+    subtitle: 'Autonomous Multi-Platform Opportunity Radar & Neural Evaluator',
     author: 'Aditya Rathore',
     publisher: 'CodeX Intelligence Systems',
     edition: 'Autonomous Production Pipeline · Next.js 15',
     year: '2026',
     stars: 5,
-    desc: 'Autonomous open-source opportunity radar that constantly scouts 16 platforms across the internet for high-value engineering contracts, startup roles, bounties, and hackathons. Evaluates 1,500+ daily live signals using Google Gemini AI and delivers scored, actionable Opportunity Cards directly to private Telegram channels.',
-    tech: ['Next.js 15', 'TypeScript 5.8', 'Google Gemini AI', 'Prisma', 'Tailwind CSS', 'Telegram Bot API'],
+    highlights: ['16 Autonomous Scout Engines', 'Gemini AI Semantic Scoring', 'Real-Time Telegram Cards'],
+    desc: 'Finding high-yield freelance contracts, client MVPs, and startup roles across dozens of job boards, Reddit subs, and Hacker News threads takes hours every day. Xoppor AI is an autonomous opportunity radar running 24/7 on GitHub Actions. It continuously sweeps 16 platforms (RemoteOK, Remotive, Hacker News "Who is Hiring", r/forhire, Devpost hackathons, and more), parses ~1,500 daily live signals, deduplicates cross-posted listings, and evaluates them with Google Gemini AI for budget conviction, client legitimacy, and skill fit. When a verified high-match opportunity surfaces, it dispatches an actionable Opportunity Card directly to my private Telegram.',
+    tech: ['Next.js 15', 'TypeScript 5.8', 'Google Gemini AI', 'Prisma ORM', 'Telegram Bot API', 'Tailwind CSS', 'Web Scraping & Deduplication', 'GitHub Actions 24/7 CI'],
     liveURL: 'https://github.com/Code-Xceed/Xoppor-AI',
     natureBlend: 0.52,
     chapters: [
-      '16 Multi-Platform Scraping Scouts',
-      'Signal Deduplication & Heuristics',
-      'Google Gemini Semantic Scoring',
-      'Opportunity Card Telegram Dispatcher',
-      'Next.js 15 & Prisma Architecture',
-      'Strict Zero-Outreach Privacy Radar',
+      'I. 16-Platform Multi-Source Scout Scrapers',
+      'II. Cross-Source Signal Deduplication',
+      'III. Google Gemini Intent & Budget Scoring',
+      'IV. Telegram Bot Card Dispatcher',
+      'V. Next.js 15 & Prisma Local Dashboard',
+      'VI. Zero-Outreach Privacy-First Architecture',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1519,8 +1527,8 @@ export const MONOGRAPHS_DATA = [
       ctx.fillStyle = '#4A3A2F';
       ctx.font = '300 22px "Plus Jakarta Sans", sans-serif';
       const blurb = [
-        'Scouts 16 web sources continuously for high-yield engineering leads.',
-        'Semantic conviction scoring powered by Google Gemini AI.',
+        'Scouts 16 web sources continuously for high-yield engineering leads & bounties.',
+        'Semantic conviction scoring and compensation harvesting powered by Gemini AI.',
         'Strict zero-outreach research architecture ensuring 100% user autonomy.',
       ];
       blurb.forEach((line, i) => {
@@ -1548,24 +1556,26 @@ export const MONOGRAPHS_DATA = [
   // 5. VAULTOP (VaultOP-Tournaments-Mod) — Tuscan Sunset & Golden Cypress Hills
   {
     id: 'vaultop-tournaments',
+    volumeNumber: 'V',
     title: 'VAULTOP',
-    subtitle: 'Official Competitive Tournament Client Mod',
+    subtitle: 'Official Competitive Tournament Client Mod for Minecraft',
     author: 'Aditya Rathore',
     publisher: 'VaultOP Esports Platform',
     edition: 'Official Competition Client · Fabric 1.21.x',
     year: '2026',
     stars: 5,
-    desc: 'The official client companion mod for the VaultOP Tournament Platform. Delivers a seamless competitive arena experience directly inside Minecraft 1.21.x: real-time match countdowns, 1-click tournament queue joining, dynamic event announcements, player stats, and cryptographic matchmaking authentication without leaving the game.',
-    tech: ['Minecraft 1.21.x', 'Fabric Loader', 'Netty Networking', 'Secure Auth', 'GLSL UI Shaders'],
+    highlights: ['Official Esports Tournament Client', 'Netty Real-Time Matchmaking', 'Hardened Anti-Evasion Auth'],
+    desc: 'VaultOP Tournaments is the official competitive client mod for the VaultOP Tournament Platform. In competitive esports gaming, tournament coordination is traditionally messy—players have to tab out to Discord announcements, Google Sheets brackets, and queue timers. This client integrates the entire tournament infrastructure directly inside Minecraft 1.21.x: players receive live match announcements and countdowns on their screen, join tournament queues with a single click, view live leaderboards, and authenticate through backend-controlled matchmaking with cryptographic anti-evasion checks.',
+    tech: ['Java 21', 'Minecraft 1.21.x', 'Fabric Loader & API', 'Netty Socket Networking', 'Cryptographic Auth', 'GLSL UI Shaders', 'Matchmaking Event WebSockets'],
     liveURL: 'https://github.com/Code-Xceed/VaultOP-Tournaments-Mod',
     natureBlend: 0.68,
     chapters: [
-      'In-Game Tournament Discovery & Signup',
-      'Real-Time Matchmaking Queue Sync',
-      'Dynamic Event Broadcast Overlays',
-      'Competitive Leaderboards & Stat Engine',
-      'Hardened Anti-Evasion Authentication',
-      'Fabric API Client Architecture',
+      'I. In-Game Tournament Discovery & Sync',
+      'II. Netty Real-Time Matchmaking Socket',
+      'III. Dynamic Event Announcement Overlays',
+      'IV. Live Leaderboard & Player Stats Engine',
+      'V. Cryptographic Anti-Evasion Auth',
+      'VI. Fabric 1.21.x Client Optimization',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1701,25 +1711,27 @@ export const MONOGRAPHS_DATA = [
   // 6. CODEX CLIENT (CodeX-Client-src) — Wild Alpine Herbarium & Edelweiss Meadow
   {
     id: 'codex-client',
+    volumeNumber: 'VI',
     title: 'CODEX CLIENT',
-    subtitle: 'Archival Fabric Utility & Performance Client',
+    subtitle: 'Fabric 1.21.4 Performance & Modular Utility Client',
     author: 'Aditya Rathore',
     publisher: 'CodeX Archival Engineering',
-    edition: 'Archival Source Edition · MC 1.21.4',
+    edition: 'Archival Open Source · Fabric 1.21.4',
     year: '2025',
     stars: 5,
-    desc: 'A bespoke Minecraft Fabric 1.21.4 utility and performance client built from scratch. Features 12+ modular HUD subsystems including custom ClickGUI, Keystrokes, Armor Status, Aim Assist, and Fullbright, engineered with clean bytecode Mixins and zero garbage collection overhead. Released as an archival open-source reference.',
-    tech: ['Java 21', 'Fabric 1.21.4', 'Bytecode Mixins', 'Gradle Kotlin DSL', 'Modular GUI Engine'],
+    highlights: ['12+ Modular Subsystems', 'Zero-GC Memory Management', 'Archival Open-Source Reference'],
+    desc: 'CodeX Client began as a personal challenge to engineer a fast, modular Minecraft utility client for Fabric 1.21.4 from scratch with zero garbage collection overhead. I implemented 12+ modular HUD subsystems—including custom ClickGUI, Keystrokes, Armor Status, Aim Assist, Custom Crosshair, Time Changer, and Fullbright—using clean bytecode Mixins and a single-root Gradle Kotlin DSL build. When I wrapped up development, rather than letting the code disappear as a private worktree, I polished and published the entire source code openly so other developers could study, fork, and learn from its architecture.',
+    tech: ['Java 21', 'Fabric 1.21.4', 'Bytecode Mixins', 'Gradle Kotlin DSL', 'Modular GUI Engine', 'Zero-GC Memory Optimization', 'Custom ClickGUI & HUD'],
     liveURL: 'https://github.com/Code-Xceed/CodeX-Client-src',
     demoURL: 'https://codexclient.netlify.app',
     natureBlend: 0.84,
     chapters: [
-      'Modular Subsystem Architecture',
-      'Custom ClickGUI & HUD Rendering',
-      'Zero-Allocation Fabric Mixins',
-      'Persistent Properties Serialization',
-      'Gradle Kotlin DSL Single-Root Build',
-      'Archival Open-Source Release',
+      'I. Modular Subsystem Registry',
+      'II. Custom ClickGUI & HUD Rendering',
+      'III. Zero-Allocation Bytecode Mixins',
+      'IV. Persistent Keybind & Config Engine',
+      'V. Single-Root Gradle Kotlin DSL Layout',
+      'VI. Archival Open-Source Release',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',
@@ -1855,24 +1867,26 @@ export const MONOGRAPHS_DATA = [
   // 7. YT MEDIA DOWNLOADER (YT-Media-Downloader) — Sunlit Forest Glade & Wild Flax Field
   {
     id: 'yt-media-downloader',
+    volumeNumber: 'VII',
     title: 'YT MEDIA',
-    subtitle: 'High-Fidelity Desktop Stream Harvester',
+    subtitle: 'High-Fidelity Multi-Threaded Desktop Stream Harvester',
     author: 'Aditya Rathore',
     publisher: 'CodeX Desktop Utilities',
     edition: 'Desktop Application · Python & CustomTkinter',
     year: '2025',
     stars: 5,
-    desc: 'A sleek, modern desktop media harvester built with CustomTkinter and Python. Provides multi-threaded extraction of pristine 4K/8K 60fps video streams, lossless audio isolation (MP3/FLAC/WAV), format probing, and automated disk storage management with zero web advertisements or rate-limiting.',
-    tech: ['Python 3', 'CustomTkinter', 'Pillow (PIL)', 'yt-dlp Core', 'FFmpeg', 'Async Pipelines'],
+    highlights: ['4K/8K 60fps & Lossless Audio', 'Multi-Threaded Async Core', 'Ad-Free Clean Desktop UI'],
+    desc: 'Most web-based media downloaders are plagued with popup advertisements, questionable redirects, and artificial bandwidth throttling, while bare command-line scripts are clunky for quick daily use. I built this modern desktop media harvester using Python, CustomTkinter, Pillow, and FFmpeg to provide a clean, ad-free experience. It features multi-threaded asynchronous extraction of 4K/8K 60fps video streams, lossless audio extraction (FLAC, WAV, MP3), deep codec and format probing, and automated disk storage routing with real-time progress feedback.',
+    tech: ['Python 3', 'CustomTkinter', 'Pillow (PIL)', 'yt-dlp Core', 'FFmpeg Transcoding', 'Multi-Threaded Async Pipelines', 'Media Codec & Stream Probing'],
     liveURL: 'https://github.com/Code-Xceed/YT-Media-Downloader',
     natureBlend: 1.0,
     chapters: [
-      'CustomTkinter Dark Mode Interface',
-      'Multi-Threaded Async Downloader Core',
-      'Deep Media Format & Codec Probing',
-      'Lossless Audio Extraction Pipelines',
-      'Storage Directory & Filename Rules',
-      'FFmpeg Transcoding Automation',
+      'I. CustomTkinter Dark Mode GUI',
+      'II. Multi-Threaded Async Downloader Core',
+      'III. Media Codec & Resolution Probing',
+      'IV. Lossless Audio Extraction Pipeline',
+      'V. Automated Disk Storage Routing',
+      'VI. FFmpeg Stream Multiplexing',
     ],
     edge: '#CCB599',
     backBg: '#D8C2A8',

@@ -545,7 +545,12 @@ export function BooksShowcase({
       return t + '...';
     }
 
-    function makeIndexPageTex(chapters) {
+    function makeIndexPageTex(cfg) {
+      const chapters = Array.isArray(cfg) ? cfg : cfg?.chapters;
+      const vol = (typeof cfg === 'object' && !Array.isArray(cfg) && cfg?.volumeNumber) || 'I';
+      const title = (typeof cfg === 'object' && !Array.isArray(cfg) && cfg?.title) || 'PROJECT SPEC';
+      const subtitle = (typeof cfg === 'object' && !Array.isArray(cfg) && cfg?.subtitle) || 'Technical Architecture Blueprint';
+
       const w = 1024;
       const h = 1536;
       const c = mkCanvas(w, h);
@@ -608,40 +613,48 @@ export function BooksShowcase({
         x.fill();
       }
 
-      // 5. Historic Headpiece: Ancient Botanical Foliage Ornament & Title
+      // 5. Headpiece: Kicker & Dynamic Architectural Blueprint Header
       x.save();
-      x.fillStyle = '#A87928';
-      x.font = '24px serif';
+      x.fillStyle = '#9E742A';
+      x.font = '500 20px "Cinzel", serif';
       x.textAlign = 'center';
-      x.fillText('❦   EX CODEX ATELIER ARCHIVE   ❦', w / 2, 138);
+      x.fillText(`✦   CODEX ARCHIVES · VOL. ${vol}   ✦`, w / 2, 126);
 
       // Title in rich aged walnut / iron-gall ink
-      x.fillStyle = '#261D15';
-      x.font = '400 74px "Bodoni Moda", "Didot", serif';
-      x.fillText('INDEX DES MATIÈRES', w / 2, 210);
+      x.fillStyle = '#1E1610';
+      x.font = '500 56px "Bodoni Moda", "Didot", serif';
+      x.fillText(`${title} — BLUEPRINT`, w / 2, 188);
+
+      // Subtitle
+      x.fillStyle = '#5A4633';
+      x.font = 'italic 300 24px "Cormorant Garamond", serif';
+      const cleanSub = subtitle ? trimToWidth(x, `“${subtitle}”`, 780) : '';
+      if (cleanSub) {
+        x.fillText(cleanSub, w / 2, 226);
+      }
 
       // Antique double rule
       x.strokeStyle = 'rgba(168, 121, 40, 0.45)';
       x.lineWidth = 1.8;
       x.beginPath();
-      x.moveTo(200, 240);
-      x.lineTo(w - 200, 240);
+      x.moveTo(180, 256);
+      x.lineTo(w - 180, 256);
       x.stroke();
 
       x.strokeStyle = 'rgba(168, 121, 40, 0.25)';
       x.lineWidth = 0.8;
       x.beginPath();
-      x.moveTo(250, 247);
-      x.lineTo(w - 250, 247);
+      x.moveTo(240, 263);
+      x.lineTo(w - 240, 263);
       x.stroke();
       x.restore();
 
       // 6. Chapter Listing in Antiquarian Calligraphic Layout
       const list = chapters && chapters.length
         ? chapters
-        : ['I. Prolegomena & Nature Chemistry', 'II. Raw Mineral Stratigraphy', 'III. Belgian Flax & Botanical Weaves', 'IV. Curatorial Plates & Archive', 'V. Exhibition Provenance', 'VI. Studio Chronology'];
+        : ['I. Core Subsystem Architecture', 'II. Low-Level Pipeline Integration', 'III. State Management & Memory', 'IV. Asynchronous Task Orchestration', 'V. Production Verification', 'VI. Archival Distribution'];
 
-      let y = 338;
+      let y = 352;
       for (let i = 0; i < list.length; i++) {
         const pageNo = String(9 + i * 16).padStart(3, ' ');
         const left = trimToWidth(x, list[i], 610);
@@ -649,7 +662,7 @@ export function BooksShowcase({
         // Chapter title in rich aged walnut ink
         x.textAlign = 'left';
         x.fillStyle = '#261D15';
-        x.font = 'italic 400 40px "Cormorant Garamond", serif';
+        x.font = 'italic 400 39px "Cormorant Garamond", serif';
         x.fillText(left, 155, y);
 
         // Page number in antique burnished gold
@@ -675,9 +688,9 @@ export function BooksShowcase({
 
       // Footnote in antique italic
       x.textAlign = 'center';
-      x.fillStyle = 'rgba(90, 68, 45, 0.7)';
-      x.font = 'italic 20px "Cormorant Garamond", serif';
-      x.fillText('—  Typis Atelier Paris · Charta Antiqua MMXXIV  —', w / 2, h - 110);
+      x.fillStyle = 'rgba(90, 68, 45, 0.72)';
+      x.font = 'italic 21px "Cormorant Garamond", serif';
+      x.fillText('— Architecture Blueprint · Designed & Engineered by Aditya Rathore —', w / 2, h - 105);
 
       return tex(c);
     }
@@ -730,7 +743,7 @@ export function BooksShowcase({
       root.add(float);
       bookRoot.add(root);
 
-      const indexPageMat = std({ map: makeIndexPageTex(cfg.chapters), roughness: 0.92, envMapIntensity: 0.2, side: THREE.DoubleSide });
+      const indexPageMat = std({ map: makeIndexPageTex(cfg), roughness: 0.92, envMapIntensity: 0.2, side: THREE.DoubleSide });
 
       const edgeColor = cfg.edge ?? '#CCB599';
       const mEdge = std({ color: edgeColor, bumpMap: clothBump, bumpScale: 0.004, roughness: 0.82, envMapIntensity: 0.18 });
@@ -2162,45 +2175,86 @@ export function BooksShowcase({
             panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
           } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
         >
+          {/* Curatorial Header: Volume Badge & Edition Metadata */}
+          <div className={`flex flex-wrap items-center gap-2.5 mb-2.5 pointer-events-auto ${dpChild(25)}`}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79238]/20 border border-[#C79238]/50 text-[#ECC76F] font-cinzel text-[10.5px] tracking-[0.22em] font-bold uppercase backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
+              <span className="text-[9px]">✦</span> VOL. {selectedCfg?.volumeNumber || 'I'}
+            </span>
+            {selectedCfg?.edition && (
+              <span className="px-3 py-1 rounded-full bg-[#181410]/75 border border-[#DFBA5A]/25 text-[#E6DAC8] font-sans text-[11px] font-medium tracking-wide backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
+                {selectedCfg.edition}
+              </span>
+            )}
+            {selectedCfg?.year && (
+              <span className="font-serif italic text-[12px] text-[#A89880] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                {selectedCfg.year}
+              </span>
+            )}
+          </div>
+
           {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
           <h2
-            className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(32px,4.4vw,66px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(50)}`}
+            className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(32px,4.2vw,62px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
           >
             {selectedCfg?.title}
           </h2>
 
-          {/* 2. Project Description (Warm Archival Linen Tone) */}
+          {/* 2. Subtitle / Architecture Mission */}
+          {selectedCfg?.subtitle && (
+            <p
+              className={`mt-1.5 font-cormorant italic text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${dpChild(90)}`}
+            >
+              {selectedCfg.subtitle}
+            </p>
+          )}
+
+          {/* 3. Key Architectural Highlights / Metrics */}
+          {selectedCfg?.highlights?.length > 0 && (
+            <div className={`mt-3 flex flex-wrap gap-2 pointer-events-auto ${dpChild(120)}`}>
+              {selectedCfg.highlights.map((highlight, hIdx) => (
+                <span
+                  key={hIdx}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[11px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
+                >
+                  <span className="text-[#DFBA5A] text-[8px]">●</span>
+                  {highlight}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
-            className={`mt-3.5 sm:mt-5 max-w-[52ch] font-sans font-normal text-[#E2DACB] text-[clamp(14px,1.08vw,16.5px)] leading-[1.74] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(130)}`}
+            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`}
           >
             {selectedCfg?.desc}
           </p>
 
-          {/* 3. Major Technologies Used (Light Warm Honey/Vellum Specimen Tags) */}
-          <div className={`mt-5 sm:mt-7 flex flex-wrap items-center gap-2 sm:gap-3 pointer-events-auto ${dpChild(210)}`}>
+          {/* 5. Major Technologies Used (Light Warm Honey/Vellum Specimen Tags) */}
+          <div className={`mt-4 sm:mt-6 flex flex-wrap items-center gap-1.5 sm:gap-2.5 pointer-events-auto ${dpChild(210)}`}>
             {(selectedCfg?.tech || ['Three.js', 'WebGL', 'GLSL Shaders', 'React', 'Tailwind CSS']).map((techItem) => (
               <span
                 key={techItem}
-                className="group/tag inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-[#C79238]/50 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
+                className="group/tag inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg border border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
               >
                 {/* Miniature Antique Venetian Gold Star ✦ */}
-                <span className="font-serif text-[11px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
+                <span className="font-serif text-[10px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
                   ✦
                 </span>
-                <span className="font-cinzel text-[11px] sm:text-[11.5px] font-semibold tracking-[0.16em] uppercase text-[#262018]">
+                <span className="font-cinzel text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase text-[#262018]">
                   {techItem}
                 </span>
               </span>
             ))}
           </div>
 
-          {/* 4. Live Project & Source CTAs (Radiant Venetian Gold Leaf Cartouches) */}
-          <div className={`mt-6 sm:mt-10 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(270)}`}>
+          {/* 6. Live Project & Source CTAs (Radiant Venetian Gold Leaf Cartouches) */}
+          <div className={`mt-5 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(260)}`}>
             <a
               href={selectedCfg?.liveURL || selectedCfg?.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="group pointer-events-auto relative inline-flex items-center gap-3 px-7 py-3.5 sm:px-8 sm:py-4 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+              className="group pointer-events-auto relative inline-flex items-center gap-3 px-6 py-3 sm:px-7 sm:py-3.5 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
               [clip-path:polygon(0%_12%,1.8%_4%,5%_6%,12%_1.5%,25%_4%,38%_1%,50%_3.5%,62%_1%,75%_4%,88%_1.5%,95%_5%,98.2%_3%,100%_12%,99%_32%,100%_52%,99%_72%,100%_88%,98.2%_97%,95%_95%,88%_98.5%,75%_96%,62%_99%,50%_96.5%,38%_99%,25%_96%,12%_98.5%,5%_95%,1.8%_97%,0%_88%,1%_70%,0%_50%,1%_30%)]
               [background:repeating-linear-gradient(118deg,rgba(255,255,255,0.10)_0px_2px,transparent_2px_7px),radial-gradient(135%_160%_at_28%_18%,#ECC76F_0%,#D49E38_55%,#B0771E_100%)]
               border-2 border-[#FFE28A]
@@ -2210,12 +2264,12 @@ export function BooksShowcase({
               hover:[filter:drop-shadow(0_4px_12px_rgba(223,186,90,0.48))_drop-shadow(0_18px_42px_rgba(199,146,56,0.42))]"
             >
               {/* Left Golden Atelier Seal / Ornament */}
-              <span className="font-serif text-[15px] text-[#18140E] transition-colors duration-300">
+              <span className="font-serif text-[14px] text-[#18140E] transition-colors duration-300">
                 ❧
               </span>
 
               {/* Label */}
-              <span className="font-cinzel text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.22em] uppercase text-[#18140E] transition-colors duration-300">
+              <span className="font-cinzel text-[11px] sm:text-[12px] font-bold tracking-[0.20em] uppercase text-[#18140E] transition-colors duration-300">
                 View Repository
               </span>
 
@@ -2242,15 +2296,15 @@ export function BooksShowcase({
                 href={selectedCfg.demoURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group pointer-events-auto relative inline-flex items-center gap-2.5 px-6 py-3.5 sm:px-7 sm:py-4 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
-                border border-[#C79238]/60 [background:rgba(21,20,19,0.45)] backdrop-blur-md
-                hover:border-[#DFBA5A] hover:bg-[#151413]/70
+                className="group pointer-events-auto relative inline-flex items-center gap-2.5 px-5 py-3 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+                border border-[#C79238]/60 [background:rgba(21,20,19,0.55)] backdrop-blur-md
+                hover:border-[#DFBA5A] hover:bg-[#151413]/75
                 [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]"
               >
-                <span className="font-serif text-[12px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
+                <span className="font-serif text-[11px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
                   ✦
                 </span>
-                <span className="font-cinzel text-[11.5px] sm:text-[12px] font-semibold tracking-[0.20em] uppercase text-[#FBF9F5]">
+                <span className="font-cinzel text-[11px] sm:text-[11.5px] font-semibold tracking-[0.18em] uppercase text-[#FBF9F5]">
                   Live Demo
                 </span>
                 <svg
