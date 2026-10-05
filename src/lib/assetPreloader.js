@@ -1,5 +1,6 @@
 // Centralized High-Performance Asset Preloader & Image Store
 import soundManager from './soundManager';
+import { preloadAllPoolVideos, CRITICAL_GALLERY_VIDEOS } from './videoPool';
 
 const projectImageStore = new Map();
 
@@ -100,36 +101,7 @@ export const CRITICAL_PRELOAD_ASSETS = [
   '/gallery/YT-media-logo.png',
 ];
 
-export const CRITICAL_PRELOAD_VIDEOS = [
-  '/gallery/gallary video/Debatable.mp4',
-  '/gallery/gallary video/GixelMC.mp4',
-  '/gallery/gallary video/HelxStudio.mp4',
-  '/gallery/gallary video/Mahindra.mp4',
-  '/gallery/gallary video/Portfolio-template.mp4',
-  '/gallery/gallary video/Portfolio-template2.mp4',
-  '/gallery/gallary video/Xmusic.mp4',
-];
-
-/**
- * Pre-fetches the initial video segment (first ~1MB) into browser cache
- * to ensure moov atom + first GOPs are ready for instant 1080p playback.
- */
-export async function preloadVideo(src) {
-  if (typeof fetch === 'undefined') return;
-  try {
-    const res = await fetch(src, { headers: { Range: 'bytes=0-1048575' } });
-    if (res && res.body) {
-      // Consume the stream fully into browser cache
-      const reader = res.body.getReader();
-      while (true) {
-        const { done } = await reader.read();
-        if (done) break;
-      }
-    }
-  } catch (e) {
-    // Non-blocking cache priming
-  }
-}
+export const CRITICAL_PRELOAD_VIDEOS = CRITICAL_GALLERY_VIDEOS;
 
 /**
  * Preloads and GPU-decodes an image asset into memory.
@@ -174,17 +146,43 @@ export function preloadImage(src) {
 
 /**
  * Master preloader executed during AtelierLoader presentation.
- * Preloads all 27 critical textures, 7 gallery videos, Google fonts, Web Audio effects, and background ambient score.
+ * Preloads all 27 critical textures, 7 gallery videos (100% as Blobs in RAM),
+ * Google fonts, Web Audio effects, and background ambient score.
+ *
+ * @param {Function} onProgress Optional callback receiving (percentage: number)
  */
-export async function preloadAllSiteAssets() {
-  const imagePromises = CRITICAL_PRELOAD_ASSETS.map(preloadImage);
-  const videoPromises = CRITICAL_PRELOAD_VIDEOS.map(preloadVideo);
+export async function preloadAllSiteAssets(onProgress) {
+  let imagesLoaded = 0;
+  const totalImages = CRITICAL_PRELOAD_ASSETS.length;
+  let videoPercent = 0;
+
+  const updateProgress = () => {
+    if (!onProgress) return;
+    const imageProgress = (imagesLoaded / totalImages) * 40; // 40% weight
+    const videoProgress = (videoPercent / 100) * 50;         // 50% weight for videos (heavy assets)
+    const baseProgress = 10;                                 // 10% base for fonts & audio
+    const total = Math.min(100, Math.round(baseProgress + imageProgress + videoProgress));
+    onProgress(total);
+  };
+
+  const imagePromises = CRITICAL_PRELOAD_ASSETS.map(async (src) => {
+    try {
+      await preloadImage(src);
+    } finally {
+      imagesLoaded++;
+      updateProgress();
+    }
+  });
+
+  const videoPromise = preloadAllPoolVideos(CRITICAL_GALLERY_VIDEOS, (pct) => {
+    videoPercent = pct;
+    updateProgress();
+  });
 
   const fontPromise = (async () => {
     if (typeof document !== 'undefined' && document.fonts) {
       try {
         await document.fonts.ready;
-        // Explicitly load key typefaces used on canvas
         const fontFaces = [
           '400 24px "Bodoni Moda"',
           '600 24px "Bodoni Moda"',
@@ -214,12 +212,14 @@ export async function preloadAllSiteAssets() {
 
   const allAssets = Promise.all([
     Promise.allSettled(imagePromises),
-    Promise.allSettled(videoPromises),
+    videoPromise,
     fontPromise,
     windowLoadPromise,
     sfxPromise,
   ]);
 
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 5500));
+  // Generous safety timeout: never block indefinitely, but allow enough time for full 52MB load
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 15000));
   await Promise.race([allAssets, safetyTimeout]);
+  if (onProgress) onProgress(100);
 }

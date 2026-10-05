@@ -63,6 +63,7 @@ export default function AtelierLoader({ onLoaded }) {
 
   const [isFading, setIsFading] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let isCancelled = false;
@@ -71,8 +72,15 @@ export default function AtelierLoader({ onLoaded }) {
       const startTime = performance.now();
       const minDuration = 1200; // refined duration: serene, readable, yet fast and snappy
 
-      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, and audio track
-      await preloadAllSiteAssets();
+      // 1. Preload 100% of all critical textures, 7 gallery videos as Blobs into RAM, fonts, and audio
+      await preloadAllSiteAssets((pct) => {
+        if (!isCancelled) {
+          setProgress(pct);
+        }
+      });
+
+      if (isCancelled) return;
+      setProgress(100);
 
       // 2. Ensure minimum duration has also passed
       const elapsed = performance.now() - startTime;
@@ -158,13 +166,18 @@ export default function AtelierLoader({ onLoaded }) {
           </span>
         </div>
 
-        {/* Delicate Golden Tapered Hairline Divider */}
-        <div
-          className="w-16 sm:w-20 h-[1.5px] my-6 sm:my-8 rounded-full opacity-65"
-          style={{
-            background: 'linear-gradient(to right, transparent, #DFBA5A, transparent)',
-          }}
-        />
+        {/* Delicate Golden Tapered Hairline Progress Track */}
+        <div className="w-32 sm:w-44 my-4 sm:my-5 flex flex-col items-center gap-1.5">
+          <div className="w-full h-[2px] bg-[#DFBA5A]/20 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#C79238] via-[#DFBA5A] to-[#C79238] transition-all duration-200 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="font-cinzel text-[9.5px] sm:text-[10px] tracking-[0.28em] text-[#8C6422] font-semibold select-none">
+            {progress}%
+          </span>
+        </div>
 
         {/* Bottom of it: The Curated Quote with Gold Leaf Highlight */}
         <blockquote className="w-full">
