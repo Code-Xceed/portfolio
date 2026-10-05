@@ -88,6 +88,7 @@ export const CRITICAL_PRELOAD_ASSETS = [
   '/wanderer-refined.png',
   '/gallery-hall-bg.jpg',
   '/gallery-corner-flowers.jpg',
+  '/gallery-corner-flowers.png',
 
   // 2. Artisanal Crumpled Paper Cursors
   '/Crumpled Paper Animated Cursor--cursor--SweezyCursors.png',
