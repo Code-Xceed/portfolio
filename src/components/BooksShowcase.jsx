@@ -1086,11 +1086,11 @@ export function BooksShowcase({
         const camZp = 9.9;
         const zw = 0.85 * fit;
         const rootY = -(1 - fit) * 0.16;
-        // Position monograph book in the upper region of the screen (~28% from top, comfortably lower)
-        const midPx = Math.max(140, Math.min(dims.h * 0.28, 255));
+        // Position monograph book in the upper region of the screen (~18% from top, comfortably higher)
+        const midPx = Math.max(105, Math.min(dims.h * 0.18, 160));
         const yw = 0.1 + (1 - (2 * midPx) / dims.h) * T13 * (camZp - zw);
-        // Substantially larger monograph scale on mobile so the book feels grand and prominent
-        const s = clamp(a * 2.9, 1.28, 1.48);
+        // Compact monograph scale on mobile so the book sits comfortably in the upper third without encroaching on text
+        const s = clamp(a * 2.15, 1.05, 1.18);
         SLOTS.detail = { p: [0, (yw - rootY) / fit, 0.85], r: [-0.02, -0.4, 0.06], s };
       } else {
         // Desktop / Landscape: Position monograph book in the center of the left column (~25% viewport width)
@@ -2205,16 +2205,16 @@ export function BooksShowcase({
           aria-live="polite"
           className={`absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
-          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
+          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-4 xs:max-md:bottom-6 sm:max-md:bottom-8 md:bottom-auto max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(480px,92vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
         >
           {/* Gentle localized ambient reading cushion behind text */}
           <div className="absolute -inset-4 sm:-inset-6 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_center,rgba(14,11,8,0.30)_0%,transparent_76%)] pointer-events-none" />
 
           {/* Curatorial Header: Thumbnail Emblem + Title */}
-          <div className="flex items-start gap-4 sm:gap-5 mb-2.5">
+          <div className="flex items-start gap-3 sm:gap-5 mb-1.5 sm:mb-2.5">
             {selectedCfg?.thumbnail && (
               <div
-                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-[#DFBA5A]/80 shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
+                className={`shrink-0 w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border border-[#DFBA5A]/80 sm:border-2 shadow-[0_4px_16px_rgba(0,0,0,0.65)] sm:shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_2px_8px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
               >
                 <img
                   src={selectedCfg.thumbnail}
@@ -2226,7 +2226,7 @@ export function BooksShowcase({
             <div className="flex-1 min-w-0">
               {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
               <h2
-                className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(28px,3.8vw,56px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
+                className={`font-bodoni font-light text-[#FDFBF7] text-[20px] xs:text-[23px] sm:text-[clamp(28px,3.8vw,56px)] leading-[1.02] sm:leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
               >
                 {selectedCfg?.title}
               </h2>
@@ -2236,7 +2236,7 @@ export function BooksShowcase({
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
             <p
-              className={`mt-1.5 font-cormorant italic text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${dpChild(90)}`}
+              className={`mt-1 sm:mt-1.5 font-cormorant italic text-[13px] xs:text-[14.5px] sm:text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] line-clamp-1 sm:line-clamp-none ${dpChild(90)}`}
             >
               {selectedCfg.subtitle}
             </p>
@@ -2244,13 +2244,13 @@ export function BooksShowcase({
 
           {/* 3. Key Architectural Highlights / Metrics */}
           {selectedCfg?.highlights?.length > 0 && (
-            <div className={`mt-3 flex flex-wrap gap-2 pointer-events-auto ${dpChild(120)}`}>
+            <div className={`mt-2 sm:mt-3 flex flex-wrap gap-1.5 sm:gap-2 pointer-events-auto ${dpChild(120)}`}>
               {selectedCfg.highlights.map((highlight, hIdx) => (
                 <span
                   key={hIdx}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[11px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[10px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
                 >
-                  <span className="text-[#DFBA5A] text-[8px]">●</span>
+                  <span className="text-[#DFBA5A] text-[7px] sm:text-[8px]">●</span>
                   {highlight}
                 </span>
               ))}
@@ -2259,23 +2259,24 @@ export function BooksShowcase({
 
           {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
-            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`}
+            className={`mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[11.5px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.52] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] line-clamp-3 sm:line-clamp-none ${dpChild(160)}`}
           >
-            {selectedCfg?.desc}
+            <span className="sm:hidden">{selectedCfg?.mobileDesc || selectedCfg?.desc}</span>
+            <span className="hidden sm:inline">{selectedCfg?.desc}</span>
           </p>
 
           {/* 5. Major Technologies Used (Light Warm Honey/Vellum Specimen Tags) */}
-          <div className={`mt-4 sm:mt-6 flex flex-wrap items-center gap-1.5 sm:gap-2.5 pointer-events-auto ${dpChild(210)}`}>
+          <div className={`mt-2.5 sm:mt-6 flex flex-wrap items-center gap-1 sm:gap-2.5 pointer-events-auto ${dpChild(210)}`}>
             {(selectedCfg?.tech || ['Three.js', 'WebGL', 'GLSL Shaders', 'React', 'Tailwind CSS']).map((techItem) => (
               <span
                 key={techItem}
-                className="group/tag inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg border border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
+                className="group/tag inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-3.5 sm:py-1.5 rounded-md sm:rounded-lg border border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1px_2px_rgba(21,20,19,0.12))] sm:[filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
               >
                 {/* Miniature Antique Venetian Gold Star ✦ */}
-                <span className="font-serif text-[10px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
+                <span className="font-serif text-[8.5px] sm:text-[10px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
                   ✦
                 </span>
-                <span className="font-cinzel text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase text-[#262018]">
+                <span className="font-cinzel text-[9.5px] sm:text-[11px] font-semibold tracking-[0.10em] sm:tracking-[0.14em] uppercase text-[#262018]">
                   {techItem}
                 </span>
               </span>
@@ -2283,27 +2284,28 @@ export function BooksShowcase({
           </div>
 
           {/* 6. Live Project & Source CTAs (Radiant Venetian Gold Leaf Cartouches) */}
-          <div className={`mt-5 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(260)}`}>
+          <div className={`mt-3 sm:mt-8 flex flex-wrap items-center gap-2 sm:gap-4 ${dpChild(260)}`}>
             <a
               href={selectedCfg?.liveURL || selectedCfg?.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="group pointer-events-auto relative inline-flex items-center gap-3 px-6 py-3 sm:px-7 sm:py-3.5 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+              className="group pointer-events-auto relative inline-flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-7 sm:py-3.5 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
               [clip-path:polygon(0%_12%,1.8%_4%,5%_6%,12%_1.5%,25%_4%,38%_1%,50%_3.5%,62%_1%,75%_4%,88%_1.5%,95%_5%,98.2%_3%,100%_12%,99%_32%,100%_52%,99%_72%,100%_88%,98.2%_97%,95%_95%,88%_98.5%,75%_96%,62%_99%,50%_96.5%,38%_99%,25%_96%,12%_98.5%,5%_95%,1.8%_97%,0%_88%,1%_70%,0%_50%,1%_30%)]
               [background:repeating-linear-gradient(118deg,rgba(255,255,255,0.10)_0px_2px,transparent_2px_7px),radial-gradient(135%_160%_at_28%_18%,#ECC76F_0%,#D49E38_55%,#B0771E_100%)]
-              border-2 border-[#FFE28A]
-              [filter:drop-shadow(0_3px_6px_rgba(21,20,19,0.22))_drop-shadow(0_12px_28px_rgba(199,146,56,0.35))]
+              border sm:border-2 border-[#FFE28A]
+              [filter:drop-shadow(0_2px_4px_rgba(21,20,19,0.22))_drop-shadow(0_8px_18px_rgba(199,146,56,0.25))]
+              sm:[filter:drop-shadow(0_3px_6px_rgba(21,20,19,0.22))_drop-shadow(0_12px_28px_rgba(199,146,56,0.35))]
               hover:border-[#FFF5CC]
               hover:[background:radial-gradient(135%_160%_at_28%_18%,#FFF0BA_0%,#E5B246_55%,#C48B25_100%)]
               hover:[filter:drop-shadow(0_4px_12px_rgba(223,186,90,0.48))_drop-shadow(0_18px_42px_rgba(199,146,56,0.42))]"
             >
               {/* Left Golden Atelier Seal / Ornament */}
-              <span className="font-serif text-[14px] text-[#18140E] transition-colors duration-300">
+              <span className="font-serif text-[11px] sm:text-[14px] text-[#18140E] transition-colors duration-300">
                 ❧
               </span>
 
               {/* Label */}
-              <span className="font-cinzel text-[11px] sm:text-[12px] font-bold tracking-[0.20em] uppercase text-[#18140E] transition-colors duration-300">
+              <span className="font-cinzel text-[10px] sm:text-[12px] font-bold tracking-[0.16em] sm:tracking-[0.20em] uppercase text-[#18140E] transition-colors duration-300">
                 View Repository
               </span>
 
@@ -2311,7 +2313,7 @@ export function BooksShowcase({
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
-                className="h-4 w-4 text-[#18140E] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#18140E] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
               >
                 <path
                   d="M5.5 14.5L14.5 5.5M6.5 5.5h8v8"
@@ -2330,15 +2332,15 @@ export function BooksShowcase({
                 href={selectedCfg.demoURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group pointer-events-auto relative inline-flex items-center gap-2.5 px-5 py-3 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
+                className="group pointer-events-auto relative inline-flex items-center gap-1.5 sm:gap-2.5 px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
                 border border-[#C79238]/60 [background:rgba(21,20,19,0.55)] backdrop-blur-md
                 hover:border-[#DFBA5A] hover:bg-[#151413]/75
                 [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]"
               >
-                <span className="font-serif text-[11px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
+                <span className="font-serif text-[9.5px] sm:text-[11px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
                   ✦
                 </span>
-                <span className="font-cinzel text-[11px] sm:text-[11.5px] font-semibold tracking-[0.18em] uppercase text-[#FBF9F5]">
+                <span className="font-cinzel text-[10px] sm:text-[11.5px] font-semibold tracking-[0.15em] sm:tracking-[0.18em] uppercase text-[#FBF9F5]">
                   Live Demo
                 </span>
                 <svg
