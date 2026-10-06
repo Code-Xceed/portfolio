@@ -100,11 +100,10 @@ export default function Hero({ onNavigateToPublications, active = true }) {
 
           {/* About Statement: Web dev -> Solutions for any problem -> Gaming & Minecraft mods */}
           <div className="mt-3.5 xs:mt-4 max-w-[90%] xs:max-w-[85%] sm:max-w-[78%]">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <span className="font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#8C6422] font-semibold">
-                ABOUT · ADITYA · INDIA 🇮🇳
+            <div className="flex items-center mb-1.5">
+              <span className="font-cinzel text-[10px] tracking-[0.24em] uppercase text-[#8C6422] font-medium select-none">
+                About · Aditya Rathore · India
               </span>
-              <span className="w-1 h-1 rounded-full bg-[#C79238]" />
             </div>
 
             <p 
@@ -211,12 +210,11 @@ export default function Hero({ onNavigateToPublications, active = true }) {
         aria-label="About Aditya Rathore"
         className="hidden lg:flex absolute top-12 lg:top-14 xl:top-16 right-12 lg:right-16 xl:right-20 z-10 pointer-events-none flex-col items-end text-right w-auto max-w-[560px] xl:max-w-[620px]"
       >
-        {/* Archival Eyebrow Kicker with Gold Folio Accent */}
-        <div className="flex items-center justify-end gap-2.5 mb-2 sm:mb-2.5">
-          <span className="font-cinzel text-[11.5px] md:text-[12px] tracking-[0.28em] uppercase text-[#8C6422] font-semibold select-none">
-            ABOUT · ADITYA RATHORE · INDIA 🇮🇳
+        {/* Minimal Editorial Eyebrow Kicker */}
+        <div className="flex items-center justify-end mb-2 sm:mb-2.5">
+          <span className="font-cinzel text-[11px] md:text-[11.5px] tracking-[0.26em] uppercase text-[#8C6422] font-medium select-none">
+            About · Aditya Rathore · India
           </span>
-          <span className="inline-block w-1.5 h-1.5 rotate-45 border border-[#8C6422]/60 bg-[#C79238]/40" />
         </div>
 
         {/* Primary Editorial About Statement with Typographic Contrast */}
