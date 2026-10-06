@@ -138,22 +138,8 @@ export default function Hero({ onNavigateToPublications, active = true }) {
         {/* 2. MIDDLE: Open Canvas for Interactive Fluid Painting (Pure Touch Zone) */}
         <div className="flex-1 w-full min-h-[30px] pointer-events-none" />
 
-        {/* 3. BOTTOM: Studio Inquiries Beacon, Big Connect Me ↗, & 5 Gold Medallions (Centered & Refined) */}
+        {/* 3. BOTTOM: Big Connect Me ↗ & 5 Gold Medallions (Centered & Refined) */}
         <footer className="w-full flex flex-col items-center justify-center text-center pt-2 pb-1">
-          {/* Active Inquiries Beacon */}
-          <div className="flex items-center justify-center gap-2 mb-1.5 select-none">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C79238] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8C6422]" />
-            </span>
-            <span 
-              className="font-cinzel text-[10.5px] sm:text-[11.5px] tracking-[0.24em] uppercase text-[#8C6422] font-semibold"
-              style={{ textShadow: '0 1px 2px rgba(251,249,245,0.98)' }}
-            >
-              INQUIRIES &amp; DIALOGUE
-            </span>
-          </div>
-
           {/* Big Cool Animated "Connect Me ↗" Anchor (Enlarged & Centered) */}
           <a 
             href="mailto:aditya.rathore10101@gmail.com"
@@ -252,22 +238,6 @@ export default function Hero({ onNavigateToPublications, active = true }) {
       <div 
         className="hidden lg:flex absolute right-12 lg:right-16 xl:right-20 bottom-12 lg:bottom-14 xl:bottom-16 z-20 pointer-events-none flex-col items-end text-right"
       >
-        {/* Active Inquiries Beacon */}
-        <div className="flex items-center gap-2 mb-1 justify-end">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C79238] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8C6422]" />
-          </span>
-          <span 
-            className="font-cinzel text-[11px] tracking-[0.24em] uppercase text-[#8C6422] font-semibold select-none"
-            style={{
-              textShadow: '0 1px 2px rgba(251,249,245,0.98), 0 2px 8px rgba(251,249,245,0.9)',
-            }}
-          >
-            INQUIRIES &amp; DIALOGUE
-          </span>
-        </div>
-
         {/* Big Cool Animated "Connect Me" Anchor */}
         <a 
           href="mailto:aditya.rathore10101@gmail.com"

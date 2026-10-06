@@ -115,9 +115,7 @@ export default function AtelierLoader({ onLoaded }) {
 
   if (isRemoved) return null;
 
-  // Split quote around the highlighted phrase
-  const { quote, highlight, author, period } = quoteData;
-  const parts = highlight ? quote.split(highlight) : [quote];
+  const { quote, author } = quoteData;
 
   return (
     <div
@@ -147,63 +145,23 @@ export default function AtelierLoader({ onLoaded }) {
       />
 
       {/* ===================================================================== */}
-      {/* PURE CENTER CLUSTER: ANIMATED LOADING EXPERIENCE & QUOTE (NOTHING ELSE)*/}
+      {/* PURE MINIMAL CENTER CLUSTER: LOADING SHINE & QUOTE WITH AUTHOR         */}
       {/* ===================================================================== */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-[640px] w-full px-2 sm:px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-[620px] w-full px-4">
         {/* Animated "Loading Experience" with Liquid Gold Shimmer */}
-        <div className="flex items-center justify-center gap-2.5 sm:gap-3">
-          <span className="font-serif text-[#C79238] text-[11px] sm:text-xs animate-[spin_10s_linear_infinite] select-none opacity-75">
-            ✦
-          </span>
-          <h1 className="animate-shimmer-text font-cinzel text-[clamp(14px,2.2vw,19px)] tracking-[0.38em] uppercase font-medium select-none">
-            Loading Experience
-          </h1>
-          <span className="font-serif text-[#C79238] text-[11px] sm:text-xs animate-[spin_10s_linear_infinite_reverse] select-none opacity-75">
-            ✦
-          </span>
-        </div>
+        <h1 className="animate-shimmer-text font-cinzel text-[clamp(13px,2vw,17px)] tracking-[0.38em] uppercase font-medium select-none">
+          Loading Experience
+        </h1>
 
-        {/* Dynamic Progress Indicator (Full Buffering into RAM) */}
-        <div className="w-44 sm:w-56 mt-4 flex flex-col items-center gap-1.5">
-          <div className="w-full h-[2px] bg-[#DFBA5A]/20 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[#C79238] to-[#DFBA5A] transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <span className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.24em] text-[#8C6422] font-semibold opacity-85">
-            {progress < 100 ? `BUFFERING ARCHIVES · ${progress}%` : 'EXPERIENCE READY'}
-          </span>
-        </div>
-
-        {/* Delicate Golden Tapered Hairline Divider */}
-        <div
-          className="w-16 sm:w-20 h-[1.5px] my-5 sm:my-7 rounded-full opacity-65"
-          style={{
-            background: 'linear-gradient(to right, transparent, #DFBA5A, transparent)',
-          }}
-        />
-
-        {/* Bottom of it: The Curated Quote with Gold Leaf Highlight */}
-        <blockquote className="w-full">
-          <p className="font-bodoni font-light text-[#151413] text-[clamp(1.18rem,3.3vw,1.95rem)] leading-[1.42] tracking-[-0.015em] max-w-[560px] mx-auto">
-            {parts[0]}
-            {highlight && (
-              <span className="relative inline-block mx-1.5 px-2.5 py-0.5 font-normal italic text-[#1A1713] rounded-md [background:linear-gradient(120deg,rgba(223,186,90,0.22)_0%,rgba(245,230,190,0.42)_50%,rgba(223,186,90,0.22)_100%)] border-b-[1.5px] border-[#C79238]/70 shadow-[0_1px_4px_rgba(199,146,56,0.12)]">
-                {highlight}
-              </span>
-            )}
-            {parts[1] || ''}
+        {/* Minimal Curated Quote & Author */}
+        <blockquote className="w-full mt-7 sm:mt-9">
+          <p className="font-bodoni font-light text-[#151413] text-[clamp(1.15rem,3.2vw,1.85rem)] leading-[1.44] tracking-[-0.015em] max-w-[560px] mx-auto">
+            {quote}
           </p>
 
-          {/* Author & Period Attribution */}
-          <footer className="mt-4 sm:mt-5 flex items-center justify-center gap-2 text-[#7A6E5F]">
-            <span className="font-cinzel text-[11px] sm:text-[12px] tracking-[0.22em] uppercase font-semibold text-[#8C6422]">
+          <footer className="mt-4 sm:mt-5 text-center">
+            <span className="font-cinzel text-[11px] sm:text-[12px] tracking-[0.24em] uppercase font-semibold text-[#8C6422]">
               {author}
-            </span>
-            <span className="text-[#8C6422]/50 text-[10px]">◇</span>
-            <span className="font-serif italic text-[12px] sm:text-[13px] text-[#8C7E6C]">
-              {period}
             </span>
           </footer>
         </blockquote>
