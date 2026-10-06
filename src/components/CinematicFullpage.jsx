@@ -11,12 +11,10 @@ import soundManager from '../lib/soundManager';
  * - Wheel, trackpad gesture thresholding with transition debounce lock
  * - Touch swipe support for mobile / tablets
  * - Arrow / Page keyboard navigation
- * - Atelier side pagination dots
  * - Safe-lock when inspecting 3D monographs (.bs-detail-open)
  */
 export default function CinematicFullpage({
   sections = [],
-  sectionTitles = ['Atelier · Aditya Rathore', 'Studio Monographs · Archive'],
   onSectionChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -223,48 +221,6 @@ export default function CinematicFullpage({
           </div>
         );
       })}
-
-      {/* ===================================================================== */}
-      {/* ATELIER SECTION RAIL: orientation + direct navigation.                 */}
-      {/*                                                                        */}
-      {/* Three small marks pinned to the right edge, vertically centred. On a   */}
-      {/* phone this is the only thing that tells a visitor the site has more    */}
-      {/* than one screen, and the 40px targets are thumb-reachable without      */}
-      {/* fighting the content in the centre. It deliberately sits BELOW the     */}
-      {/* sections in DOM order but above them in z, and the Projects carousel   */}
-      {/* arrows are nudged clear of it (see BooksShowcase).                     */}
-      {/* ===================================================================== */}
-      <nav
-        aria-label="Section navigation"
-        className="absolute right-1 sm:right-2 lg:right-4 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center"
-      >
-        {sections.map((_, idx) => {
-          const isCurrent = idx === activeIndex;
-          const label = sectionTitles[idx] || `Section ${idx + 1}`;
-          return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => goToSection(idx)}
-              aria-label={`Go to ${label}`}
-              aria-current={isCurrent ? 'true' : undefined}
-              className="group relative flex h-10 w-10 cursor-pointer items-center justify-center [-webkit-tap-highlight-color:transparent]"
-            >
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  isCurrent
-                    ? 'h-2.5 w-2.5 bg-[#8C6422] shadow-[0_0_0_3px_rgba(223,186,90,0.30)]'
-                    : 'h-1.5 w-1.5 bg-[#151413]/25 group-hover:bg-[#C79238]/80'
-                }`}
-              />
-              {/* Archival label, desktop only, revealed on hover */}
-              <span className="pointer-events-none absolute right-full mr-2 hidden whitespace-nowrap font-cinzel text-[9.5px] tracking-[0.2em] uppercase text-[#8C6422] opacity-0 transition-opacity duration-200 group-hover:opacity-100 lg:block">
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
     </div>
   );
 }

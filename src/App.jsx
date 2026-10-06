@@ -41,11 +41,6 @@ export default function App() {
 
       {/* Fullpage Cinematic Zoom Experience */}
       <CinematicFullpage
-        sectionTitles={[
-          'Atelier · Aditya Rathore',
-          'Gallery · Curated Plates',
-          'Projects · Archive',
-        ]}
         sections={[
           ({ nextSection, active }) => (
             <Hero onNavigateToPublications={nextSection} active={active} />
