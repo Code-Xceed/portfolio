@@ -17,10 +17,10 @@ export default function App() {
     return () => cleanup?.();
   }, []);
 
-  const handleLoaded = () => {
+  const handleLoaded = React.useCallback(() => {
     setLoaded(true);
     soundManager.startBgMusic();
-  };
+  }, []);
 
   return (
     <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5] text-[#151413] selection:bg-[#C79238] selection:text-white">
@@ -41,7 +41,6 @@ export default function App() {
 
       {/* Fullpage Cinematic Zoom Experience */}
       <CinematicFullpage
-        enabled={loaded}
         sections={[
           ({ nextSection, active }) => (
             <Hero onNavigateToPublications={nextSection} active={active} />

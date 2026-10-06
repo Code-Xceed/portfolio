@@ -306,10 +306,12 @@ export async function preloadAllSiteAssets(onProgress) {
   })();
 
   const windowLoadPromise = new Promise((resolve) => {
-    if (typeof document !== 'undefined' && document.readyState === 'complete') {
+    if (typeof document === 'undefined' || document.readyState === 'complete' || document.readyState === 'interactive') {
       resolve();
     } else if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', resolve, { once: true });
       window.addEventListener('load', resolve, { once: true });
+      setTimeout(resolve, 800);
     } else {
       resolve();
     }
@@ -325,8 +327,8 @@ export async function preloadAllSiteAssets(onProgress) {
     sfxPromise,
   ]);
 
-  // Generous timeout (30s) as a safety net only — normal path waits for every video blob
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 30000));
+  // Safety net (4s) so user is never stalled indefinitely on slow networks
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 4000));
   await Promise.race([allAssets, safetyTimeout]);
 
   // Signal that the video phase has settled, so gallery cards may safely fall back
