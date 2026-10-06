@@ -670,16 +670,16 @@ export function BooksShowcase({
         const pageNo = String(9 + i * 16).padStart(3, ' ');
         const left = trimToWidth(x, list[i], 610);
 
-        // Chapter title in rich aged walnut ink (High-contrast bold)
+        // Chapter title in rich aged walnut ink
         x.textAlign = 'left';
-        x.fillStyle = '#100B06';
-        x.font = 'italic 600 40px "Cormorant Garamond", serif';
+        x.fillStyle = '#261D15';
+        x.font = 'italic 400 39px "Cormorant Garamond", serif';
         x.fillText(left, 155, y);
 
         // Page number in antique burnished gold
         x.textAlign = 'right';
-        x.fillStyle = '#8C5A14';
-        x.font = '700 38px "Bodoni Moda", serif';
+        x.fillStyle = '#A87928';
+        x.font = '600 36px "Bodoni Moda", serif';
         x.fillText(pageNo, w - 155, y);
 
         // Dotted antique leader line
@@ -1815,7 +1815,7 @@ export function BooksShowcase({
       }
       detailSpot.intensity = THREE.MathUtils.lerp(
         detailSpot.intensity,
-        isDetailEnv ? (SLOTS.portrait ? 1.5 : 1.7) : 0.0,
+        isDetailEnv ? (SLOTS.portrait ? 2.2 : 2.6) : 0.0,
         Math.min(1.0, dt * 2.2)
       );
 
@@ -2014,38 +2014,37 @@ export function BooksShowcase({
         className="z-[0]"
       />
 
+      {/* Atmospheric Dimming Archival Tint for Detail View (Deep Darkened Reading Scrim with Smooth Fade) */}
+      <div
+        className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          envDimmed ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+          background:
+            'radial-gradient(ellipse 130% 120% at 50% 50%, rgba(14, 11, 8, 0.84) 0%, rgba(7, 5, 4, 0.95) 100%)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+        }}
+      />
+
       {/* Cinematic Glow Spotlight behind the Book in Final Detail Position (Desktop) */}
       <div
-        className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`pointer-events-none absolute inset-0 z-[2] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           envDimmed ? 'opacity-100' : 'opacity-0'
         } max-md:hidden`}
         style={{
           background:
-            'radial-gradient(ellipse 52vw 58vh at 27% 48%, rgba(255, 238, 185, 0.48) 0%, rgba(223, 186, 90, 0.24) 32%, rgba(199, 146, 56, 0.08) 58%, transparent 76%)',
+            'radial-gradient(ellipse 52vw 58vh at 27% 48%, rgba(255, 238, 185, 0.36) 0%, rgba(223, 186, 90, 0.18) 32%, rgba(199, 146, 56, 0.05) 58%, transparent 76%)',
         }}
       />
       {/* Mobile Cinematic Glow Spotlight (Upper Center) */}
       <div
-        className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`pointer-events-none absolute inset-0 z-[2] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           envDimmed ? 'opacity-100' : 'opacity-0'
         } md:hidden`}
         style={{
           background:
-            'radial-gradient(ellipse 92vw 46vh at 50% 28%, rgba(255, 238, 185, 0.48) 0%, rgba(223, 186, 90, 0.24) 32%, rgba(199, 146, 56, 0.08) 58%, transparent 76%)',
-        }}
-      />
-
-      {/* Atmospheric Dimming Archival Vignette for Detail View (1.2s Cinematic Fade) */}
-      <div
-        className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          envDimmed
-            ? 'opacity-100'
-            : 'opacity-0'
-        }`}
-        style={{
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(18, 14, 11, 0.42) 0%, rgba(10, 8, 6, 0.76) 55%, rgba(6, 5, 4, 0.90) 100%)',
-          backdropFilter: 'blur(3px)',
-          WebkitBackdropFilter: 'blur(3px)',
+            'radial-gradient(ellipse 92vw 46vh at 50% 28%, rgba(255, 238, 185, 0.36) 0%, rgba(223, 186, 90, 0.18) 32%, rgba(199, 146, 56, 0.05) 58%, transparent 76%)',
         }}
       />
 
@@ -2206,13 +2205,13 @@ export function BooksShowcase({
           aria-live="polite"
           className={`absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
-          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-8 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,92vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:pointer-events-auto md:right-[4%] lg:right-[6%] xl:right-[8%] md:top-1/2 md:-translate-y-1/2 md:w-[min(560px,46%)] pointer-events-auto p-5 sm:p-7 md:p-8 rounded-2xl bg-[#0E0B09]/82 backdrop-blur-2xl border border-[#DFBA5A]/30 shadow-[0_20px_60px_rgba(0,0,0,0.75)]`}
+          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
         >
-          {/* Curatorial Header: Thumbnail Emblem + Title */}
-          <div className="flex items-center gap-4 sm:gap-5 mb-2.5">
+          {/* Curatorial Header: Thumbnail Emblem + Volume Badges + Title */}
+          <div className="flex items-start gap-4 sm:gap-5 mb-2.5">
             {selectedCfg?.thumbnail && (
               <div
-                className={`shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border-2 border-[#DFBA5A]/80 shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
+                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-[#DFBA5A]/80 shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
               >
                 <img
                   src={selectedCfg.thumbnail}
@@ -2222,9 +2221,9 @@ export function BooksShowcase({
               </div>
             )}
             <div className="flex-1 min-w-0">
-              {/* 1. Project Title */}
+              {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
               <h2
-                className={`font-bodoni font-normal text-[#FFFFFF] text-[clamp(28px,3.6vw,52px)] leading-[1.02] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] ${dpChild(45)}`}
+                className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(28px,3.8vw,56px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
               >
                 {selectedCfg?.title}
               </h2>
@@ -2234,7 +2233,7 @@ export function BooksShowcase({
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
             <p
-              className={`mt-1 font-serif italic text-[clamp(16px,1.25vw,21px)] text-[#F3CE7A] font-medium leading-snug drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(70)}`}
+              className={`mt-1.5 font-cormorant italic text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${dpChild(90)}`}
             >
               {selectedCfg.subtitle}
             </p>
@@ -2242,22 +2241,22 @@ export function BooksShowcase({
 
           {/* 3. Key Architectural Highlights / Metrics */}
           {selectedCfg?.highlights?.length > 0 && (
-            <div className={`mt-3 flex flex-wrap gap-2 pointer-events-auto ${dpChild(95)}`}>
+            <div className={`mt-3 flex flex-wrap gap-2 pointer-events-auto ${dpChild(120)}`}>
               {selectedCfg.highlights.map((highlight, hIdx) => (
                 <span
                   key={hIdx}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1B1612] border border-[#DFBA5A]/45 text-[#FFFFFF] text-[11.5px] sm:text-[12px] font-sans font-medium tracking-wide shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[11px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
                 >
-                  <span className="text-[#E5B64E] text-[8px]">●</span>
+                  <span className="text-[#DFBA5A] text-[8px]">●</span>
                   {highlight}
                 </span>
               ))}
             </div>
           )}
 
-          {/* 4. Human Project Narrative (High-Contrast Pure Ivory Tone, 100% Legible) */}
+          {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
-            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#FAF6F0] text-[clamp(14px,1.06vw,16px)] leading-[1.78] drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] ${dpChild(120)}`}
+            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`}
           >
             {selectedCfg?.desc}
           </p>

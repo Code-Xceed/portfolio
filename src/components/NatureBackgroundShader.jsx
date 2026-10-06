@@ -305,6 +305,9 @@ void main() {
   float bottomFade = smoothstep(0.12, 0.0, uv.y);
   sceneColor = mix(sceneColor, linenGround, bottomFade * 0.85);
 
+  // In detail mode, smoothly sink ground into deep archival darkness for supreme text readability
+  sceneColor = mix(sceneColor, vec3(0.06, 0.05, 0.04), u_detail_mode * 0.70);
+
   gl_FragColor = vec4(sceneColor, 1.0);
 }
 `;
