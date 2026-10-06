@@ -1,7 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TOP_GALLERY_PLATES, BOTTOM_GALLERY_PLATES } from '../data/galleryData';
-import { getPreloadedVideoUrl } from '../lib/assetPreloader';
+import { getPreloadedVideoBlob, areVideosPreloaded } from '../lib/assetPreloader';
 import soundManager from '../lib/soundManager';
+
+// Fluid, viewport-relative plate sizing.
+//
+// Two constraints shape these two numbers:
+//  1. Height: a plate is capped at 60vh so it can never overflow its 34vh marquee band.
+//  2. Width: 5 plates + 5 gaps per stream always span WIDER than the viewport, at every
+//     real display size. The clone set that makes the loop seamless sits exactly one
+//     stream-width away, so a stream can never show the same film twice on screen — and
+//     because the two streams carry disjoint films, neither can the pair of them.
+const PLATE_WIDTH = 'min(clamp(260px, 23vw, 660px), 60vh)';
+const MARQUEE_GAP = 'clamp(40px, 4.5vw, 150px)';
+const MARQUEE_SET_STYLE = { gap: MARQUEE_GAP, paddingRight: MARQUEE_GAP };
 
 // Fine-art Renaissance corner filigree bracket
 const CornerFiligree = ({ className = '' }) => (
@@ -18,28 +30,81 @@ const CornerFiligree = ({ className = '' }) => (
   </svg>
 );
 
-// Dedicated Video Card Component ensuring 100% reliable continuous 60fps playback from in-memory Blobs
-function GalleryVideoCard({ src, className = '' }) {
+// Dedicated Video Card Component delivering silky-smooth native 60fps playback.
+//
+// Performance contract (this is what keeps the marquee buttery smooth):
+//  1. The <video> src is attached ONLY from the in-RAM Blob created during the loading
+//     screen. Until then the element has no src at all, so 24 gallery cards never race
+//     the loader for bandwidth.
+//  2. Playback is limited to cards that are BOTH inside this section AND inside the
+//     viewport. Off-screen clones stay paused, so the browser is asked to decode a
+//     handful of streams instead of 24 at once.
+function GalleryVideoCard({ src, className = '', active = true }) {
   const videoRef = useRef(null);
-  const [currentSrc, setCurrentSrc] = useState(() => getPreloadedVideoUrl(src));
+  const containerRef = useRef(null);
+  const [videoSrc, setVideoSrc] = useState(() => getPreloadedVideoBlob(src));
+  const [inView, setInView] = useState(false);
+  // Playback keeps running through the ~1.1s cinematic section transition so the
+  // fade-out never shows a frozen frame; it stops once the section is truly gone.
+  const [playbackAllowed, setPlaybackAllowed] = useState(active);
 
-  // Reactively receive the in-memory Blob URL as soon as preloading completes
   useEffect(() => {
-    const handlePreloaded = () => {
-      const resolved = getPreloadedVideoUrl(src);
-      if (resolved && resolved !== currentSrc) {
-        setCurrentSrc(resolved);
+    if (active) {
+      setPlaybackAllowed(true);
+      return undefined;
+    }
+    const timer = setTimeout(() => setPlaybackAllowed(false), 1200);
+    return () => clearTimeout(timer);
+  }, [active]);
+
+  // 1. Attach the in-memory Blob URL the moment it exists — never race the network.
+  useEffect(() => {
+    const sync = () => {
+      const blobUrl = getPreloadedVideoBlob(src);
+      if (blobUrl) {
+        setVideoSrc((prev) => (prev === blobUrl ? prev : blobUrl));
+        return;
+      }
+      // Only after the preload phase has fully settled do we allow a direct fallback,
+      // so a failed asset still renders instead of staying permanently blank.
+      if (areVideosPreloaded()) {
+        setVideoSrc((prev) => (prev ? prev : src));
       }
     };
-    handlePreloaded();
-    window.addEventListener('videos-preloaded', handlePreloaded);
-    return () => window.removeEventListener('videos-preloaded', handlePreloaded);
-  }, [src, currentSrc]);
 
-  // Ensure unblocked native 60fps autoplay at exact 1.0 normal speed
+    sync();
+    window.addEventListener('videos-preloaded', sync);
+    window.addEventListener('videos-preload-complete', sync);
+    return () => {
+      window.removeEventListener('videos-preloaded', sync);
+      window.removeEventListener('videos-preload-complete', sync);
+    };
+  }, [src]);
+
+  // 2. Track whether this specific card is actually on screen.
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { root: null, rootMargin: '240px 360px 240px 360px', threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const shouldPlay = playbackAllowed && inView && Boolean(videoSrc);
+  const shouldPlayRef = useRef(false);
+
+  // 3. Play only what is visible, at exactly 1.0x native speed.
+  useEffect(() => {
+    shouldPlayRef.current = shouldPlay;
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoSrc) return;
 
     video.muted = true;
     video.defaultMuted = true;
@@ -48,6 +113,11 @@ function GalleryVideoCard({ src, className = '' }) {
     video.playbackRate = 1.0;
     video.defaultPlaybackRate = 1.0;
 
+    if (!shouldPlay) {
+      video.pause();
+      return;
+    }
+
     const startPlayback = () => {
       video.playbackRate = 1.0;
       const p = video.play();
@@ -55,31 +125,55 @@ function GalleryVideoCard({ src, className = '' }) {
     };
 
     startPlayback();
-  }, [currentSrc]);
+  }, [shouldPlay, videoSrc]);
+
+  // 4. Browsers suspend muted media while a tab is backgrounded and do not always
+  //    resume it. Re-assert playback on return so cards never stay frozen.
+  useEffect(() => {
+    const resume = () => {
+      const video = videoRef.current;
+      if (!video || !shouldPlayRef.current || !video.paused) return;
+      video.playbackRate = 1.0;
+      const p = video.play();
+      if (p !== undefined) p.catch(() => {});
+    };
+
+    const onVisibility = () => {
+      if (!document.hidden) resume();
+    };
+
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('focus', resume);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('focus', resume);
+    };
+  }, []);
+
+  const handleReady = (e) => {
+    if (!shouldPlay) return;
+    e.target.playbackRate = 1.0;
+    e.target.play().catch(() => {});
+  };
 
   return (
-    <div className="w-full h-full">
-      <video
-        ref={videoRef}
-        src={currentSrc}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        disablePictureInPicture
-        disableRemotePlayback
-        tabIndex={-1}
-        onLoadedData={(e) => {
-          e.target.playbackRate = 1.0;
-          e.target.play().catch(() => {});
-        }}
-        onCanPlay={(e) => {
-          e.target.playbackRate = 1.0;
-          e.target.play().catch(() => {});
-        }}
-        className={className}
-      />
+    <div ref={containerRef} className="w-full h-full">
+      {videoSrc && (
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          loop
+          muted
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          disableRemotePlayback
+          tabIndex={-1}
+          onLoadedData={handleReady}
+          onCanPlay={handleReady}
+          className={className}
+        />
+      )}
     </div>
   );
 }
@@ -122,10 +216,12 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
     >
       {/* Artwork Video Plate with genuine 16:9 widescreen video dimensions */}
       <div 
-        className={`relative overflow-hidden rounded-xs border bg-[#151413] ${card.frameBorder} ${card.imgSize} shrink-0 transform-gpu`}
+        className={`relative aspect-video overflow-hidden rounded-none border bg-[#151413] ${card.frameBorder} shrink-0 transform-gpu`}
+        style={{ width: PLATE_WIDTH }}
       >
         <GalleryVideoCard
           src={card.video}
+          active={active}
           className="w-full h-full object-cover block pointer-events-none"
         />
       </div>
@@ -256,11 +352,11 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
       >
         <div className="flex w-max">
           {/* Set 1 */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow">
+          <div className="flex items-center shrink-0 animate-marquee-flow" style={MARQUEE_SET_STYLE}>
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u1'))}
           </div>
           {/* Set 2 (Exact clone matching gap width for 100% glitchless loop) */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow" aria-hidden="true">
+          <div className="flex items-center shrink-0 animate-marquee-flow" style={MARQUEE_SET_STYLE} aria-hidden="true">
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u2'))}
           </div>
         </div>
@@ -298,11 +394,11 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
       >
         <div className="flex w-max">
           {/* Set 1 */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow-slower">
+          <div className="flex items-center shrink-0 animate-marquee-flow-slower" style={MARQUEE_SET_STYLE}>
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l1'))}
           </div>
           {/* Set 2 (Exact clone matching gap width for 100% glitchless loop) */}
-          <div className="flex items-center gap-10 sm:gap-14 md:gap-18 shrink-0 pr-10 sm:pr-14 md:pr-18 animate-marquee-flow-slower" aria-hidden="true">
+          <div className="flex items-center shrink-0 animate-marquee-flow-slower" style={MARQUEE_SET_STYLE} aria-hidden="true">
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l2'))}
           </div>
         </div>
@@ -346,6 +442,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
                 {selectedPlate.video ? (
                   <GalleryVideoCard
                     src={selectedPlate.video}
+                    active={true}
                     className="w-full h-full object-cover block"
                   />
                 ) : (

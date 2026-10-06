@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 
+
+# Full-resolution source media (transcoded 540p60 versions live in public/gallery/videos)
+source-videos/

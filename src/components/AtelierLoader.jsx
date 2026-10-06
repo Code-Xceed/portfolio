@@ -72,7 +72,7 @@ export default function AtelierLoader({ onLoaded }) {
       const startTime = performance.now();
       const minDuration = 1400; // serene atelier presentation
 
-      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 7 videos into RAM
+      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 10 videos into RAM
       await preloadAllSiteAssets((p) => {
         if (!isCancelled) {
           setProgress(p);

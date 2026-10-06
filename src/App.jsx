@@ -47,8 +47,8 @@ export default function App() {
           'Projects · Archive',
         ]}
         sections={[
-          ({ nextSection }) => (
-            <Hero onNavigateToPublications={nextSection} />
+          ({ nextSection, active }) => (
+            <Hero onNavigateToPublications={nextSection} active={active} />
           ),
           ({ nextSection, prevSection, active }) => (
             <GallerySection 

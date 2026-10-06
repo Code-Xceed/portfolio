@@ -65,6 +65,17 @@ export function getProjectImage(url, onLoaded) {
 
 // Video In-Memory Blob URL Store (Guarantees zero network latency and silky-smooth 60fps playback)
 const videoBlobStore = new Map();
+const videoInflight = new Map();
+let videosPreloadComplete = false;
+
+/**
+ * Returns the in-memory Blob URL for a preloaded video, or null when it is not in RAM yet.
+ * Gallery <video> elements use this so they NEVER touch the network during the loading screen.
+ */
+export function getPreloadedVideoBlob(url) {
+  if (!url) return null;
+  return videoBlobStore.get(url) || null;
+}
 
 /**
  * Returns the in-memory Blob URL for a preloaded video, falling back to the original URL.
@@ -72,6 +83,13 @@ const videoBlobStore = new Map();
 export function getPreloadedVideoUrl(url) {
   if (!url) return url;
   return videoBlobStore.get(url) || url;
+}
+
+/**
+ * True once the video preload phase has fully settled (used to allow a safe network fallback).
+ */
+export function areVideosPreloaded() {
+  return videosPreloadComplete;
 }
 
 export const CRITICAL_PRELOAD_ASSETS = [
@@ -119,6 +137,9 @@ export const CRITICAL_PRELOAD_VIDEOS = [
   '/gallery/videos/Mahindra.mp4',
   '/gallery/videos/Portfolio-template.mp4',
   '/gallery/videos/Portfolio-template2.mp4',
+  '/gallery/videos/Showcase-1.mp4',
+  '/gallery/videos/Showcase-2.mp4',
+  '/gallery/videos/Showcase-3.mp4',
   '/gallery/videos/Xmusic.mp4',
 ];
 
@@ -135,25 +156,38 @@ export async function preloadVideoFully(url, onComplete) {
     onComplete?.();
     return videoBlobStore.get(url);
   }
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    videoBlobStore.set(url, blobUrl);
-
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('videos-preloaded', { detail: { url, blobUrl } }));
-    }
-
+  // Share a single network request per asset (React StrictMode mounts effects twice in dev)
+  if (videoInflight.has(url)) {
+    const shared = await videoInflight.get(url);
     onComplete?.();
-    return blobUrl;
-  } catch (e) {
-    console.warn('Video preload fallback for:', url, e);
-    onComplete?.();
-    return url;
+    return shared;
   }
+
+  const task = (async () => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      videoBlobStore.set(url, blobUrl);
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('videos-preloaded', { detail: { url, blobUrl } }));
+      }
+
+      return blobUrl;
+    } catch (e) {
+      console.warn('Video preload fallback for:', url, e);
+      return url;
+    } finally {
+      videoInflight.delete(url);
+    }
+  })();
+
+  videoInflight.set(url, task);
+  const resolved = await task;
+  onComplete?.();
+  return resolved;
 }
 
 export const preloadVideo = preloadVideoFully;
@@ -206,7 +240,7 @@ export function preloadImage(src, onComplete) {
 
 /**
  * Master preloader executed during AtelierLoader presentation.
- * Preloads all 27 critical textures, 7 gallery videos (100% in RAM), Google fonts, Web Audio effects, and background ambient score.
+ * Preloads all 27 critical textures, 10 gallery videos (100% in RAM), Google fonts, Web Audio effects, and background ambient score.
  * Reports real-time percentage progress (0 to 100).
  */
 export async function preloadAllSiteAssets(onProgress) {
@@ -279,9 +313,16 @@ export async function preloadAllSiteAssets(onProgress) {
     sfxPromise,
   ]);
 
-  // Generous timeout (25s) to guarantee high-res videos finish downloading fully
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 25000));
+  // Generous timeout (30s) as a safety net only — normal path waits for every video blob
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 30000));
   await Promise.race([allAssets, safetyTimeout]);
+
+  // Signal that the video phase has settled, so gallery cards may safely fall back
+  // to a direct network URL if any single asset failed to become a Blob.
+  videosPreloadComplete = true;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('videos-preload-complete'));
+  }
 
   onProgress?.(100);
 }

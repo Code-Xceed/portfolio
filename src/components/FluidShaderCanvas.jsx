@@ -3,8 +3,21 @@ import React, { useEffect, useRef } from 'react';
 export default function FluidShaderCanvas({ 
   imageSrc = '/alpine-sanctuary-reference.jpg',
   mobileImageSrc = '/alpine-sanctuary-mobile.jpg',
+  active = true,
 }) {
   const canvasRef = useRef(null);
+  // Full-screen fragment shader: only render while this section is genuinely on screen,
+  // otherwise it steals GPU headroom from the gallery's video decoders.
+  const activeRef = useRef(active);
+  const animIdRef = useRef(null);
+  const renderRef = useRef(null);
+
+  useEffect(() => {
+    activeRef.current = active;
+    if (active && renderRef.current && animIdRef.current === null) {
+      animIdRef.current = requestAnimationFrame(renderRef.current);
+    }
+  }, [active]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,7 +32,6 @@ export default function FluidShaderCanvas({
     });
     if (!gl) return;
 
-    let animationFrameId;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
@@ -337,11 +349,22 @@ export default function FluidShaderCanvas({
     window.addEventListener('touchcancel', handleMouseLeave, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
 
-    let startTime = performance.now();
+    // Accumulated clock so the shader resumes without a time jump after being paused
+    let elapsedTime = 0;
+    let lastFrameTime = 0;
 
     // Main animation frame
     const render = (currentTime) => {
-      const elapsed = (currentTime - startTime) * 0.001;
+      if (!activeRef.current) {
+        animIdRef.current = null;
+        lastFrameTime = 0;
+        return;
+      }
+
+      if (!lastFrameTime) lastFrameTime = currentTime;
+      elapsedTime += (currentTime - lastFrameTime) * 0.001;
+      lastFrameTime = currentTime;
+      const elapsed = elapsedTime;
 
       // 1. Mouse physics interpolation
       mouse.prevX = mouse.x;
@@ -422,13 +445,19 @@ export default function FluidShaderCanvas({
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-      animationFrameId = requestAnimationFrame(render);
+      animIdRef.current = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    renderRef.current = render;
+    if (activeRef.current) {
+      animIdRef.current = requestAnimationFrame(render);
+    }
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animIdRef.current) cancelAnimationFrame(animIdRef.current);
+      animIdRef.current = null;
+      renderRef.current = null;
+      lastFrameTime = 0;
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchstart', handleTouchStart);

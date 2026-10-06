@@ -62,13 +62,14 @@ const SOCIAL_HANDLES = [
   },
 ];
 
-export default function Hero({ onNavigateToPublications }) {
+export default function Hero({ onNavigateToPublications, active = true }) {
   return (
     <section className="relative w-full h-[100svh] min-h-[100svh] flex flex-col justify-end items-start px-5 xs:px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 pb-6 sm:pb-8 lg:pb-14 xl:pb-16 overflow-hidden select-none bg-[#FBF9F5]">
       {/* Interactive WebGL Fluid Shader Canvas (Alpine Mountain Sanctuary Background with Fluid Hover Reveal) */}
       <FluidShaderCanvas 
         imageSrc="/alpine-sanctuary-reference.jpg" 
         mobileImageSrc="/alpine-sanctuary-mobile.jpg" 
+        active={active}
       />
 
       {/* ========================================================================= */}
