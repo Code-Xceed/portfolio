@@ -1880,9 +1880,6 @@ export function BooksShowcase({
     });
     rebuildHitMeshes();
     camTo('hero');
-    try {
-      renderer.compile(scene, camera);
-    } catch (e) {}
     animate();
 
     const visibilityObserver = new IntersectionObserver(
@@ -2169,36 +2166,28 @@ export function BooksShowcase({
         Inspect
       </button>
 
-      {/* Close Detail View Button (Archival Light Honey Washi Seal with Gold Trim) */}
+      {/* Close Detail View Button (Clean Minimal Atelier Round Seal with Gold Trim) */}
       <button
         ref={closeBtnRef}
         type="button"
         aria-label="Return to archive view"
-        className={`group cursor-pointer absolute left-1/2 top-7 z-40 -translate-x-1/2 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rotate-1 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent]
-        [clip-path:polygon(4%_12%,12%_4%,25%_6%,38%_2%,50%_5%,62%_2%,75%_6%,88%_4%,96%_12%,98%_25%,95%_38%,99%_50%,95%_62%,98%_75%,96%_88%,88%_96%,75%_94%,62%_98%,50%_95%,38%_98%,25%_94%,12%_96%,4%_88%,2%_75%,5%_62%,1%_50%,5%_38%,2%_25%)]
-        [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.06)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#F8F2E4_0%,#EFE4CF_58%,#E2D0B5_100%)]
-        border-2 border-[#C79238]/60
-        [filter:drop-shadow(0_2px_5px_rgba(21,20,19,0.18))_drop-shadow(0_10px_24px_rgba(21,20,19,0.20))]
-        hover:[filter:drop-shadow(0_4px_8px_rgba(21,20,19,0.22))_drop-shadow(0_14px_32px_rgba(199,146,56,0.38))]
-        hover:border-[#DFBA5A]
+        className={`group cursor-pointer absolute left-1/2 top-7 z-40 -translate-x-1/2 inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-108 active:scale-95 [-webkit-tap-highlight-color:transparent]
+        bg-[#181410]/85 backdrop-blur-md border border-[#DFBA5A]/50 text-[#F5EFE6] hover:text-[#DFBA5A] hover:border-[#DFBA5A] hover:bg-[#181410] shadow-[0_4px_20px_rgba(0,0,0,0.5)]
         max-md:left-auto max-md:right-5 max-md:top-5 max-md:translate-x-0 ${
           uiMode === 'detail' ? 'pointer-events-auto opacity-100 scale-100' : 'pointer-events-none opacity-0 scale-90'
         }`}
       >
-        {/* Calligraphic Antique Cross with Venetian Gold Central Pip */}
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          className="h-5 w-5 text-[#1C1712] transition-all duration-300 group-hover:text-[#C79238] group-hover:rotate-90"
+          className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-90 text-[#F5EFE6]"
         >
           <path
-            d="M6.5 6.5L17.5 17.5M6.5 17.5L17.5 6.5"
+            d="M6 6L18 18M6 18L18 6"
             stroke="currentColor"
-            strokeWidth={2}
+            strokeWidth={1.8}
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
-          <circle cx="12" cy="12" r="1.6" fill="#C79238" />
         </svg>
       </button>
 
@@ -2208,43 +2197,49 @@ export function BooksShowcase({
           ref={dpRef}
           aria-live="polite"
           className={`absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
-          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
+            panelVisible ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
+          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-8 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,92vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] max-h-[88vh] overflow-y-auto`}
         >
-          {/* Curatorial Header: Thumbnail Emblem + Volume Badges + Title */}
-          <div className="flex items-start gap-4 sm:gap-5 mb-2.5">
+          {/* Curatorial Header: Thumbnail Emblem + Clean Editorial Kicker + Title */}
+          <div className="flex items-start gap-3.5 sm:gap-4 mb-2">
             {selectedCfg?.thumbnail && (
               <div
-                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-[#DFBA5A]/80 shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
+                className={`shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border border-[#DFBA5A]/50 shadow-[0_4px_16px_rgba(0,0,0,0.5)] bg-[#14100C] ${dpChild(25)}`}
               >
                 <img
                   src={selectedCfg.thumbnail}
                   alt={selectedCfg.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                  className="w-full h-full object-cover"
                 />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              {/* Volume Badge & Edition Metadata */}
-              <div className={`flex flex-wrap items-center gap-2 mb-2 pointer-events-auto ${dpChild(35)}`}>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79238]/20 border border-[#C79238]/50 text-[#ECC76F] font-cinzel text-[10.5px] tracking-[0.22em] font-bold uppercase backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
-                  <span className="text-[9px]">✦</span> VOL. {selectedCfg?.volumeNumber || 'I'}
+              {/* Clean Single Minimal Kicker Line (No messy overlapping badges) */}
+              <div className={`flex flex-wrap items-center gap-2 mb-1 ${dpChild(35)}`}>
+                <span className="font-cinzel text-[11px] sm:text-[11.5px] tracking-[0.22em] uppercase text-[#DFBA5A] font-semibold">
+                  VOL. {selectedCfg?.volumeNumber || 'I'}
                 </span>
-                {selectedCfg?.edition && (
-                  <span className="px-3 py-1 rounded-full bg-[#181410]/75 border border-[#DFBA5A]/25 text-[#E6DAC8] font-sans text-[11px] font-medium tracking-wide backdrop-blur-md [filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.6))]">
-                    {selectedCfg.edition}
-                  </span>
-                )}
                 {selectedCfg?.year && (
-                  <span className="font-serif italic text-[12px] text-[#A89880] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-                    {selectedCfg.year}
-                  </span>
+                  <>
+                    <span className="text-[#C79238]/60 text-[10px]">·</span>
+                    <span className="font-cinzel text-[11px] sm:text-[11.5px] tracking-[0.16em] text-[#C79238]">
+                      {selectedCfg.year}
+                    </span>
+                  </>
+                )}
+                {selectedCfg?.edition && (
+                  <>
+                    <span className="text-[#C79238]/60 text-[10px]">·</span>
+                    <span className="font-sans text-[11px] text-[#A89880] tracking-wide truncate max-w-[240px]">
+                      {selectedCfg.edition}
+                    </span>
+                  </>
                 )}
               </div>
 
-              {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
+              {/* 1. Project Title */}
               <h2
-                className={`font-bodoni font-light text-[#FDFBF7] text-[clamp(28px,3.8vw,56px)] leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
+                className={`font-bodoni font-normal text-[#FDFBF7] text-[clamp(26px,3.4vw,48px)] leading-[1.02] tracking-[-0.02em] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
               >
                 {selectedCfg?.title}
               </h2>
@@ -2254,118 +2249,86 @@ export function BooksShowcase({
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
             <p
-              className={`mt-1.5 font-cormorant italic text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${dpChild(90)}`}
+              className={`mt-1 font-serif italic text-[clamp(14.5px,1.15vw,18px)] text-[#E4C375] font-light leading-snug drop-shadow-sm ${dpChild(90)}`}
             >
               {selectedCfg.subtitle}
             </p>
           )}
 
-          {/* 3. Key Architectural Highlights / Metrics */}
+          {/* 3. Key Architectural Highlights / Metrics (Clean Minimal Glass Pills) */}
           {selectedCfg?.highlights?.length > 0 && (
-            <div className={`mt-3 flex flex-wrap gap-2 pointer-events-auto ${dpChild(120)}`}>
+            <div className={`mt-3 flex flex-wrap items-center gap-2 ${dpChild(120)}`}>
               {selectedCfg.highlights.map((highlight, hIdx) => (
                 <span
                   key={hIdx}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[11px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-[#DFBA5A]/25 text-[#E6DAC8] text-[11px] sm:text-[11.5px] font-sans tracking-wide backdrop-blur-sm"
                 >
-                  <span className="text-[#DFBA5A] text-[8px]">●</span>
+                  <span className="w-1 h-1 rounded-full bg-[#DFBA5A]" />
                   {highlight}
                 </span>
               ))}
             </div>
           )}
 
-          {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
+          {/* 4. Human Project Narrative (Warm Archival Tone) */}
           <p
-            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`}
+            className={`mt-3.5 sm:mt-4 max-w-[54ch] font-sans font-light text-[#E2DACB]/90 text-[clamp(13px,0.98vw,14.5px)] leading-[1.72] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${dpChild(160)}`}
           >
             {selectedCfg?.desc}
           </p>
 
-          {/* 5. Major Technologies Used (Light Warm Honey/Vellum Specimen Tags) */}
-          <div className={`mt-4 sm:mt-6 flex flex-wrap items-center gap-1.5 sm:gap-2.5 pointer-events-auto ${dpChild(210)}`}>
+          {/* 5. Major Technologies Used (Sleek Minimal Glass Capsules - No Heavy Yellow Stickers) */}
+          <div className={`mt-4 sm:mt-5 flex flex-wrap items-center gap-1.5 sm:gap-2 ${dpChild(210)}`}>
             {(selectedCfg?.tech || ['Three.js', 'WebGL', 'GLSL Shaders', 'React', 'Tailwind CSS']).map((techItem) => (
               <span
                 key={techItem}
-                className="group/tag inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg border border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
+                className="inline-flex items-center px-2.5 py-1 rounded-md bg-white/[0.04] border border-[#DFBA5A]/20 text-[#DFBA5A]/90 hover:text-[#FDFBF7] hover:border-[#DFBA5A]/50 hover:bg-white/[0.08] text-[10.5px] sm:text-[11px] font-sans tracking-wide transition-colors duration-200"
               >
-                {/* Miniature Antique Venetian Gold Star ✦ */}
-                <span className="font-serif text-[10px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
-                  ✦
-                </span>
-                <span className="font-cinzel text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase text-[#262018]">
-                  {techItem}
-                </span>
+                {techItem}
               </span>
             ))}
           </div>
 
-          {/* 6. Live Project & Source CTAs (Radiant Venetian Gold Leaf Cartouches) */}
-          <div className={`mt-5 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(260)}`}>
+          {/* 6. Live Project & Source CTAs (Clean, Refined, High-End Styling) */}
+          <div className={`mt-5 sm:mt-7 flex flex-wrap items-center gap-3 sm:gap-4 ${dpChild(260)}`}>
             <a
               href={selectedCfg?.liveURL || selectedCfg?.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="group pointer-events-auto relative inline-flex items-center gap-3 px-6 py-3 sm:px-7 sm:py-3.5 -rotate-1 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
-              [clip-path:polygon(0%_12%,1.8%_4%,5%_6%,12%_1.5%,25%_4%,38%_1%,50%_3.5%,62%_1%,75%_4%,88%_1.5%,95%_5%,98.2%_3%,100%_12%,99%_32%,100%_52%,99%_72%,100%_88%,98.2%_97%,95%_95%,88%_98.5%,75%_96%,62%_99%,50%_96.5%,38%_99%,25%_96%,12%_98.5%,5%_95%,1.8%_97%,0%_88%,1%_70%,0%_50%,1%_30%)]
-              [background:repeating-linear-gradient(118deg,rgba(255,255,255,0.10)_0px_2px,transparent_2px_7px),radial-gradient(135%_160%_at_28%_18%,#ECC76F_0%,#D49E38_55%,#B0771E_100%)]
-              border-2 border-[#FFE28A]
-              [filter:drop-shadow(0_3px_6px_rgba(21,20,19,0.22))_drop-shadow(0_12px_28px_rgba(199,146,56,0.35))]
-              hover:border-[#FFF5CC]
-              hover:[background:radial-gradient(135%_160%_at_28%_18%,#FFF0BA_0%,#E5B246_55%,#C48B25_100%)]
-              hover:[filter:drop-shadow(0_4px_12px_rgba(223,186,90,0.48))_drop-shadow(0_18px_42px_rgba(199,146,56,0.42))]"
+              className="pointer-events-auto relative inline-flex items-center gap-2.5 px-6 py-2.5 sm:px-7 sm:py-3 rounded-lg bg-gradient-to-r from-[#C79238] to-[#DFBA5A] text-[#151413] font-cinzel font-semibold text-[11px] sm:text-[12px] tracking-[0.18em] uppercase shadow-[0_4px_16px_rgba(199,146,56,0.28)] hover:shadow-[0_6px_22px_rgba(199,146,56,0.42)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out"
             >
-              {/* Left Golden Atelier Seal / Ornament */}
-              <span className="font-serif text-[14px] text-[#18140E] transition-colors duration-300">
-                ❧
-              </span>
-
-              {/* Label */}
-              <span className="font-cinzel text-[11px] sm:text-[12px] font-bold tracking-[0.20em] uppercase text-[#18140E] transition-colors duration-300">
-                View Repository
-              </span>
-
-              {/* Calligraphic Diagonal Arrow */}
+              <span>View Repository</span>
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
-                className="h-4 w-4 text-[#18140E] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                className="h-3.5 w-3.5 text-[#151413] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               >
                 <path
-                  d="M5.5 14.5L14.5 5.5M6.5 5.5h8v8"
+                  d="M5 15L15 5M6 5h9v9"
                   stroke="currentColor"
                   strokeWidth={2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="14.5" cy="5.5" r="1.3" fill="currentColor" />
               </svg>
             </a>
 
-            {/* Optional Live Demo / Showcase Link */}
+            {/* Optional Live Demo Link */}
             {selectedCfg?.demoURL && (
               <a
                 href={selectedCfg.demoURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group pointer-events-auto relative inline-flex items-center gap-2.5 px-5 py-3 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
-                border border-[#C79238]/60 [background:rgba(21,20,19,0.55)] backdrop-blur-md
-                hover:border-[#DFBA5A] hover:bg-[#151413]/75
-                [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]"
+                className="pointer-events-auto relative inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-[#DFBA5A]/35 text-[#FDFBF7] font-cinzel font-semibold text-[11px] sm:text-[11.5px] tracking-[0.16em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out"
               >
-                <span className="font-serif text-[11px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
-                  ✦
-                </span>
-                <span className="font-cinzel text-[11px] sm:text-[11.5px] font-semibold tracking-[0.18em] uppercase text-[#FBF9F5]">
-                  Live Demo
-                </span>
+                <span>Live Demo</span>
                 <svg
                   viewBox="0 0 20 20"
                   fill="none"
-                  className="h-3.5 w-3.5 text-[#DFBA5A] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                  className="h-3.5 w-3.5 text-[#DFBA5A] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 >
                   <path
-                    d="M5.5 14.5L14.5 5.5M6.5 5.5h8v8"
+                    d="M5 15L15 5M6 5h9v9"
                     stroke="currentColor"
                     strokeWidth={2}
                     strokeLinecap="round"

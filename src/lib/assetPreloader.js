@@ -171,18 +171,6 @@ export async function preloadVideoFully(url, onComplete) {
       const blobUrl = URL.createObjectURL(blob);
       videoBlobStore.set(url, blobUrl);
 
-      // Prime browser video decoder so playback is instantaneous with 0ms buffering
-      if (typeof document !== 'undefined') {
-        try {
-          const v = document.createElement('video');
-          v.preload = 'auto';
-          v.muted = true;
-          v.playsInline = true;
-          v.src = blobUrl;
-          v.load();
-        } catch (_) {}
-      }
-
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('videos-preloaded', { detail: { url, blobUrl } }));
       }
@@ -306,12 +294,10 @@ export async function preloadAllSiteAssets(onProgress) {
   })();
 
   const windowLoadPromise = new Promise((resolve) => {
-    if (typeof document === 'undefined' || document.readyState === 'complete' || document.readyState === 'interactive') {
+    if (typeof document !== 'undefined' && document.readyState === 'complete') {
       resolve();
     } else if (typeof window !== 'undefined') {
-      window.addEventListener('DOMContentLoaded', resolve, { once: true });
       window.addEventListener('load', resolve, { once: true });
-      setTimeout(resolve, 800);
     } else {
       resolve();
     }
@@ -327,8 +313,8 @@ export async function preloadAllSiteAssets(onProgress) {
     sfxPromise,
   ]);
 
-  // Safety net (4s) so user is never stalled indefinitely on slow networks
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 4000));
+  // Generous timeout (30s) as a safety net only — normal path waits for every video blob
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 30000));
   await Promise.race([allAssets, safetyTimeout]);
 
   // Signal that the video phase has settled, so gallery cards may safely fall back

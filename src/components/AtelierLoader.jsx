@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import soundManager from '../lib/soundManager';
 import { preloadAllSiteAssets } from '../lib/assetPreloader';
 
@@ -63,61 +63,55 @@ export default function AtelierLoader({ onLoaded }) {
 
   const [isFading, setIsFading] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const onLoadedRef = useRef(onLoaded);
   useEffect(() => {
-    onLoadedRef.current = onLoaded;
-  }, [onLoaded]);
-
-  // Comprehensive Preload & WebGL/GPU Pipeline Warmup (Guaranteed single run)
-  useEffect(() => {
-    let finished = false;
-
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      soundManager.unlock();
-      setIsFading(true);
-      onLoadedRef.current?.();
-      setTimeout(() => {
-        setIsRemoved(true);
-      }, 900);
-    };
-
-    // Absolute fallback: ensure site is ALWAYS accessible within 2.2s even on slow connections
-    const safetyTimer = setTimeout(finish, 2200);
+    let isCancelled = false;
 
     async function preprocessAndLoadEverything() {
       const startTime = performance.now();
-      const minDuration = 1200; // attentive, calm presentation
+      const minDuration = 1400; // serene atelier presentation
 
-      try {
-        await preloadAllSiteAssets();
-      } catch (e) {
-        console.warn('Asset preload error:', e);
-      }
+      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 10 videos into RAM
+      await preloadAllSiteAssets((p) => {
+        if (!isCancelled) {
+          setProgress(p);
+        }
+      });
 
+      // 2. Ensure minimum duration has also passed
       const elapsed = performance.now() - startTime;
       if (elapsed < minDuration) {
         await new Promise((resolve) => setTimeout(resolve, minDuration - elapsed));
       }
 
+      // 3. Guarantee that the browser paints the underlying WebGL & canvas pipeline
       await new Promise((resolve) => {
         requestAnimationFrame(() => {
           requestAnimationFrame(resolve);
         });
       });
 
-      clearTimeout(safetyTimer);
-      finish();
+      if (isCancelled) return;
+
+      // 4. Assets and underlying scene are 100% ready — unlock audio and trigger immediate crossfade
+      soundManager.unlock();
+      setIsFading(true);
+      onLoaded?.();
+
+      setTimeout(() => {
+        if (!isCancelled) {
+          setIsRemoved(true);
+        }
+      }, 950);
     }
 
     preprocessAndLoadEverything();
 
     return () => {
-      clearTimeout(safetyTimer);
+      isCancelled = true;
     };
-  }, []);
+  }, [onLoaded]);
 
   if (isRemoved) return null;
 
@@ -129,18 +123,6 @@ export default function AtelierLoader({ onLoaded }) {
       aria-live="polite"
       onPointerDown={() => soundManager.unlock()}
       onClick={() => soundManager.unlock()}
-      onWheel={(e) => {
-        if (!isFading) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }}
-      onTouchMove={(e) => {
-        if (!isFading) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }}
       className={`fixed inset-0 z-50 flex items-center justify-center px-6 sm:px-12 select-none overflow-hidden bg-[#FBF9F5] transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isFading
           ? 'opacity-0 scale-[1.03] pointer-events-none'

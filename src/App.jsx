@@ -17,10 +17,10 @@ export default function App() {
     return () => cleanup?.();
   }, []);
 
-  const handleLoaded = React.useCallback(() => {
+  const handleLoaded = () => {
     setLoaded(true);
     soundManager.startBgMusic();
-  }, []);
+  };
 
   return (
     <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5] text-[#151413] selection:bg-[#C79238] selection:text-white">

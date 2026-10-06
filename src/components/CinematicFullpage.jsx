@@ -71,9 +71,9 @@ export default function CinematicFullpage({
       clearTimeout(wheelTimer);
       wheelTimer = setTimeout(() => {
         wheelAccumulator = 0;
-      }, 180);
+      }, 200);
 
-      const THRESHOLD = 25;
+      const THRESHOLD = 35;
       if (wheelAccumulator > THRESHOLD && activeIndex < sections.length - 1) {
         e.preventDefault();
         wheelAccumulator = 0;
@@ -109,7 +109,7 @@ export default function CinematicFullpage({
       const dx = touchStartX.current - e.changedTouches[0].clientX;
 
       // Ensure vertical swipe has priority over horizontal carousel drag
-      if (Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx) * 1.3) {
+      if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.5) {
         if (dy > 0 && activeIndex < sections.length - 1) {
           nextSection();
         } else if (dy < 0 && activeIndex > 0) {
@@ -169,7 +169,7 @@ export default function CinematicFullpage({
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [enabled, activeIndex, nextSection, prevSection, goToSection, sections.length]);
+  }, [activeIndex, nextSection, prevSection, goToSection, sections.length]);
 
   return (
     <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5]">
