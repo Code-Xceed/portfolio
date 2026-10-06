@@ -276,13 +276,13 @@
 
 .animate-marquee-flow {
   display: flex !important;
-  animation: marqueeScroll 40s linear infinite !important;
+  animation: marqueeScroll 58s linear infinite !important;
   will-change: transform;
 }
 
 .animate-marquee-flow-slower {
   display: flex !important;
-  animation: marqueeScroll 48s linear infinite !important;
+  animation: marqueeScroll 70s linear infinite !important;
   will-change: transform;
 }
 
