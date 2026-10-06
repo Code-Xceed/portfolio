@@ -175,8 +175,6 @@ function GalleryVideoCard({ src, className = '', active = true }) {
 }
 
 export default function GallerySection({ active = true, onNext, onPrev }) {
-  const [selectedPlate, setSelectedPlate] = useState(null);
-
   // When user interacts, ensure video autoplay permissions are active
   useEffect(() => {
     const handleFirstGesture = () => {
@@ -193,22 +191,11 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
     };
   }, []);
 
-  const handleCardClick = (plate) => {
-    soundManager.play('click');
-    setSelectedPlate(plate);
-  };
-
-  const handleCloseModal = () => {
-    soundManager.play('click');
-    setSelectedPlate(null);
-  };
-
-  // Render an individual prominent 16:9 video gallery card
+  // Render an individual prominent 16:9 video gallery card (pure showcase mode)
   const renderCard = (card, keyPrefix) => (
     <div
       key={`${keyPrefix}-${card.id}`}
-      onClick={() => handleCardClick(card)}
-      className="gallery-card inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none"
+      className="gallery-card inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 select-none"
     >
       {/* Artwork Video Plate with genuine 16:9 widescreen video dimensions */}
       <div 
@@ -431,116 +418,6 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
           </div>
         </div>
       </div>
-
-      {/* ========================================================================= */}
-      {/* 7. ARCHIVAL PLATE INSPECTION MODAL (When clicking any card)               */}
-      {/* ========================================================================= */}
-      {selectedPlate && (
-        <div 
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#151413]/70 backdrop-blur-md animate-fadeIn"
-          onClick={handleCloseModal}
-        >
-          <div 
-            className="relative w-full max-w-3xl bg-[#FBF9F5] rounded-xl border border-[#DFBA5A] shadow-2xl p-6 sm:p-8 overflow-hidden select-text text-left max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header: Folio Meta & Close Button */}
-            <div className="flex items-center justify-between border-b border-[#C79238]/25 pb-3 mb-5">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#C79238]" />
-                <span className="font-cinzel text-[10.5px] tracking-[0.24em] uppercase text-[#8C6422] font-semibold">
-                  {selectedPlate.kicker} · ARCHIVAL PLATE
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={handleCloseModal}
-                className="w-8 h-8 rounded-full border border-[#DFBA5A] flex items-center justify-center text-sm text-[#151413] hover:bg-[#8C6422] hover:text-[#FBF9F5] transition-all cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Modal Body: High-Res Image & Artwork Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-              {/* Artwork Plate with Venetian Gold Foil Inset */}
-              <div className="relative overflow-hidden rounded-md border border-[#DFBA5A] bg-[#151413] shadow-lg aspect-video">
-                {selectedPlate.video ? (
-                  <GalleryVideoCard
-                    src={selectedPlate.video}
-                    active={true}
-                    className="w-full h-full object-cover block"
-                  />
-                ) : (
-                  <img
-                    src={selectedPlate.image}
-                    alt={selectedPlate.title}
-                    className="w-full h-full object-cover block"
-                  />
-                )}
-              </div>
-
-              {/* Curatorial Details */}
-              <div className="flex flex-col justify-between h-full">
-                <div>
-                  <span className="font-serif italic text-sm text-[#8C6422]">
-                    {selectedPlate.kicker}
-                  </span>
-                  <h3 className="font-bodoni text-2xl sm:text-3xl font-normal text-[#151413] leading-tight mt-1">
-                    {selectedPlate.title}
-                  </h3>
-                  <p className="font-serif italic text-base text-[#736859] mt-0.5">
-                    {selectedPlate.caption}
-                  </p>
-
-                  <div className="w-12 h-[1px] bg-[#C79238]/40 my-3.5" />
-
-                  <p className="font-serif italic text-sm sm:text-[14.5px] text-[#2A231A] leading-relaxed">
-                    {selectedPlate.note}
-                  </p>
-
-                  {/* Technical Specifications */}
-                  <div className="mt-4 pt-3 border-t border-[#C79238]/15 space-y-1.5 text-xs font-sans text-[#736859]">
-                    <div className="flex justify-between">
-                      <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#8C6422]">Medium</span>
-                      <span className="text-[#151413]">{selectedPlate.medium}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#8C6422]">Dimensions</span>
-                      <span className="text-[#151413]">{selectedPlate.dimensions}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#8C6422]">Catalog Year</span>
-                      <span className="text-[#151413]">{selectedPlate.year}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Palette Swatches */}
-                {selectedPlate.palette && (
-                  <div className="mt-5 pt-3 border-t border-[#C79238]/20 flex items-center justify-between">
-                    <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] text-[#8C6422]">
-                      Pigment Palette
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      {selectedPlate.palette.map((color, cIdx) => (
-                        <span
-                          key={cIdx}
-                          title={color}
-                          className="w-4 h-4 rounded-full border border-white/60 shadow-xs"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
