@@ -266,21 +266,23 @@
 
 /* Mathematically Seamless Infinite Marquee Loop (100% Glitchless 0px Jump) */
 @keyframes marqueeScroll {
-  from {
+  0% {
     transform: translate3d(0, 0, 0);
   }
-  to {
+  100% {
     transform: translate3d(-100%, 0, 0);
   }
 }
 
 .animate-marquee-flow {
-  animation: marqueeScroll 42s linear infinite;
+  display: flex !important;
+  animation: marqueeScroll 40s linear infinite !important;
   will-change: transform;
 }
 
 .animate-marquee-flow-slower {
-  animation: marqueeScroll 50s linear infinite;
+  display: flex !important;
+  animation: marqueeScroll 48s linear infinite !important;
   will-change: transform;
 }
 
@@ -326,11 +328,6 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .animate-marquee-flow,
-  .animate-marquee-flow-slower {
-    animation: none;
   }
 
   /* Text carries these gradients as a sheen; without the animation the text would

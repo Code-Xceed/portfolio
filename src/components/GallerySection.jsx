@@ -332,7 +332,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
         aria-label="Upper Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="flex w-max">
+        <div className="flex shrink-0 w-max">
           {/* Set 1 */}
           <div className="flex items-center shrink-0 animate-marquee-flow" style={MARQUEE_SET_STYLE}>
             {TOP_GALLERY_PLATES.map((card) => renderCard(card, 'u1'))}
@@ -407,7 +407,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
         aria-label="Lower Gallery Stream"
         className="relative z-20 w-full h-[32vh] sm:h-[34vh] flex items-center overflow-hidden pointer-events-auto"
       >
-        <div className="flex w-max">
+        <div className="flex shrink-0 w-max">
           {/* Set 1 */}
           <div className="flex items-center shrink-0 animate-marquee-flow-slower" style={MARQUEE_SET_STYLE}>
             {BOTTOM_GALLERY_PLATES.map((card) => renderCard(card, 'l1'))}
