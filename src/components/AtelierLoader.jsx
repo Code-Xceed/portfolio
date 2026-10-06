@@ -65,36 +65,87 @@ export default function AtelierLoader({ onLoaded }) {
   const [isRemoved, setIsRemoved] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // 1. Strict Scroll & Input Lock: User CANNOT scroll, swipe, or navigate while loading screen is active
+  useEffect(() => {
+    const preventScrollAndGestures = (e) => {
+      if (e.type === 'wheel' || e.type === 'touchmove') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (e.type === 'keydown') {
+        const lockedKeys = [
+          'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight',
+          'PageDown', 'PageUp', 'Home', 'End', ' ', 'Space',
+        ];
+        if (lockedKeys.includes(e.key)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    };
+
+    window.addEventListener('wheel', preventScrollAndGestures, { passive: false, capture: true });
+    window.addEventListener('touchmove', preventScrollAndGestures, { passive: false, capture: true });
+    window.addEventListener('keydown', preventScrollAndGestures, { capture: true });
+
+    const prevOverflow = document.body.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+    const prevOverscroll = document.body.style.overscrollBehavior;
+
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.touchAction = 'none';
+    document.body.style.touchAction = 'none';
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.overscrollBehavior = 'none';
+
+    return () => {
+      window.removeEventListener('wheel', preventScrollAndGestures, { capture: true });
+      window.removeEventListener('touchmove', preventScrollAndGestures, { capture: true });
+      window.removeEventListener('keydown', preventScrollAndGestures, { capture: true });
+
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = prevOverflow || '';
+      document.documentElement.style.touchAction = '';
+      document.body.style.touchAction = prevTouchAction || '';
+      document.documentElement.style.overscrollBehavior = '';
+      document.body.style.overscrollBehavior = prevOverscroll || '';
+    };
+  }, []);
+
+  // 2. Comprehensive Preload & WebGL/GPU Pipeline Warmup
   useEffect(() => {
     let isCancelled = false;
 
     async function preprocessAndLoadEverything() {
       const startTime = performance.now();
-      const minDuration = 1400; // serene atelier presentation
+      const minDuration = 1800; // Attentive, serene presentation
 
-      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 10 videos into RAM
+      // Preload & GPU-decode all 28 textures, 3D monograph assets, fonts, audio, and all 10 videos into RAM
       await preloadAllSiteAssets((p) => {
         if (!isCancelled) {
           setProgress(p);
         }
       });
 
-      // 2. Ensure minimum duration has also passed
+      // Ensure mindful minimum duration has elapsed for attentive reading
       const elapsed = performance.now() - startTime;
       if (elapsed < minDuration) {
         await new Promise((resolve) => setTimeout(resolve, minDuration - elapsed));
       }
 
-      // 3. Guarantee that the browser paints the underlying WebGL & canvas pipeline
+      // Guarantee browser composites and warms up all WebGL canvases and shaders
       await new Promise((resolve) => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(resolve);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(resolve);
+          });
         });
       });
 
       if (isCancelled) return;
 
-      // 4. Assets and underlying scene are 100% ready — unlock audio and trigger immediate crossfade
+      // Everything is 100% primed & ready — unlock audio and begin silky crossfade
       soundManager.unlock();
       setIsFading(true);
       onLoaded?.();

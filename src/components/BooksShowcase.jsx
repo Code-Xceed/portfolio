@@ -1880,6 +1880,9 @@ export function BooksShowcase({
     });
     rebuildHitMeshes();
     camTo('hero');
+    try {
+      renderer.compile(scene, camera);
+    } catch (e) {}
     animate();
 
     const visibilityObserver = new IntersectionObserver(

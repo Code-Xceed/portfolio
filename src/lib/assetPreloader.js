@@ -171,6 +171,18 @@ export async function preloadVideoFully(url, onComplete) {
       const blobUrl = URL.createObjectURL(blob);
       videoBlobStore.set(url, blobUrl);
 
+      // Prime browser video decoder so playback is instantaneous with 0ms buffering
+      if (typeof document !== 'undefined') {
+        try {
+          const v = document.createElement('video');
+          v.preload = 'auto';
+          v.muted = true;
+          v.playsInline = true;
+          v.src = blobUrl;
+          v.load();
+        } catch (_) {}
+      }
+
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('videos-preloaded', { detail: { url, blobUrl } }));
       }

@@ -41,6 +41,7 @@ export default function App() {
 
       {/* Fullpage Cinematic Zoom Experience */}
       <CinematicFullpage
+        enabled={loaded}
         sections={[
           ({ nextSection, active }) => (
             <Hero onNavigateToPublications={nextSection} active={active} />

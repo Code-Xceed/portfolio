@@ -15,6 +15,7 @@ import soundManager from '../lib/soundManager';
  */
 export default function CinematicFullpage({
   sections = [],
+  enabled = true,
   onSectionChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,7 +26,7 @@ export default function CinematicFullpage({
 
   const goToSection = useCallback(
     (index) => {
-      if (index === activeIndex || transitioningRef.current) return;
+      if (!enabled || index === activeIndex || transitioningRef.current) return;
       if (index < 0 || index >= sections.length) return;
 
       soundManager.play('hold');
@@ -57,6 +58,11 @@ export default function CinematicFullpage({
     let wheelTimer = null;
 
     const onWheel = (e) => {
+      if (!enabled) {
+        e.preventDefault();
+        return;
+      }
+
       // If user is inside the 3D book inspection view, lock section scrolling
       if (document.querySelector('.bs-detail-open')) {
         return;
@@ -90,18 +96,18 @@ export default function CinematicFullpage({
       window.removeEventListener('wheel', onWheel);
       clearTimeout(wheelTimer);
     };
-  }, [activeIndex, nextSection, prevSection, sections.length]);
+  }, [enabled, activeIndex, nextSection, prevSection, sections.length]);
 
   // Touch gesture listener
   useEffect(() => {
     const onTouchStart = (e) => {
-      if (e.touches.length !== 1) return;
+      if (!enabled || e.touches.length !== 1) return;
       touchStartY.current = e.touches[0].clientY;
       touchStartX.current = e.touches[0].clientX;
     };
 
     const onTouchEnd = (e) => {
-      if (document.querySelector('.bs-detail-open')) return;
+      if (!enabled || document.querySelector('.bs-detail-open')) return;
       if (transitioningRef.current) return;
       if (e.changedTouches.length !== 1) return;
 
@@ -124,11 +130,13 @@ export default function CinematicFullpage({
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
     };
-  }, [activeIndex, nextSection, prevSection, sections.length]);
+  }, [enabled, activeIndex, nextSection, prevSection, sections.length]);
 
   // Keyboard navigation
   useEffect(() => {
     const onKeyDown = (e) => {
+      if (!enabled) return;
+
       // Ignore if user is inside an input, textarea, or contentEditable
       if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName) || e.target?.isContentEditable) return;
 
@@ -169,7 +177,7 @@ export default function CinematicFullpage({
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [activeIndex, nextSection, prevSection, goToSection, sections.length]);
+  }, [enabled, activeIndex, nextSection, prevSection, goToSection, sections.length]);
 
   return (
     <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5]">
