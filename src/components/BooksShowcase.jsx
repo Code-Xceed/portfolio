@@ -1086,11 +1086,11 @@ export function BooksShowcase({
         const camZp = 9.9;
         const zw = 0.85 * fit;
         const rootY = -(1 - fit) * 0.16;
-        // Position monograph book in the upper region of the screen (~18% from top, comfortably higher)
-        const midPx = Math.max(105, Math.min(dims.h * 0.18, 160));
+        // Position monograph book comfortably lower in the upper half with generous top margin (~23.5% from top)
+        const midPx = Math.max(135, Math.min(dims.h * 0.235, 205));
         const yw = 0.1 + (1 - (2 * midPx) / dims.h) * T13 * (camZp - zw);
-        // Compact monograph scale on mobile so the book sits comfortably in the upper third without encroaching on text
-        const s = clamp(a * 2.15, 1.05, 1.18);
+        // Balanced monograph scale on mobile so the book feels substantial in the upper half
+        const s = clamp(a * 2.42, 1.14, 1.25);
         SLOTS.detail = { p: [0, (yw - rootY) / fit, 0.85], r: [-0.02, -0.4, 0.06], s };
       } else {
         // Desktop / Landscape: Position monograph book in the center of the left column (~25% viewport width)
@@ -2259,7 +2259,7 @@ export function BooksShowcase({
 
           {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
-            className={`mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[11.5px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.52] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] line-clamp-3 sm:line-clamp-none ${dpChild(160)}`}
+            className={`mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[12px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.58] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] line-clamp-4 sm:line-clamp-none ${dpChild(160)}`}
           >
             <span className="sm:hidden">{selectedCfg?.mobileDesc || selectedCfg?.desc}</span>
             <span className="hidden sm:inline">{selectedCfg?.desc}</span>
