@@ -2014,16 +2014,16 @@ export function BooksShowcase({
         className="z-[0]"
       />
 
-      {/* Atmospheric Dimming Archival Tint for Detail View (Deep Darkened Reading Scrim with Smooth Fade) */}
+      {/* Atmospheric Dimming Archival Tint for Detail View (Balanced, Theme-Preserving Translucent Glaze) */}
       <div
         className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           envDimmed ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
           background:
-            'radial-gradient(ellipse 130% 120% at 50% 50%, rgba(14, 11, 8, 0.84) 0%, rgba(7, 5, 4, 0.95) 100%)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+            'radial-gradient(ellipse 120% 110% at 28% 46%, rgba(24, 18, 14, 0.20) 0%, rgba(18, 13, 9, 0.42) 50%, rgba(12, 9, 6, 0.58) 100%)',
+          backdropFilter: 'blur(2.5px)',
+          WebkitBackdropFilter: 'blur(2.5px)',
         }}
       />
 
@@ -2034,7 +2034,7 @@ export function BooksShowcase({
         } max-md:hidden`}
         style={{
           background:
-            'radial-gradient(ellipse 52vw 58vh at 27% 48%, rgba(255, 238, 185, 0.36) 0%, rgba(223, 186, 90, 0.18) 32%, rgba(199, 146, 56, 0.05) 58%, transparent 76%)',
+            'radial-gradient(ellipse 56vw 62vh at 27% 48%, rgba(255, 238, 185, 0.42) 0%, rgba(223, 186, 90, 0.22) 34%, rgba(199, 146, 56, 0.06) 62%, transparent 78%)',
         }}
       />
       {/* Mobile Cinematic Glow Spotlight (Upper Center) */}
@@ -2044,7 +2044,7 @@ export function BooksShowcase({
         } md:hidden`}
         style={{
           background:
-            'radial-gradient(ellipse 92vw 46vh at 50% 28%, rgba(255, 238, 185, 0.36) 0%, rgba(223, 186, 90, 0.18) 32%, rgba(199, 146, 56, 0.05) 58%, transparent 76%)',
+            'radial-gradient(ellipse 92vw 46vh at 50% 28%, rgba(255, 238, 185, 0.42) 0%, rgba(223, 186, 90, 0.22) 34%, rgba(199, 146, 56, 0.06) 62%, transparent 78%)',
         }}
       />
 
@@ -2207,7 +2207,10 @@ export function BooksShowcase({
             panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
           } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-12 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(540px,90vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
         >
-          {/* Curatorial Header: Thumbnail Emblem + Volume Badges + Title */}
+          {/* Gentle localized ambient reading cushion behind text */}
+          <div className="absolute -inset-4 sm:-inset-6 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_center,rgba(14,11,8,0.30)_0%,transparent_76%)] pointer-events-none" />
+
+          {/* Curatorial Header: Thumbnail Emblem + Title */}
           <div className="flex items-start gap-4 sm:gap-5 mb-2.5">
             {selectedCfg?.thumbnail && (
               <div
