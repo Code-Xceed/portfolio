@@ -224,6 +224,55 @@
   animation: fadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* =========================================================================
+   GALLERY MARQUEE METRICS — single source of truth
+   -------------------------------------------------------------------------
+   The upper and lower streams are visible at the same time and carry DISJOINT
+   sets of films, so a film can never appear in both streams. Within a stream,
+   the clone set that makes the loop seamless sits exactly one stream-width
+   away — so as long as one stream (5 plates + 5 gaps) is WIDER than the
+   viewport, the clone can never be on screen at the same time as its original.
+
+   Two bounds keep that true:
+     • 23vw + 4.5vw per plate → a stream is always ~1.37x the viewport wide.
+     • the 56vh cap stops a plate from overflowing its 32–34vh marquee band.
+   The caps only engage on very wide screens (~4050px+), beyond any real display.
+   ========================================================================= */
+:root {
+  --gallery-plate-w: min(clamp(260px, 23vw, 660px), 56vh);
+  --gallery-gap: clamp(40px, 4.5vw, 150px);
+}
+
+.gallery-plate {
+  width: var(--gallery-plate-w);
+}
+
+/* -------------------------------------------------------------------------
+   Portrait phones: put the caption BELOW its plate and size both to the
+   viewport. Side by side, a 260px plate + 16px gap + 150px caption needs
+   ~426px, so on a 360–430px phone the caption was sliced by the screen edge
+   and a plate could never be seen together with its own caption.
+   Gated on height >= 560px so short landscape phones keep the side-by-side
+   arrangement, which fits comfortably on their wide screens.
+   ------------------------------------------------------------------------- */
+@media (max-width: 767px) and (min-height: 560px) {
+  :root {
+    --gallery-plate-w: min(78vw, 32vh);
+  }
+
+  .gallery-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.625rem;
+  }
+
+  .gallery-card .gallery-caption {
+    min-width: 0;
+    width: var(--gallery-plate-w);
+    max-width: var(--gallery-plate-w);
+  }
+}
+
 /* Mathematically Seamless Infinite Marquee Loop (100% Glitchless 0px Jump) */
 @keyframes marqueeScroll {
   from {

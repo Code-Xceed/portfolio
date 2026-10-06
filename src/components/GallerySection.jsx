@@ -3,17 +3,13 @@ import { TOP_GALLERY_PLATES, BOTTOM_GALLERY_PLATES } from '../data/galleryData';
 import { getPreloadedVideoBlob, areVideosPreloaded } from '../lib/assetPreloader';
 import soundManager from '../lib/soundManager';
 
-// Fluid, viewport-relative plate sizing.
-//
-// Two constraints shape these two numbers:
-//  1. Height: a plate is capped at 60vh so it can never overflow its 34vh marquee band.
-//  2. Width: 5 plates + 5 gaps per stream always span WIDER than the viewport, at every
-//     real display size. The clone set that makes the loop seamless sits exactly one
-//     stream-width away, so a stream can never show the same film twice on screen — and
-//     because the two streams carry disjoint films, neither can the pair of them.
-const PLATE_WIDTH = 'min(clamp(260px, 23vw, 660px), 60vh)';
-const MARQUEE_GAP = 'clamp(40px, 4.5vw, 150px)';
-const MARQUEE_SET_STYLE = { gap: MARQUEE_GAP, paddingRight: MARQUEE_GAP };
+// Marquee metrics live in index.css as `--gallery-plate-w` / `--gallery-gap`, so that
+// both the plate width and its portrait-phone override come from one place. The two
+// numbers carry the no-repeat guarantee, and the reasoning is documented there.
+const MARQUEE_SET_STYLE = {
+  gap: 'var(--gallery-gap)',
+  paddingRight: 'var(--gallery-gap)',
+};
 
 // Fine-art Renaissance corner filigree bracket
 const CornerFiligree = ({ className = '' }) => (
@@ -212,12 +208,11 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
     <div
       key={`${keyPrefix}-${card.id}`}
       onClick={() => handleCardClick(card)}
-      className="inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none"
+      className="gallery-card inline-flex items-center gap-4 sm:gap-6 md:gap-7 shrink-0 cursor-pointer select-none"
     >
       {/* Artwork Video Plate with genuine 16:9 widescreen video dimensions */}
       <div 
-        className={`relative aspect-video overflow-hidden rounded-none border bg-[#151413] ${card.frameBorder} shrink-0 transform-gpu`}
-        style={{ width: PLATE_WIDTH }}
+        className={`gallery-plate relative aspect-video overflow-hidden rounded-none border bg-[#151413] ${card.frameBorder} shrink-0 transform-gpu`}
       >
         <GalleryVideoCard
           src={card.video}
@@ -227,7 +222,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
       </div>
 
       {/* Beside Video: 3 Lines of Clear Editorial Typography */}
-      <div className="flex flex-col items-start text-left min-w-[150px] max-w-[210px] sm:max-w-[260px]">
+      <div className="gallery-caption flex flex-col items-start text-left min-w-[150px] max-w-[210px] sm:max-w-[260px]">
         {/* 1. Italic Serif Kicker */}
         <span className="font-serif italic text-[12.5px] sm:text-[14px] md:text-[15px] text-[#8C6422] tracking-wide leading-tight">
           {card.kicker}
@@ -366,23 +361,56 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
       {/* 5. CENTER: Monumental Animated Title (Zero Overlap with Cards)            */}
       {/* ========================================================================= */}
       <div 
-        aria-hidden="true"
         className="relative z-10 w-full text-center pointer-events-none select-none my-auto py-0 flex items-center justify-center"
       >
         {/* Soft Golden Backlight Halo behind Title */}
         <div 
+          aria-hidden="true"
           className="absolute w-[60vw] max-w-[650px] h-[140px] rounded-full pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at center, rgba(223, 186, 90, 0.12) 0%, transparent 70%)',
           }}
         />
 
-        {/* Monumental Title with Gilded Sheen Animation */}
-        <h2 
-          className="font-bodoni font-normal text-[clamp(4.5rem,14vw,11.5rem)] leading-none tracking-[-0.035em] whitespace-nowrap animate-gallery-title-sheen select-none inline-block drop-shadow-xs"
-        >
-          Gallery
-        </h2>
+        <div className="relative z-10 flex flex-col items-center gap-2.5 sm:gap-3.5">
+          {/* Monumental Title with Gilded Sheen Animation */}
+          <h2 
+            aria-hidden="true"
+            className="font-bodoni font-normal text-[clamp(4.5rem,14vw,11.5rem)] leading-none tracking-[-0.035em] whitespace-nowrap animate-gallery-title-sheen select-none inline-block drop-shadow-xs"
+          >
+            Gallery
+          </h2>
+
+          {/* =================================================================== */}
+          {/* FORWARD AFFORDANCE.                                                 */}
+          {/* The Gallery is the middle of three screens, so it owes the visitor  */}
+          {/* a "there is more below" cue — this mirrors the Hero's existing       */}
+          {/* "Gallery · Explore" hint and closes what was previously a dead end. */}
+          {/* It sits inside the title band so it fills space that was already   */}
+          {/* empty rather than crowding either marquee stream.                  */}
+          {/* =================================================================== */}
+          <button
+            type="button"
+            onClick={() => {
+              soundManager.play('hold');
+              onNext?.();
+            }}
+            className="group pointer-events-auto cursor-pointer flex flex-col items-center gap-1.5 opacity-70 hover:opacity-100 transition-all duration-300 select-none [-webkit-tap-highlight-color:transparent]"
+          >
+            <span className="font-cinzel text-[9.5px] sm:text-[10px] tracking-[0.26em] uppercase text-[#151413]/70 group-hover:text-[#C79238] transition-colors">
+              Projects · Continue
+            </span>
+            <svg
+              className="w-3.5 h-3.5 text-[#151413]/50 group-hover:text-[#C79238] animate-bounce transition-colors"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <path d="M7 7l5 5 5-5M7 14l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* ========================================================================= */}
