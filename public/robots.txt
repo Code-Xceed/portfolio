@@ -1,0 +1,10 @@
+# Aditya Rathore — Atelier Portfolio
+# TODO(deploy): replace YOUR-DOMAIN.example with the production origin.
+
+User-agent: *
+Allow: /
+
+# The site is a single interactive experience, so there is nothing to disallow.
+# Source media (source-videos/, *.exr) never enters the deployed bundle.
+
+Sitemap: https://YOUR-DOMAIN.example/sitemap.xml

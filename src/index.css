@@ -40,23 +40,14 @@
     padding: 0;
     overflow-x: hidden;
     background-color: var(--canvas-bg);
-    cursor: none !important;
   }
 
-  /* Universal Native Windows Cursor Suppression: Never show OS cursor anywhere on the site */
-  *,
-  *::before,
-  *::after,
-  html,
-  body,
-  button,
-  a,
-  input,
-  textarea,
-  select,
-  canvas {
-    cursor: none !important;
-  }
+  /*
+   * Native cursor suppression deliberately lives in index.html and is scoped to
+   * `html.has-custom-cursor`, a class CustomCursor adds once it has mounted. Keeping it
+   * out of the base stylesheet means a JavaScript failure can never strand a visitor
+   * with no pointer at all.
+   */
 }
 
 /* Typography Helpers */
@@ -324,6 +315,42 @@
   animation: galleryTextGlint 12s ease-in-out infinite;
 }
 
+/* =========================================================================
+   REDUCED MOTION
+   -------------------------------------------------------------------------
+   The marquees, the gilded sheen sweeps, the shimmer and the pulsing equaliser
+   are decorative only. Visitors whose OS asks for less motion get static plates
+   and plain ink instead of endless looping animation. The 3D scenes read
+   `prefers-reduced-motion` separately in JS (BooksShowcase idle drift).
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
+  .animate-marquee-flow,
+  .animate-marquee-flow-slower {
+    animation: none;
+  }
 
+  /* Text carries these gradients as a sheen; without the animation the text would
+     stay transparent, so the gradient is dropped and solid ink is restored. */
+  .animate-shimmer-text,
+  .animate-gallery-title-sheen {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .animate-soundbar-1,
+  .animate-soundbar-2,
+  .animate-soundbar-3,
+  .animate-soundbar-4,
+  .animate-glaze-slow,
+  .animate-glaze-reverse,
+  .animate-bounce,
+  .animate-fadeIn {
+    animation: none;
+  }
+}
 

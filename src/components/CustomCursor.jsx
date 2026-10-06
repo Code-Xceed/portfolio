@@ -14,7 +14,8 @@ import React, { useEffect, useRef } from 'react';
  *     Pointer fingertip: (13px, 0px)
  * - Hotspot-centered tactile press feedback (scale 0.88 on pointerdown)
  * - Seamless crossfade and micro-rotation on interactive hover
- * - Universal native cursor suppression across all web elements
+ * - Native cursor suppression applied only while this component is mounted
+ *   (`html.has-custom-cursor`), so a failed bundle still shows an OS pointer
  */
 export default function CustomCursor() {
   const containerRef = useRef(null);
@@ -34,9 +35,10 @@ export default function CustomCursor() {
 
     if (isTouchOnly) return;
 
-    // Enforce cursor: none directly on root elements
-    document.documentElement.style.cursor = 'none';
-    document.body.style.cursor = 'none';
+    // Suppress the native pointer only once we know the paper cursor is mounted, so a
+    // scripting failure (or a crawler with JS disabled) never leaves a visitor with no
+    // cursor at all. The rule itself lives in index.html, keyed off this class.
+    document.documentElement.classList.add('has-custom-cursor');
 
     // Helper: Determine if element is interactive
     const checkInteractive = (el) => {
@@ -101,15 +103,15 @@ export default function CustomCursor() {
       }
     };
 
-    // Ultra-smooth native refresh rate cursor tracking loop (60Hz / 120Hz / 144Hz+)
-    let cursorRaf = 0;
-    const renderCursorFrame = () => {
+    // The paper cursor is positioned straight from pointermove instead of a rAF loop.
+    // Browsers already coalesce pointermove to roughly one event per frame, so this is
+    // the lowest possible latency AND costs nothing at all while the pointer is idle —
+    // the previous unconditional rAF loop kept the compositor awake for the whole visit.
+    const placeCursor = () => {
       if (containerRef.current && isVisibleRef.current && posRef.current.x >= 0) {
         containerRef.current.style.transform = `translate3d(${posRef.current.x}px, ${posRef.current.y}px, 0)`;
       }
-      cursorRaf = requestAnimationFrame(renderCursorFrame);
     };
-    cursorRaf = requestAnimationFrame(renderCursorFrame);
 
     // Instant pointer move listener with zero latency
     const onPointerMove = (e) => {
@@ -123,9 +125,7 @@ export default function CustomCursor() {
           containerRef.current.style.opacity = '1';
         }
       }
-      if (containerRef.current) {
-        containerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      }
+      placeCursor();
 
       const isHoveringInteractive = checkInteractive(e.target);
       if (isHoveringInteractive !== isPointerRef.current) {
@@ -159,25 +159,16 @@ export default function CustomCursor() {
     };
 
     // Window boundaries
-    const onMouseLeave = () => {
-      isVisibleRef.current = false;
-      if (containerRef.current) containerRef.current.style.opacity = '0';
+    const setVisible = (visible) => {
+      isVisibleRef.current = visible;
+      if (containerRef.current) containerRef.current.style.opacity = visible ? '1' : '0';
+      if (visible) placeCursor();
     };
 
-    const onMouseEnter = () => {
-      isVisibleRef.current = true;
-      if (containerRef.current) containerRef.current.style.opacity = '1';
-    };
-
-    const onBlur = () => {
-      isVisibleRef.current = false;
-      if (containerRef.current) containerRef.current.style.opacity = '0';
-    };
-
-    const onFocus = () => {
-      isVisibleRef.current = true;
-      if (containerRef.current) containerRef.current.style.opacity = '1';
-    };
+    const onMouseLeave = () => setVisible(false);
+    const onMouseEnter = () => setVisible(true);
+    const onBlur = () => setVisible(false);
+    const onFocus = () => setVisible(true);
 
     // Attach passive window listeners
     window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -193,7 +184,6 @@ export default function CustomCursor() {
     applyState();
 
     return () => {
-      cancelAnimationFrame(cursorRaf);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
@@ -202,8 +192,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseenter', onMouseEnter);
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('focus', onFocus);
-      document.documentElement.style.cursor = '';
-      document.body.style.cursor = '';
+      document.documentElement.classList.remove('has-custom-cursor');
     };
   }, []);
 

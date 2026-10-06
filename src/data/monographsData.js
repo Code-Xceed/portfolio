@@ -371,7 +371,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'framegit',
     volumeNumber: 'II',
-    thumbnail: '/gallery/FreameGIT-logo.png',
+    thumbnail: '/gallery/FrameGIT-logo.png',
     title: 'FRAMEGIT',
     subtitle: 'Content-Addressed Version Control for Creative Video Timelines',
     author: 'Aditya Rathore',

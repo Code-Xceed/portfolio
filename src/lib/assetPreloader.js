@@ -92,20 +92,19 @@ export function areVideosPreloaded() {
   return videosPreloadComplete;
 }
 
+// Every entry here blocks the loading gate, so this list is deliberately limited to
+// assets that are actually painted on screen. Seven former entries
+// (hero-painting-mobile, dark-hero-painting, wanderer-refined, sanctuary-foreground,
+// sanctuary-bg-clean, gallery-hall-bg and the .jpg twin of gallery-corner-flowers)
+// were left over from an earlier scene design and cost ~4 MB of first-load bandwidth
+// for images that were never displayed.
 export const CRITICAL_PRELOAD_ASSETS = [
   // 1. Hero & Nature Environments
   '/alpine-sanctuary-reference.jpg',
   '/alpine-sanctuary-mobile.jpg',
   '/hero-painting.jpg',
-  '/hero-painting-mobile.jpg',
   '/hero-canvas-impasto.jpg',
   '/hero-tuscan-mist.jpg',
-  '/dark-hero-painting.jpg',
-  '/sanctuary-foreground.png',
-  '/sanctuary-bg-clean.jpg',
-  '/wanderer-refined.png',
-  '/gallery-hall-bg.jpg',
-  '/gallery-corner-flowers.jpg',
   '/gallery-corner-flowers.png',
 
   // 2. Artisanal Crumpled Paper Cursors
@@ -122,7 +121,7 @@ export const CRITICAL_PRELOAD_ASSETS = [
 
   // 4. 3D Monograph Publication Logos (All 7 Authentic Logos)
   '/gallery/Xmusic-Logo.png',
-  '/gallery/FreameGIT-logo.png',
+  '/gallery/FrameGIT-logo.png',
   '/gallery/Xdrop-logo.png',
   '/gallery/Xoppor-AI.png',
   '/gallery/vault-logo.png',

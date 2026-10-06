@@ -1,0 +1,15 @@
+{
+  "name": "Aditya Rathore — Atelier Portfolio",
+  "short_name": "A. Rathore",
+  "description": "Websites, web apps and product solutions for problems of any format, built in India by Aditya Rathore.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#FBF9F5",
+  "theme_color": "#FBF9F5",
+  "lang": "en",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

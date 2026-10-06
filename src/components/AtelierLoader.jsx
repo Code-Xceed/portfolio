@@ -148,10 +148,13 @@ export default function AtelierLoader({ onLoaded }) {
       {/* PURE MINIMAL CENTER CLUSTER: LOADING SHINE & QUOTE WITH AUTHOR         */}
       {/* ===================================================================== */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-[620px] w-full px-4">
-        {/* Animated "Loading Experience" with Liquid Gold Shimmer */}
-        <h1 className="animate-shimmer-text font-cinzel text-[clamp(13px,2vw,17px)] tracking-[0.38em] uppercase font-medium select-none">
+        {/* Animated "Loading Experience" with Liquid Gold Shimmer.
+            Deliberately NOT a heading: the loader is transient, and an <h1> here would
+            make "Loading Experience" the first document heading for crawlers that
+            capture the page before the experience mounts. */}
+        <p className="animate-shimmer-text font-cinzel text-[clamp(13px,2vw,17px)] tracking-[0.38em] uppercase font-medium select-none">
           Loading Experience
-        </h1>
+        </p>
 
         {/* Minimal Curated Quote & Author */}
         <blockquote className="w-full mt-7 sm:mt-9">

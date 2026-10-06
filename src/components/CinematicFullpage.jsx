@@ -172,7 +172,9 @@ export default function CinematicFullpage({
   }, [activeIndex, nextSection, prevSection, goToSection, sections.length]);
 
   return (
-    <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5]">
+    // <main> gives assistive tech and crawlers a single content landmark for the whole
+    // three-section experience. The section wrappers carry the per-screen semantics.
+    <main className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5]">
       {/* Render All Sections with Cinematic Zoom Transform Layers */}
       {sections.map((sectionNode, idx) => {
         const isActive = idx === activeIndex;
@@ -221,6 +223,6 @@ export default function CinematicFullpage({
           </div>
         );
       })}
-    </div>
+    </main>
   );
 }

@@ -25,5 +25,8 @@ dist-ssr
 
 
 
-# Full-resolution source media (transcoded 540p60 versions live in public/gallery/videos)
+# Full-resolution source media & working files (never deployed — the site ships the
+# transcoded 540p60 versions in public/gallery/videos instead)
 source-videos/
+*.exr
+*.tmp-*

@@ -2,23 +2,164 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- viewport-fit=cover is required for env(safe-area-inset-*) to report real values on notched phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!--
+      ============================================================================
+      TODO(deploy): replace every occurrence of https://YOUR-DOMAIN.example with the
+      production origin (no trailing slash). Canonical, og:url, og:image, twitter
+      cards, the JSON-LD block, public/robots.txt and public/sitemap.xml all use it.
+      ============================================================================
+    -->
+    <title>Aditya Rathore — Web Developer, Product Builder &amp; Minecraft Modder</title>
+    <meta
+      name="description"
+      content="Portfolio of Aditya Rathore — a web developer from India building websites, web apps and product solutions for problems of any format, plus Minecraft mods and real-time game infrastructure."
+    />
+    <meta name="author" content="Aditya Rathore" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://YOUR-DOMAIN.example/" />
+    <meta name="theme-color" content="#FBF9F5" />
+    <meta name="color-scheme" content="light" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aditya Rathore — Atelier Portfolio" />
+    <meta property="og:title" content="Aditya Rathore — Web Developer, Product Builder &amp; Minecraft Modder" />
+    <meta
+      property="og:description"
+      content="Websites, web apps and product solutions for problems of any format. Built in India by Aditya Rathore."
+    />
+    <meta property="og:url" content="https://YOUR-DOMAIN.example/" />
+    <meta property="og:image" content="https://YOUR-DOMAIN.example/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Aditya Rathore — portfolios, projects and Minecraft mods" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Aditya Rathore — Web Developer, Product Builder &amp; Minecraft Modder" />
+    <meta
+      name="twitter:description"
+      content="Websites, web apps and product solutions for problems of any format. Built in India by Aditya Rathore."
+    />
+    <meta name="twitter:image" content="https://YOUR-DOMAIN.example/og-image.jpg" />
+
+    <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ADITYA RATHORE · Web Developer, Solutions &amp; Minecraft Mods</title>
-    <meta name="description" content="Portfolio of Aditya Rathore: Web developer, product solution builder for problems of any format, and gamer &amp; Minecraft mod creator from India." />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,500;1,6..96,600;1,6..96,700;1,6..96,800;1,6..96,900&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Immediate cursor suppression before style loads to prevent any OS cursor flicker -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,500;1,6..96,600;1,6..96,700;1,6..96,800;1,6..96,900&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- The bespoke paper cursor only exists on devices with a fine pointer, so the
+         preloads are restricted to those devices instead of costing every phone. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/Crumpled%20Paper%20Animated%20Cursor--cursor--SweezyCursors.png"
+      media="(pointer: fine)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/Crumpled%20Paper%20Animated%20Cursor--pointer--SweezyCursors.png"
+      media="(pointer: fine)"
+    />
+
+    <!--
+      Native cursors are hidden by this class, which CustomCursor adds on mount.
+      Doing it here (instead of in the stylesheet) means a JavaScript failure — or a
+      crawler with scripts disabled — still leaves the visitor a visible pointer.
+    -->
     <style>
-      *, *::before, *::after, html, body { cursor: none !important; }
+      html.has-custom-cursor,
+      html.has-custom-cursor *,
+      html.has-custom-cursor *::before,
+      html.has-custom-cursor *::after {
+        cursor: none !important;
+      }
     </style>
-    <!-- Preload Crumpled Paper Custom Cursors -->
-    <link rel="preload" as="image" href="/Crumpled%20Paper%20Animated%20Cursor--cursor--SweezyCursors.png" />
-    <link rel="preload" as="image" href="/Crumpled%20Paper%20Animated%20Cursor--pointer--SweezyCursors.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://YOUR-DOMAIN.example/#person",
+            "name": "Aditya Rathore",
+            "jobTitle": "Web Developer & Product Builder",
+            "email": "mailto:aditya.rathore10101@gmail.com",
+            "url": "https://YOUR-DOMAIN.example/",
+            "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+            "knowsAbout": [
+              "Web Development",
+              "Web Applications",
+              "React",
+              "Three.js",
+              "WebGL",
+              "Product Design",
+              "Minecraft Modding",
+              "Game Server Infrastructure"
+            ],
+            "sameAs": [
+              "https://github.com/Code-Xceed",
+              "https://www.linkedin.com/in/aditya-rathore-110125385",
+              "https://www.instagram.com/aditya.13201/"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://YOUR-DOMAIN.example/#website",
+            "url": "https://YOUR-DOMAIN.example/",
+            "name": "Aditya Rathore — Atelier Portfolio",
+            "inLanguage": "en",
+            "author": { "@id": "https://YOUR-DOMAIN.example/#person" }
+          }
+        ]
+      }
+    </script>
   </head>
-  <body style="cursor: none;">
+  <body>
     <div id="root"></div>
+
+    <!-- Crawlers and visitors without JavaScript still get the real content. -->
+    <noscript>
+      <div style="max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, sans-serif; line-height: 1.65; color: #151413; background: #FBF9F5;">
+        <h1 style="font-size: 2rem; margin: 0 0 1rem;">Aditya Rathore — Web Developer &amp; Product Builder</h1>
+        <p>
+          I build websites &amp; web apps, craft solutions for problems of literally any format, and love
+          gaming and making Minecraft mods. This interactive portfolio needs JavaScript for its 3D
+          publications and film gallery, but everything below stays reachable without it.
+        </p>
+        <h2 style="font-size: 1.15rem; margin: 1.75rem 0 .5rem;">Selected projects</h2>
+        <ul>
+          <li><strong>XMusic</strong> — native in-game audio &amp; streaming engine.</li>
+          <li><strong>FrameGit</strong> — content-addressed version control for Premiere Pro &amp; DaVinci Resolve timelines.</li>
+          <li><strong>XDrop</strong> — universal social media &amp; web asset importer for NLE timelines.</li>
+          <li><strong>Xoppor AI</strong> — autonomous multi-platform opportunity radar.</li>
+          <li><strong>VaultOP</strong> — competitive tournament client mod for Minecraft.</li>
+          <li><strong>CodeX Client</strong> — Fabric 1.21.4 performance &amp; modular utility client.</li>
+          <li><strong>YT Media</strong> — multi-threaded desktop stream harvester.</li>
+        </ul>
+        <h2 style="font-size: 1.15rem; margin: 1.75rem 0 .5rem;">Elsewhere</h2>
+        <ul>
+          <li><a href="https://github.com/Code-Xceed">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/aditya-rathore-110125385">LinkedIn</a></li>
+          <li><a href="https://www.instagram.com/aditya.13201/">Instagram</a></li>
+          <li><a href="mailto:aditya.rathore10101@gmail.com">aditya.rathore10101@gmail.com</a></li>
+        </ul>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
