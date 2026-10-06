@@ -44,6 +44,8 @@ export function BooksShowcase({
   const closeBtnRef = useRef(null);
   const dpRef = useRef(null);
   const shiftCarouselRef = useRef(() => {});
+  const sheetHRef = useRef(0);
+  const reflowRef = useRef(null);
 
   const onBookSelectRef = useRef(onBookSelect);
   useEffect(() => {
@@ -56,6 +58,13 @@ export function BooksShowcase({
   const [activeNature, setActiveNature] = useState(initialCenter?.natureBlend ?? 0.0);
   const [envDimmed, setEnvDimmed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // Portrait phones / tablets stack the dossier sheet under the monograph.
+  // Wide landscape keeps the two-column atelier split. Single source of truth for
+  // both the 3D monograph placement and the DOM dossier placement.
+  const [stackedDetail, setStackedDetail] = useState(false);
+  // Stacked dossier sheet: overflow detection powers a "scroll for more" cue.
+  const [dossierOverflow, setDossierOverflow] = useState(false);
+  const [dossierScrolled, setDossierScrolled] = useState(false);
 
   // Preload all authentic project thumbnail images into memory
   useEffect(() => {
@@ -1057,6 +1066,9 @@ export function BooksShowcase({
     function computeSlots() {
       const a = dims.w / Math.max(1, dims.h);
       const portrait = a < 0.85;
+      const stackDetail = dims.w < 1280 && dims.h > dims.w * 0.85;
+      setStackedDetail(stackDetail);
+      SLOTS.detailCamZ = stackDetail ? 10.4 : 9.6;
       // Refined smaller scale for books so background sky, rays, and header have ample space
       const baseFit = portrait ? clamp(a / 1.08, 0.32, 0.64) : clamp(a / 1.62, 0.44, 0.84);
       const fit = baseFit * 0.86;
@@ -1081,16 +1093,31 @@ export function BooksShowcase({
         return;
       }
 
-      if (SLOTS.portrait) {
+      if (stackDetail) {
         const T13 = 0.23087;
         const camZp = 9.9;
         const zw = 0.85 * fit;
         const rootY = -(1 - fit) * 0.16;
-        // Position monograph book comfortably lower in the upper half with generous top margin (~23.5% from top)
-        const midPx = Math.max(135, Math.min(dims.h * 0.235, 205));
+        // Monograph stage: the volume is centred between a generous top margin (clearing the
+        // header seals) and the dossier sheet's top edge, shrinking only when the viewport is
+        // too short to hold both at full size — so it never clips and never collides with copy.
+        const stageTop = Math.max(64, dims.h * 0.09);
+        // The dossier sheet is anchored to the bottom edge, so its measured height gives the
+        // volume's real ceiling; 0.42h is the fallback before the sheet has been measured.
+        const sheetH = sheetHRef.current;
+        const stageBottom = (sheetH > 0 ? dims.h - sheetH : dims.h * 0.42) - 6;
+        const baseS = clamp(a * 2.42, 1.14, 1.25);
+        // Projection model fitted against a live Box3 projection of the open volume
+        // (halo plane included, hence the 0.574 book fraction).
+        const haloH = 0.96 * fit * baseS * dims.h;
+        // Fit the volume to the stage, letting it breathe up a little when there is room.
+        const shrink = Math.min(1.3, Math.max(0.35, (stageBottom - stageTop) / Math.max(1, 0.574 * haloH)));
+        const s = baseS * shrink;
+        const bookH = 0.574 * haloH * shrink;
+        // Centre the volume in whatever stage the sheet leaves it, so short sheets do not
+        // strand the monograph at the very top of the viewport.
+        const midPx = stageTop + Math.max(0, stageBottom - stageTop - bookH) / 2 + 0.312 * haloH * shrink;
         const yw = 0.1 + (1 - (2 * midPx) / dims.h) * T13 * (camZp - zw);
-        // Balanced monograph scale on mobile so the book feels substantial in the upper half
-        const s = clamp(a * 2.42, 1.14, 1.25);
         SLOTS.detail = { p: [0, (yw - rootY) / fit, 0.85], r: [-0.02, -0.4, 0.06], s };
       } else {
         // Desktop / Landscape: Position monograph book in the center of the left column (~25% viewport width)
@@ -1195,6 +1222,13 @@ export function BooksShowcase({
       currentWindow.forEach((bi) => hitMeshes.push(bookInstances[bi].hit));
     }
 
+    // Lets the DOM dossier report its measured height back into the 3D layout, so the
+    // monograph is always sized against the reading sheet's real top edge.
+    reflowRef.current = () => {
+      computeSlots();
+      applyMode();
+    };
+
     function applyMode() {
       if (state.mode === 'hero' || state.mode === 'closing') {
         currentWindow.forEach((bi, i) => {
@@ -1274,7 +1308,7 @@ export function BooksShowcase({
     function camTo(mode) {
       if (mode === 'detail') {
         camX.t = 0;
-        camZ.t = SLOTS.portrait ? 10.4 : 9.6;
+        camZ.t = SLOTS.detailCamZ ?? 9.6;
         lookX.t = 0;
         lookY.t = SLOTS.portrait ? 0 : 0.02;
       } else {
@@ -1923,6 +1957,7 @@ export function BooksShowcase({
 
     return () => {
       cancelled = true;
+      reflowRef.current = null;
       if (rafId) cancelAnimationFrame(rafId);
       timeouts.forEach((id) => clearTimeout(id));
       if (orientationTimeout) clearTimeout(orientationTimeout);
@@ -1980,6 +2015,39 @@ export function BooksShowcase({
   const heroWordVisible = mounted && uiMode === 'hero';
   const canCarousel = showCarousel && books.length > 3;
 
+  // Detect whether the stacked dossier overflows its sheet, so the scroll cue only
+  // appears when there is genuinely more copy below the fold.
+  useEffect(() => {
+    const el = dpRef.current;
+    if (!el || !stackedDetail) {
+      setDossierOverflow(false);
+      return;
+    }
+    const measure = () => {
+      setDossierOverflow(el.scrollHeight > el.clientHeight + 2);
+      const nextH = el.offsetHeight;
+      if (Math.abs(nextH - sheetHRef.current) > 1) {
+        sheetHRef.current = nextH;
+        reflowRef.current?.();
+      }
+    };
+    measure();
+    const id = requestAnimationFrame(measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => {
+      cancelAnimationFrame(id);
+      ro.disconnect();
+    };
+  }, [stackedDetail, selectedCfg, panelVisible]);
+
+  // Every freshly opened dossier starts at the top of the sheet with the cue showing.
+  useEffect(() => {
+    if (!stackedDetail) return;
+    setDossierScrolled(false);
+    dpRef.current?.scrollTo({ top: 0 });
+  }, [selectedCfg, stackedDetail, panelVisible]);
+
   const delayMap = {
     50: 'delay-[50ms]',
     130: 'delay-[130ms]',
@@ -2001,7 +2069,7 @@ export function BooksShowcase({
       aria-label={`${heroTitle} publication showcase`}
       data-state={uiMode}
       className={cn(
-        'book-showcase relative isolate w-full h-[100svh] min-h-[700px] overflow-hidden outline-none [container-type:size] select-none [-webkit-tap-highlight-color:transparent]',
+        'book-showcase relative isolate w-full h-[100svh] min-h-[100svh] overflow-hidden outline-none [container-type:size] select-none [-webkit-tap-highlight-color:transparent]',
         'transition-colors duration-700 ease-out text-[#151413]',
         className,
       )}
@@ -2048,6 +2116,20 @@ export function BooksShowcase({
         }}
       />
 
+      {/* Stacked (portrait) Dossier Reading Scrim: graduates the composition into a readable sheet
+          so the project copy never fights the landscape behind it. */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute inset-0 z-[4] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
+          stackedDetail ? 'opacity-100' : 'opacity-0',
+        )}
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(12,9,6,0) 0%, rgba(12,9,6,0) 30%, rgba(12,9,6,0.34) 44%, rgba(11,8,6,0.62) 58%, rgba(10,7,5,0.78) 74%, rgba(8,6,4,0.88) 100%)',
+        }}
+      />
+
       {/* Background Architectural Word: 'Projects' (Positioned lower and significantly bigger) */}
       <div
         className={`pointer-events-none absolute left-1/2 top-[8%] xs:top-[9%] sm:top-[11%] md:top-[12%] lg:top-[13%] z-[2] -translate-x-1/2 select-none transition-all duration-700 ease-out w-full max-w-[100vw] text-center px-2 sm:px-4 overflow-hidden ${
@@ -2082,7 +2164,7 @@ export function BooksShowcase({
             data-sfx="drag"
             aria-label="Previous monograph publication"
             onClick={() => shiftCarouselRef.current(-1)}
-            className={`group cursor-pointer absolute left-3 sm:left-6 md:left-14 top-1/2 max-md:top-[68%] z-30 -translate-y-1/2 inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-12 -rotate-2 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent] [clip-path:polygon(0%_8%,3%_1.5%,11%_4.5%,21%_1%,34%_3%,48%_0.8%,62%_3%,76%_1.2%,88%_3.5%,97%_1%,100%_8%,98%_24%,100%_42%,97.5%_56%,99.5%_72%,97%_86%,100%_94%,94%_99%,82%_97%,68%_99.5%,52%_97.5%,38%_99.5%,24%_97%,12%_99%,3%_96%,0%_92%,2.5%_76%,0.8%_58%,2.8%_42%,1.2%_26%,2.5%_12%)] [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.04)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#FFFDF9_0%,#F6EFE3_58%,#EBDDC4_100%)] [filter:drop-shadow(0_2px_3px_rgba(21,20,19,0.12))_drop-shadow(0_10px_22px_rgba(21,20,19,0.16))] hover:[filter:drop-shadow(0_3px_5px_rgba(21,20,19,0.15))_drop-shadow(0_14px_30px_rgba(199,146,56,0.30))] border border-[#C79238]/35 ${
+            className={`group cursor-pointer absolute left-3 sm:left-6 md:left-14 ${stackedDetail ? 'top-[64%]' : 'top-1/2'} z-30 -translate-y-1/2 inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-12 -rotate-2 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent] [clip-path:polygon(0%_8%,3%_1.5%,11%_4.5%,21%_1%,34%_3%,48%_0.8%,62%_3%,76%_1.2%,88%_3.5%,97%_1%,100%_8%,98%_24%,100%_42%,97.5%_56%,99.5%_72%,97%_86%,100%_94%,94%_99%,82%_97%,68%_99.5%,52%_97.5%,38%_99.5%,24%_97%,12%_99%,3%_96%,0%_92%,2.5%_76%,0.8%_58%,2.8%_42%,1.2%_26%,2.5%_12%)] [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.04)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#FFFDF9_0%,#F6EFE3_58%,#EBDDC4_100%)] [filter:drop-shadow(0_2px_3px_rgba(21,20,19,0.12))_drop-shadow(0_10px_22px_rgba(21,20,19,0.16))] hover:[filter:drop-shadow(0_3px_5px_rgba(21,20,19,0.15))_drop-shadow(0_14px_30px_rgba(199,146,56,0.30))] border border-[#C79238]/35 ${
               uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
             }`}
           >
@@ -2103,7 +2185,7 @@ export function BooksShowcase({
             data-sfx="drag"
             aria-label="Next monograph publication"
             onClick={() => shiftCarouselRef.current(1)}
-            className={`group cursor-pointer absolute right-3 sm:right-6 md:right-14 top-1/2 max-md:top-[68%] z-30 -translate-y-1/2 inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-12 rotate-2 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent] [clip-path:polygon(0%_8%,3%_1.5%,11%_4.5%,21%_1%,34%_3%,48%_0.8%,62%_3%,76%_1.2%,88%_3.5%,97%_1%,100%_8%,98%_24%,100%_42%,97.5%_56%,99.5%_72%,97%_86%,100%_94%,94%_99%,82%_97%,68%_99.5%,52%_97.5%,38%_99.5%,24%_97%,12%_99%,3%_96%,0%_92%,2.5%_76%,0.8%_58%,2.8%_42%,1.2%_26%,2.5%_12%)] [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.04)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#FFFDF9_0%,#F6EFE3_58%,#EBDDC4_100%)] [filter:drop-shadow(0_2px_3px_rgba(21,20,19,0.12))_drop-shadow(0_10px_22px_rgba(21,20,19,0.16))] hover:[filter:drop-shadow(0_3px_5px_rgba(21,20,19,0.15))_drop-shadow(0_14px_30px_rgba(199,146,56,0.30))] border border-[#C79238]/35 ${
+            className={`group cursor-pointer absolute right-3 sm:right-6 md:right-14 ${stackedDetail ? 'top-[64%]' : 'top-1/2'} z-30 -translate-y-1/2 inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-12 rotate-2 hover:rotate-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent] [clip-path:polygon(0%_8%,3%_1.5%,11%_4.5%,21%_1%,34%_3%,48%_0.8%,62%_3%,76%_1.2%,88%_3.5%,97%_1%,100%_8%,98%_24%,100%_42%,97.5%_56%,99.5%_72%,97%_86%,100%_94%,94%_99%,82%_97%,68%_99.5%,52%_97.5%,38%_99.5%,24%_97%,12%_99%,3%_96%,0%_92%,2.5%_76%,0.8%_58%,2.8%_42%,1.2%_26%,2.5%_12%)] [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.04)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#FFFDF9_0%,#F6EFE3_58%,#EBDDC4_100%)] [filter:drop-shadow(0_2px_3px_rgba(21,20,19,0.12))_drop-shadow(0_10px_22px_rgba(21,20,19,0.16))] hover:[filter:drop-shadow(0_3px_5px_rgba(21,20,19,0.15))_drop-shadow(0_14px_30px_rgba(199,146,56,0.30))] border border-[#C79238]/35 ${
               uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
             }`}
           >
@@ -2129,7 +2211,14 @@ export function BooksShowcase({
             soundManager.play('hold');
             onNavigateBack();
           }}
-          className="group cursor-pointer absolute top-4 sm:top-5 left-1/2 -translate-x-1/2 z-25 flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-all duration-300 pointer-events-auto select-none"
+          className={cn(
+            'group cursor-pointer absolute z-25 flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-all duration-300 pointer-events-auto select-none',
+            // Stacked layouts move the return hint to the top-right so it never collides
+            // with the fixed audio seal sitting in the top-left corner.
+            stackedDetail
+              ? 'top-[calc(env(safe-area-inset-top)+1rem)] left-auto right-4 -translate-x-0'
+              : 'top-4 sm:top-5 left-1/2 -translate-x-1/2',
+          )}
         >
           <svg
             className="w-3.5 h-3.5 text-[#151413]/60 group-hover:text-[#C79238] transition-colors"
@@ -2170,14 +2259,19 @@ export function BooksShowcase({
         ref={closeBtnRef}
         type="button"
         aria-label="Return to archive view"
-        className={`group cursor-pointer absolute left-1/2 top-7 z-40 -translate-x-1/2 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rotate-1 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent]
+        className={`group cursor-pointer absolute z-40 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rotate-1 hover:rotate-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 active:scale-95 [-webkit-tap-highlight-color:transparent]
         [clip-path:polygon(4%_12%,12%_4%,25%_6%,38%_2%,50%_5%,62%_2%,75%_6%,88%_4%,96%_12%,98%_25%,95%_38%,99%_50%,95%_62%,98%_75%,96%_88%,88%_96%,75%_94%,62%_98%,50%_95%,38%_98%,25%_94%,12%_96%,4%_88%,2%_75%,5%_62%,1%_50%,5%_38%,2%_25%)]
         [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.06)_0px_2px,transparent_2px_7px),radial-gradient(130%_150%_at_30%_20%,#F8F2E4_0%,#EFE4CF_58%,#E2D0B5_100%)]
         border-2 border-[#C79238]/60
         [filter:drop-shadow(0_2px_5px_rgba(21,20,19,0.18))_drop-shadow(0_10px_24px_rgba(21,20,19,0.20))]
         hover:[filter:drop-shadow(0_4px_8px_rgba(21,20,19,0.22))_drop-shadow(0_14px_32px_rgba(199,146,56,0.38))]
         hover:border-[#DFBA5A]
-        max-md:left-auto max-md:right-5 max-md:top-5 max-md:translate-x-0 ${
+        ${
+          stackedDetail
+            ? 'left-auto right-[calc(env(safe-area-inset-right)+1rem)] top-[calc(env(safe-area-inset-top)+1rem)] translate-x-0'
+            : 'left-1/2 -translate-x-1/2 top-7 max-lg:left-auto max-lg:right-5 max-lg:top-[calc(env(safe-area-inset-top)+1rem)] max-lg:translate-x-0'
+        }
+        ${
           uiMode === 'detail' ? 'pointer-events-auto opacity-100 scale-100' : 'pointer-events-none opacity-0 scale-90'
         }`}
       >
@@ -2203,12 +2297,45 @@ export function BooksShowcase({
         <div
           ref={dpRef}
           aria-live="polite"
-          className={`absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            panelVisible ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none delay-[300ms]'
-          } max-md:left-1/2 max-md:right-auto max-md:top-auto max-md:bottom-4 xs:max-md:bottom-6 sm:max-md:bottom-8 md:bottom-auto max-md:-translate-x-1/2 max-md:translate-y-0 max-md:w-[min(480px,92vw)] max-md:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 max-md:p-0 max-md:pointer-events-auto md:right-[5%] lg:right-[7%] xl:right-[9%] md:top-1/2 md:-translate-y-1/2 md:w-[min(540px,44%)] md:pointer-events-none`}
+          onScroll={(e) => {
+            const next = e.currentTarget.scrollTop > 6;
+            setDossierScrolled((prev) => (prev === next ? prev : next));
+          }}
+          style={
+            stackedDetail && dossierOverflow && !dossierScrolled
+              ? {
+                maskImage: 'linear-gradient(to bottom, #000 calc(100% - 46px), transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, #000 calc(100% - 46px), transparent 100%)',
+              }
+              : undefined
+          }
+          className={cn(
+            'absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+            // Stacked: full-width dossier sheet pinned to the bottom edge, scrolls as one unit.
+            // Split: two-column atelier dossier pinned to the right, vertically centred.
+            stackedDetail
+              ? 'left-1/2 right-auto top-auto bottom-0 -translate-x-1/2 translate-y-0 w-[min(640px,100vw)] max-h-[58%] px-5 pt-2.5 pb-[calc(env(safe-area-inset-bottom)+1.5rem)]'
+              : 'left-auto right-[5%] lg:right-[7%] xl:right-[9%] top-1/2 -translate-y-1/2 w-[min(540px,44%)] max-h-[88%] px-6',
+            'overflow-y-auto overscroll-contain touch-pan-y no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0',
+            panelVisible
+              ? 'opacity-100 visible pointer-events-auto'
+              : 'opacity-0 invisible pointer-events-none delay-[300ms]',
+          )}
         >
-          {/* Gentle localized ambient reading cushion behind text */}
-          <div className="absolute -inset-4 sm:-inset-6 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_center,rgba(14,11,8,0.30)_0%,transparent_76%)] pointer-events-none" />
+          {/* Gentle localized ambient reading cushion behind text (split layout only —
+              the stacked sheet gets its legibility from the full-width reading scrim) */}
+          {!stackedDetail && (
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(14,11,8,0.34)_0%,transparent_78%)] pointer-events-none" />
+          )}
+
+          {/* Dossier top rule: marks the start of the stacked reading sheet */}
+          {stackedDetail && (
+            <div aria-hidden="true" className="mb-2.5 flex items-center gap-2.5">
+              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C79238]/50" />
+              <span className="font-serif text-[9px] leading-none text-[#DFBA5A]/85 select-none">✦</span>
+              <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C79238]/50" />
+            </div>
+          )}
 
           {/* Curatorial Header: Thumbnail Emblem + Title */}
           <div className="flex items-start gap-3 sm:gap-5 mb-1.5 sm:mb-2.5">
@@ -2236,7 +2363,7 @@ export function BooksShowcase({
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
             <p
-              className={`mt-1 sm:mt-1.5 font-cormorant italic text-[13px] xs:text-[14.5px] sm:text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] line-clamp-1 sm:line-clamp-none ${dpChild(90)}`}
+              className={`mt-1 sm:mt-1.5 font-cormorant italic text-[13px] xs:text-[14.5px] sm:text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${stackedDetail ? 'line-clamp-2' : ''} ${dpChild(90)}`}
             >
               {selectedCfg.subtitle}
             </p>
@@ -2259,10 +2386,12 @@ export function BooksShowcase({
 
           {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
-            className={`mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[12px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.58] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] line-clamp-4 sm:line-clamp-none ${dpChild(160)}`}
+            className={cn(
+              `mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[12px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.58] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`,
+              stackedDetail ? 'line-clamp-4' : '',
+            )}
           >
-            <span className="sm:hidden">{selectedCfg?.mobileDesc || selectedCfg?.desc}</span>
-            <span className="hidden sm:inline">{selectedCfg?.desc}</span>
+            {stackedDetail ? selectedCfg?.mobileDesc || selectedCfg?.desc : selectedCfg?.desc}
           </p>
 
           {/* 5. Major Technologies Used (Light Warm Honey/Vellum Specimen Tags) */}
@@ -2359,6 +2488,7 @@ export function BooksShowcase({
               </a>
             )}
           </div>
+
         </div>
       )}
     </div>
