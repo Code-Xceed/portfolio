@@ -38,10 +38,24 @@ moves between them with a GPU transform (scale + fade + blur) so no WebGL contex
 
 ### Navigation model
 `CinematicFullpage` owns the only scroll surface on the site. Wheel deltas are accumulated against a
-35px threshold, touch uses `dy > 50 && dy > 1.5·dx`, and keyboard supports arrows / PageUp / PageDown /
-Home / End / 1–2. A 1100 ms transition lock prevents double-advance. While a monograph dossier is open
-(`.bs-detail-open`) all three inputs are deliberately ignored so the reader can scroll the dossier
-without being thrown to another screen.
+35px threshold; keyboard supports arrows / PageUp / PageDown / Home / End / 1–2. A 1100 ms transition
+lock prevents double-advance. While a monograph dossier is open (`.bs-detail-open`) all inputs are
+deliberately ignored so the reader can scroll the dossier without being thrown to another screen.
+
+Touch is handled on `touchmove`, not `touchend`, and that detail is the whole reason backwards
+navigation works on phones:
+
+- A downward swipe is *also* Chrome Android's pull-to-refresh direction. The browser used to claim the
+gesture, fire `touchcancel` (never `touchend`), and then reload the page — so swiping back up a screen
+did nothing and looked like a browser refresh. Navigation now reacts as soon as a gesture proves it is
+vertical (8px axis lock, `|dy| > 1.15·|dx|`), calls `preventDefault()` on a non-passive `touchmove` so
+the native overscroll never starts, and switches screen at the moment the finger crosses 46px of
+travel — the same feel as the wheel on desktop.
+- `overscroll-behavior: none` on `html` and `body` is the belt to that braces: it stops rubber-banding
+and pull-to-refresh even before the first `touchmove` arrives (Safari included).
+- Anything that genuinely scrolls (the mobile dossier drawer) is detected by walking up from the touch
+target for an overflowing `overflow-y` ancestor; when one is found the gesture is left entirely alone
+so its native momentum scrolling still works.
 
 ---
 
@@ -51,8 +65,15 @@ without being thrown to another screen.
 |-------|-------|-------|
 | 10 gallery films | `public/gallery/videos/*.mp4` | 960×540, 60 fps, H.264 High, yuv420p, `+faststart`, **audio stripped**, ~23 MB total. |
 | Original masters | `source-videos/` | Git-ignored. The 540p/60 files above are transcoded from these. |
-| Atlas paintings, shader plates | `public/*.jpg`, `public/*.png` | Served as-is. |
+| Shader plates & corner washes | `public/*.jpg` | Re-encoded for the web: 640–1280 px on the long edge, MJPEG q5. |
+| 3D monograph covers | `public/gallery/*.webp` | 1024×1024 WebP q88, down from 1254×1254 PNGs — 11.4 MB → 0.5 MB across all seven. |
+| Botanical vignette | `public/gallery-corner-flowers.webp` | WebP with alpha (1.9 MB → 220 KB). |
 | Audio | `public/*.ogg`, `*.mp3` | One ambient loop + five interaction SFX, mixed by `src/lib/soundManager.js`. |
+
+Everything under `public/` is served as-is, so it should stay hand-optimised — the whole image budget
+(including both cursor PNGs, the OG card and the favicon) is now under 1.5 MB, and the loading gate in
+`CRITICAL_PRELOAD_ASSETS` is ~1.2 MB. If you add a cover, export it as WebP at 1024 px and register it
+in both `src/data/monographsData.js` and `CRITICAL_PRELOAD_ASSETS`.
 
 Re-encoding a new film to match the existing profile:
 
@@ -103,8 +124,9 @@ Two layout modes exist for the Projects screen, chosen from one place so the 3D 
 dossier can never disagree:
 
 - **Stacked** (`--stack`): portrait phones and tablets. The monograph occupies the upper stage and the
-  dossier becomes a full-width bottom sheet that scrolls as one unit, with a soft fade where more copy
-  continues below and `env(safe-area-inset-bottom)` padding for home-bar devices.
+  dossier becomes a full-width linen drawer pinned to the bottom edge, scrollable as one unit, with a
+  paper-coloured veil where more copy continues below and `env(safe-area-inset-bottom)` padding for
+  home-bar devices. It carries its own pale surface, so no dark scrim is painted over the landscape.
 - **Split**: wide landscape. The monograph holds the left column, the dossier the right, and the
   dossier scrolls internally if the window is short.
 
@@ -116,14 +138,21 @@ edge — no clipping, at any viewport.
 
 ## Deployment checklist
 
-- [ ] **Replace `https://YOUR-DOMAIN.example`** in `index.html`, `public/robots.txt` and
-      `public/sitemap.xml` with the production origin. (Listed as a `TODO(deploy)` comment in each.)
-- [ ] Point `og:image` at a real 1200×630 asset — `public/og-image.jpg` already ships one.
-- [ ] Confirm long-cache headers on `/gallery/videos/*` and `/assets/*` (they are content-hashed).
-- [ ] Compress `public/*.jpg|png` if the host does not do it for you; the shader plates are the
-      heaviest first-paint assets.
-- [ ] Run `npm run lint` and `npm run build`; both must exit 0.
-- [ ] Smoke-test the three screens at ~390×844, 768×1024, 1280×800 and a landscape phone.
+The production origin is **`https://codex.is-a.dev`**, wired into `index.html` (canonical, OG, Twitter,
+JSON-LD), `public/robots.txt`, `public/sitemap.xml`, `public/site.webmanifest` and `public/CNAME`. To move
+to a different host later, change that one origin in those five files — nothing else hard-codes it.
+
+- [x] Production origin set, with `public/CNAME` so GitHub Pages serves the is-a.dev subdomain.
+- [x] `og:image` is a real 1200×630 card (`public/og-image.jpg`); `apple-touch-icon.png` is 180×180.
+- [x] `public/` pruned and optimised: 46 MB → 26 MB, of which 23 MB is the ten films. Covers and the
+      botanical vignette ship as WebP.
+- [ ] Confirm long-cache headers on `/gallery/videos/*` and `/assets/*` (assets are content-hashed;
+      the films are not, so give them a long `Cache-Control` at the host or accept revalidation).
+- [ ] Register the subdomain with is-a.dev (they take it as a pull request adding `domains/codex.json`)
+      and point it at the host, then confirm the certificate has issued before sharing the link.
+- [ ] Run `npm run lint` and `npm run build`; both must exit 0 (they do as of this commit).
+- [ ] Smoke-test the three screens at ~390×844, 768×1024, 1280×800 and a landscape phone, swiping
+      **both** directions on the first two.
 
 ## Accessibility notes
 

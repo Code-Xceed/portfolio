@@ -42,16 +42,19 @@ function GalleryVideoCard({ src, className = '', active = true }) {
   const [inView, setInView] = useState(false);
   // Playback keeps running through the ~1.1s cinematic section transition so the
   // fade-out never shows a frozen frame; it stops once the section is truly gone.
-  const [playbackAllowed, setPlaybackAllowed] = useState(active);
+  //
+  // `playbackGraceOver` is the delayed half of that rule: it is only ever written from
+  // inside the timer (never synchronously from the effect body, which would cost an
+  // extra render pass on every section change). The 0ms reset on `active` re-arms the
+  // grace window so the next departure gets its full 1.2s of uninterrupted motion.
+  const [playbackGraceOver, setPlaybackGraceOver] = useState(!active);
 
   useEffect(() => {
-    if (active) {
-      setPlaybackAllowed(true);
-      return undefined;
-    }
-    const timer = setTimeout(() => setPlaybackAllowed(false), 1200);
+    const timer = setTimeout(() => setPlaybackGraceOver(!active), active ? 0 : 1200);
     return () => clearTimeout(timer);
   }, [active]);
+
+  const playbackAllowed = active || !playbackGraceOver;
 
   // 1. Attach the in-memory Blob URL the moment it exists — never race the network.
   useEffect(() => {
@@ -174,7 +177,7 @@ function GalleryVideoCard({ src, className = '', active = true }) {
   );
 }
 
-export default function GallerySection({ active = true, onNext, onPrev }) {
+export default function GallerySection({ active = true, onNext }) {
   // When user interacts, ensure video autoplay permissions are active
   useEffect(() => {
     const handleFirstGesture = () => {
@@ -318,7 +321,7 @@ export default function GallerySection({ active = true, onNext, onPrev }) {
         }}
       >
         <img
-          src="/gallery-corner-flowers.png"
+          src="/gallery-corner-flowers.webp"
           alt="Oil painted garden bushes and blooming wildflowers"
           className="w-full h-auto object-contain object-bottom-right mix-blend-multiply opacity-85 filter contrast-105"
           loading="eager"

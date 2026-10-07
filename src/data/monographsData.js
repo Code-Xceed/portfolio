@@ -68,11 +68,6 @@ function applyLinenClothTexture(ctx, w, h) {
   ctx.restore();
 }
 
-// Helper for linen/parchment grain texture on canvas (backwards compatible)
-function applyParchmentGrain(ctx, w, h, count = 2800) {
-  applyLinenClothTexture(ctx, w, h);
-}
-
 // ----------------------------------------------------------------------
 // AUTHENTIC PROJECT THUMBNAIL MOUNTING WITH CURATORIAL FILTERING
 // ----------------------------------------------------------------------
@@ -223,7 +218,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'x-music',
     volumeNumber: 'I',
-    thumbnail: '/gallery/Xmusic-Logo.png',
+    thumbnail: '/gallery/Xmusic-Logo.webp',
     title: 'XMUSIC',
     subtitle: 'Native In-Game Audio & Streaming Engine',
     author: 'Aditya Rathore',
@@ -371,7 +366,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'framegit',
     volumeNumber: 'II',
-    thumbnail: '/gallery/FrameGIT-logo.png',
+    thumbnail: '/gallery/FrameGIT-logo.webp',
     title: 'FRAMEGIT',
     subtitle: 'Content-Addressed Version Control for Creative Video Timelines',
     author: 'Aditya Rathore',
@@ -518,7 +513,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'xdrop',
     volumeNumber: 'III',
-    thumbnail: '/gallery/Xdrop-logo.png',
+    thumbnail: '/gallery/Xdrop-logo.webp',
     title: 'XDROP',
     subtitle: 'Universal Social Media & Web Asset Importer for NLE Timelines',
     author: 'Aditya Rathore',
@@ -665,7 +660,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'xoppor-ai',
     volumeNumber: 'IV',
-    thumbnail: '/gallery/Xoppor-AI.png',
+    thumbnail: '/gallery/Xoppor-AI.webp',
     title: 'XOPPOR AI',
     subtitle: 'Autonomous Multi-Platform Opportunity Radar & Neural Evaluator',
     author: 'Aditya Rathore',
@@ -812,7 +807,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'vaultop-tournaments',
     volumeNumber: 'V',
-    thumbnail: '/gallery/vault-logo.png',
+    thumbnail: '/gallery/vault-logo.webp',
     title: 'VAULTOP',
     subtitle: 'Official Competitive Tournament Client Mod for Minecraft',
     author: 'Aditya Rathore',
@@ -959,7 +954,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'codex-client',
     volumeNumber: 'VI',
-    thumbnail: '/gallery/CodeX-logo.png',
+    thumbnail: '/gallery/CodeX-logo.webp',
     title: 'CODEX CLIENT',
     subtitle: 'Fabric 1.21.4 Performance & Modular Utility Client',
     author: 'Aditya Rathore',
@@ -1107,7 +1102,7 @@ export const MONOGRAPHS_DATA = [
   {
     id: 'yt-media-downloader',
     volumeNumber: 'VII',
-    thumbnail: '/gallery/YT-media-logo.png',
+    thumbnail: '/gallery/YT-media-logo.webp',
     title: 'YT MEDIA',
     subtitle: 'High-Fidelity Multi-Threaded Desktop Stream Harvester',
     author: 'Aditya Rathore',

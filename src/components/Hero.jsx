@@ -63,6 +63,34 @@ const SOCIAL_HANDLES = [
 ];
 
 export default function Hero({ onNavigateToPublications, active = true }) {
+  // Shared "Gallery · Explore" scroll cue, rendered inline (never as a nested component, which
+  // would remount and restart its bounce on every section change). The two layouts park their
+  // content in different corners: on mobile the Connect Me block owns the bottom centre, so the
+  // cue has to sit in flow beneath the medallions instead of floating over them.
+  const renderScrollCue = (className) => (
+    <button
+      type="button"
+      onClick={() => {
+        soundManager.play('hold');
+        onNavigateToPublications?.();
+      }}
+      className={`hero-scroll-cue group cursor-pointer flex-col items-center gap-1.5 opacity-65 hover:opacity-100 transition-all duration-300 pointer-events-auto select-none ${className}`}
+    >
+      <span className="font-cinzel text-[9.5px] sm:text-[10px] tracking-[0.26em] uppercase text-[#151413]/70 group-hover:text-[#C79238] transition-colors">
+        Gallery · Explore
+      </span>
+      <svg
+        className="w-3.5 h-3.5 text-[#151413]/50 group-hover:text-[#C79238] animate-bounce transition-colors"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      >
+        <path d="M7 13l5 5 5-5M7 6l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+
   return (
     <section className="relative w-full h-[100svh] min-h-[100svh] flex flex-col justify-end items-start px-5 xs:px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 pb-6 sm:pb-8 lg:pb-14 xl:pb-16 overflow-hidden select-none bg-[#FBF9F5]">
       {/* Interactive WebGL Fluid Shader Canvas (Alpine Mountain Sanctuary Background with Fluid Hover Reveal) */}
@@ -75,13 +103,20 @@ export default function Hero({ onNavigateToPublications, active = true }) {
       {/* ========================================================================= */}
       {/* MOBILE & TABLET PORTRAIT: HIGH-FASHION SCULPTURAL EDITORIAL (< 1024px)     */}
       {/* ========================================================================= */}
-      <div className="flex lg:hidden flex-col justify-between w-full h-full relative z-10 pointer-events-none pt-12 xs:pt-14 sm:pt-16 pb-6 xs:pb-7 sm:pb-8">
+      {/* The bottom padding reserves the band the pinned scroll cue occupies: on mobile the
+          Connect Me block is centred on the same edge the cue is anchored to, so at 24px of
+          clearance the medallions sat directly underneath the cue's label. */}
+      <div className="flex lg:hidden flex-col justify-between w-full h-full relative z-10 pointer-events-none pt-12 xs:pt-14 sm:pt-16 pb-16 sm:pb-18">
         {/* 1. TOP MASTHEAD & EDITORIAL STATEMENT (Lowered & Refined) */}
         <header className="w-full flex flex-col items-start text-left">
           {/* Monumental Sculptural Masthead: ADITYA RATHORE */}
           <h1 className="leading-[0.84] tracking-[-0.035em] text-left w-full">
+            {/* Sized against height as well as width: past ~558px wide the width term tops out,
+                so on a short window the masthead alone used to push the Connect Me block and the
+                scroll cue past the fold. min() keeps the two comfortable at any window shape
+                while leaving portrait phones on their original ramp. */}
             <span 
-              className="block font-bodoni font-light text-[#151413] text-[clamp(4.0rem,19.5vw,6.8rem)] tracking-[-0.035em]"
+              className="block font-bodoni font-light text-[#151413] text-[clamp(4rem,min(19.5vw,12.5vh),6.8rem)] tracking-[-0.035em]"
               style={{
                 textShadow: '0 1px 2px rgba(251,249,245,0.98), 0 2px 14px rgba(251,249,245,0.95), 0 0 28px rgba(251,249,245,0.85)',
               }}
@@ -89,7 +124,7 @@ export default function Hero({ onNavigateToPublications, active = true }) {
               ADITYA
             </span>
             <span 
-              className="block font-bodoni italic font-normal text-[#151413] text-[clamp(4.4rem,21.5vw,7.4rem)] ml-1 xs:ml-1.5 mt-0.5 sm:mt-1"
+              className="block font-bodoni italic font-normal text-[#151413] text-[clamp(4.4rem,min(21.5vw,13.8vh),7.4rem)] ml-1 xs:ml-1.5 mt-0.5 sm:mt-1"
               style={{
                 textShadow: '0 1px 2px rgba(251,249,245,0.98), 0 2px 14px rgba(251,249,245,0.95), 0 0 28px rgba(251,249,245,0.85)',
               }}
@@ -312,30 +347,12 @@ export default function Hero({ onNavigateToPublications, active = true }) {
         </h1>
       </div>
 
-      {/* Subtle Scroll Hint towards Perspective II: Projects Archive */}
-      {onNavigateToPublications && (
-        <button
-          type="button"
-          onClick={() => {
-            soundManager.play('hold');
-            onNavigateToPublications();
-          }}
-          className="group cursor-pointer absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-25 flex flex-col items-center gap-1.5 opacity-65 hover:opacity-100 transition-all duration-300 pointer-events-auto select-none"
-        >
-          <span className="font-cinzel text-[9.5px] sm:text-[10px] tracking-[0.26em] uppercase text-[#151413]/70 group-hover:text-[#C79238] transition-colors">
-            Gallery · Explore
-          </span>
-          <svg
-            className="w-3.5 h-3.5 text-[#151413]/50 group-hover:text-[#C79238] animate-bounce transition-colors"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-          >
-            <path d="M7 13l5 5 5-5M7 6l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      )}
+      {/* Subtle Scroll Hint towards Perspective II: Projects Archive. Pinned to the bottom of
+          the viewport on every layout — it is the "there is more below" affordance, so it must
+          stay reachable — while the layout containers reserve this band with their own bottom
+          padding so the Connect Me block can never land underneath it. */}
+      {onNavigateToPublications &&
+        renderScrollCue('absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-25 flex')}
 
       {/* Discreet Keyboard Shortcuts Affordance (Desktop Only) */}
       <div 

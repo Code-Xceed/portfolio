@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Hero from './components/Hero';
 import GallerySection from './components/GallerySection';
 import BooksShowcase from './components/BooksShowcase';
@@ -10,17 +10,18 @@ import { MONOGRAPHS_DATA } from './data/monographsData';
 import soundManager from './lib/soundManager';
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
-
   useEffect(() => {
     const cleanup = soundManager.initGlobalListeners();
     return () => cleanup?.();
   }, []);
 
-  const handleLoaded = () => {
-    setLoaded(true);
+  // Stable identity — AtelierLoader's effect depends on this callback, so a fresh
+  // function on each render would tear the effect down and re-run the entire preload
+  // (and its 1400 ms gate) the instant loading finished, which swallowed the loader's
+  // own fade-out timeout and left the score arriving a second and a half late.
+  const handleLoaded = useCallback(() => {
     soundManager.startBgMusic();
-  };
+  }, []);
 
   return (
     <div className="relative w-full h-[100svh] overflow-hidden bg-[#FBF9F5] text-[#151413] selection:bg-[#C79238] selection:text-white">
@@ -45,11 +46,10 @@ export default function App() {
           ({ nextSection, active }) => (
             <Hero onNavigateToPublications={nextSection} active={active} />
           ),
-          ({ nextSection, prevSection, active }) => (
+          ({ nextSection, active }) => (
             <GallerySection 
               active={active}
               onNext={nextSection} 
-              onPrev={prevSection} 
             />
           ),
           ({ prevSection }) => (
@@ -57,7 +57,6 @@ export default function App() {
               <BooksShowcase 
                 books={MONOGRAPHS_DATA}
                 heroTitle="Projects"
-                navTitle="PROJECTS · ÉDITIONS D'ATELIER"
                 onNavigateBack={prevSection}
               />
             </section>

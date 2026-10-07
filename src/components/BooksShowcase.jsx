@@ -5,22 +5,6 @@ import { MONOGRAPHS_DATA } from '@/data/monographsData';
 import NatureBackgroundShader from './NatureBackgroundShader';
 import soundManager from '../lib/soundManager';
 
-function ChevronLeft() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
-function ChevronRight() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 18l6-6-6-6" />
-    </svg>
-  );
-}
-
 const OPEN_BTN_OFF = ['opacity-0', 'scale-[0.94]'];
 const OPEN_BTN_ON = ['opacity-100', 'scale-100'];
 
@@ -29,8 +13,6 @@ import { getProjectImage } from '@/lib/assetPreloader';
 export function BooksShowcase({
   books = MONOGRAPHS_DATA,
   heroTitle = 'Projects',
-  navTitle = 'STUDIO PUBLICATIONS · PARIS — TOKYO',
-  showNav = true,
   showDetailPanel = true,
   showCarousel = true,
   themeColors,
@@ -309,33 +291,6 @@ export function BooksShowcase({
       );
     }
 
-    function noiseTexture(base, amp, scratches) {
-      const s = 256;
-      const c = mkCanvas(s, s);
-      const x = c.getContext('2d');
-      const img = x.createImageData(s, s);
-      const d = img.data;
-      for (let i = 0; i < d.length; i += 4) {
-        const v = base + (Math.random() - 0.5) * 2 * amp;
-        d[i] = d[i + 1] = d[i + 2] = v;
-        d[i + 3] = 255;
-      }
-      x.putImageData(img, 0, 0);
-      if (scratches) {
-        x.strokeStyle = 'rgba(215,200,180,.25)';
-        x.lineWidth = 1;
-        for (let i = 0; i < 5; i++) {
-          x.beginPath();
-          const y = Math.random() * s;
-          x.moveTo(0, y);
-          x.lineTo(s, y + (Math.random() - 0.5) * 22);
-          x.stroke();
-        }
-      }
-      return new THREE.CanvasTexture(c);
-    }
-
-    const laminateBump = noiseTexture(128, 10, true);
     const clothBump = (function () {
       const s = 128;
       const c = mkCanvas(s, s);
@@ -1463,7 +1418,10 @@ export function BooksShowcase({
     }
 
     const onCloseClick = () => close();
-    closeBtnRef.current?.addEventListener('click', onCloseClick);
+    // Capture the node now: the cleanup must detach from the very element it attached to,
+    // not from whatever `closeBtnRef.current` happens to point at 30 frames later.
+    const closeBtnNode = closeBtnRef.current;
+    closeBtnNode?.addEventListener('click', onCloseClick);
 
     // Pointer hand & drag physics
     const ptr = {
@@ -1978,7 +1936,7 @@ export function BooksShowcase({
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('lostpointercapture', cancelPointer);
-      closeBtnRef.current?.removeEventListener('click', onCloseClick);
+      closeBtnNode?.removeEventListener('click', onCloseClick);
 
       scene.traverse((obj) => {
         if (obj.geometry) obj.geometry.dispose();
@@ -2088,8 +2046,11 @@ export function BooksShowcase({
           envDimmed ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          background:
-            'radial-gradient(ellipse 120% 110% at 28% 46%, rgba(24, 18, 14, 0.20) 0%, rgba(18, 13, 9, 0.42) 50%, rgba(12, 9, 6, 0.58) 100%)',
+          // Stacked layouts keep the whole composition light and airy — the dossier there is a
+          // pale linen sheet with ink type, so it needs a whisper of tempering, not a dark wash.
+          background: stackedDetail
+            ? 'radial-gradient(ellipse 150% 80% at 50% 24%, rgba(24, 18, 14, 0.05) 0%, rgba(18, 13, 9, 0.15) 58%, rgba(12, 9, 6, 0.26) 100%)'
+            : 'radial-gradient(ellipse 120% 110% at 28% 46%, rgba(24, 18, 14, 0.20) 0%, rgba(18, 13, 9, 0.42) 50%, rgba(12, 9, 6, 0.58) 100%)',
           backdropFilter: 'blur(2.5px)',
           WebkitBackdropFilter: 'blur(2.5px)',
         }}
@@ -2116,19 +2077,13 @@ export function BooksShowcase({
         }}
       />
 
-      {/* Stacked (portrait) Dossier Reading Scrim: graduates the composition into a readable sheet
-          so the project copy never fights the landscape behind it. */}
-      <div
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute inset-0 z-[4] transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
-          stackedDetail ? 'opacity-100' : 'opacity-0',
-        )}
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(12,9,6,0) 0%, rgba(12,9,6,0) 30%, rgba(12,9,6,0.34) 44%, rgba(11,8,6,0.62) 58%, rgba(10,7,5,0.78) 74%, rgba(8,6,4,0.88) 100%)',
-        }}
-      />
+      {/*
+       * NOTE: there is deliberately no full-bleed dark scrim here any more. It used to sit on
+       * every stacked (portrait) layout — including the closed carousel — and washed the whole
+       * lower half of the Projects screen into a murky brown tint. The stacked dossier now
+       * carries its own pale linen surface instead (see the panel below), so the landscape
+       * stays exactly as bright as it is on desktop.
+       */}
 
       {/* Background Architectural Word: 'Projects' (Positioned lower and significantly bigger) */}
       <div
@@ -2301,20 +2256,13 @@ export function BooksShowcase({
             const next = e.currentTarget.scrollTop > 6;
             setDossierScrolled((prev) => (prev === next ? prev : next));
           }}
-          style={
-            stackedDetail && dossierOverflow && !dossierScrolled
-              ? {
-                maskImage: 'linear-gradient(to bottom, #000 calc(100% - 46px), transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, #000 calc(100% - 46px), transparent 100%)',
-              }
-              : undefined
-          }
           className={cn(
             'absolute z-[15] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-            // Stacked: full-width dossier sheet pinned to the bottom edge, scrolls as one unit.
+            // Stacked: full-width linen dossier drawer pinned to the bottom edge, scrolls as one
+            // unit. It supplies its own paper so no dark reading scrim is needed behind it.
             // Split: two-column atelier dossier pinned to the right, vertically centred.
             stackedDetail
-              ? 'left-1/2 right-auto top-auto bottom-0 -translate-x-1/2 translate-y-0 w-[min(640px,100vw)] max-h-[58%] px-5 pt-2.5 pb-[calc(env(safe-area-inset-bottom)+1.5rem)]'
+              ? 'left-1/2 right-auto top-auto bottom-0 -translate-x-1/2 translate-y-0 w-[min(640px,100vw)] max-h-[58%] px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] border-t border-[#C79238]/45 [background:repeating-linear-gradient(118deg,rgba(199,146,56,0.05)_0px_2px,transparent_2px_7px),radial-gradient(150%_170%_at_26%_0%,#FFFDF8_0%,#F8F1E2_58%,#EDE0C6_100%)] [box-shadow:0_-20px_46px_rgba(21,20,19,0.18)]'
               : 'left-auto right-[5%] lg:right-[7%] xl:right-[9%] top-1/2 -translate-y-1/2 w-[min(540px,44%)] max-h-[88%] px-6',
             'overflow-y-auto overscroll-contain touch-pan-y no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0',
             panelVisible
@@ -2323,7 +2271,7 @@ export function BooksShowcase({
           )}
         >
           {/* Gentle localized ambient reading cushion behind text (split layout only —
-              the stacked sheet gets its legibility from the full-width reading scrim) */}
+              the stacked sheet is solid linen, so it needs no cushion at all) */}
           {!stackedDetail && (
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(14,11,8,0.34)_0%,transparent_78%)] pointer-events-none" />
           )}
@@ -2341,7 +2289,13 @@ export function BooksShowcase({
           <div className="flex items-start gap-3 sm:gap-5 mb-1.5 sm:mb-2.5">
             {selectedCfg?.thumbnail && (
               <div
-                className={`shrink-0 w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border border-[#DFBA5A]/80 sm:border-2 shadow-[0_4px_16px_rgba(0,0,0,0.65)] sm:shadow-[0_6px_22px_rgba(0,0,0,0.65)] bg-[#14100C] [filter:drop-shadow(0_2px_8px_rgba(199,146,56,0.30))] group ${dpChild(25)}`}
+                className={cn(
+                  'shrink-0 w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border border-[#DFBA5A]/80 sm:border-2 bg-[#14100C] group',
+                  stackedDetail
+                    ? 'shadow-[0_3px_12px_rgba(21,20,19,0.26)]'
+                    : 'shadow-[0_4px_16px_rgba(0,0,0,0.65)] sm:shadow-[0_6px_22px_rgba(0,0,0,0.65)] [filter:drop-shadow(0_2px_8px_rgba(199,146,56,0.30))]',
+                  dpChild(25),
+                )}
               >
                 <img
                   src={selectedCfg.thumbnail}
@@ -2353,7 +2307,15 @@ export function BooksShowcase({
             <div className="flex-1 min-w-0">
               {/* 1. Project Title (Luminous Warm Ivory & Venetian Gold Depth) */}
               <h2
-                className={`font-bodoni font-light text-[#FDFBF7] text-[20px] xs:text-[23px] sm:text-[clamp(28px,3.8vw,56px)] leading-[1.02] sm:leading-[0.98] tracking-[-0.025em] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] ${dpChild(60)}`}
+                className={cn(
+                  'font-bodoni font-light text-[20px] xs:text-[23px] sm:text-[clamp(28px,3.8vw,56px)] leading-[1.02] sm:leading-[0.98] tracking-[-0.025em]',
+                  // Stacked sheet is pale linen: the title becomes warm ink with a paper-lift
+                  // highlight instead of a luminous ivory glyph haloed in black.
+                  stackedDetail
+                    ? 'text-[#1A1611] drop-shadow-[0_1px_0_rgba(255,255,255,0.75)]'
+                    : 'text-[#FDFBF7] drop-shadow-[0_2px_14px_rgba(223,186,90,0.25)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]',
+                  dpChild(60),
+                )}
               >
                 {selectedCfg?.title}
               </h2>
@@ -2363,7 +2325,14 @@ export function BooksShowcase({
           {/* 2. Subtitle / Architecture Mission */}
           {selectedCfg?.subtitle && (
             <p
-              className={`mt-1 sm:mt-1.5 font-cormorant italic text-[13px] xs:text-[14.5px] sm:text-[clamp(16px,1.25vw,21px)] text-[#E4C375] font-light leading-snug drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] ${stackedDetail ? 'line-clamp-2' : ''} ${dpChild(90)}`}
+              className={cn(
+                'mt-1 sm:mt-1.5 font-cormorant italic text-[13px] xs:text-[14.5px] sm:text-[clamp(16px,1.25vw,21px)] font-light leading-snug',
+                stackedDetail
+                  ? 'text-[#8A6420]'
+                  : 'text-[#E4C375] drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]',
+                stackedDetail ? 'line-clamp-2' : '',
+                dpChild(90),
+              )}
             >
               {selectedCfg.subtitle}
             </p>
@@ -2375,7 +2344,12 @@ export function BooksShowcase({
               {selectedCfg.highlights.map((highlight, hIdx) => (
                 <span
                   key={hIdx}
-                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-[#181410]/80 border border-[#C79238]/35 text-[#F5EFE6] text-[10px] sm:text-[11.5px] font-sans font-medium tracking-wide drop-shadow-sm backdrop-blur-sm"
+                  className={cn(
+                    'inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] sm:text-[11.5px] font-sans font-medium tracking-wide border',
+                    stackedDetail
+                      ? 'bg-[#F2E8D4] border-[#C79238]/40 text-[#3E372B]'
+                      : 'bg-[#181410]/80 border-[#C79238]/35 text-[#F5EFE6] drop-shadow-sm backdrop-blur-sm',
+                  )}
                 >
                   <span className="text-[#DFBA5A] text-[7px] sm:text-[8px]">●</span>
                   {highlight}
@@ -2387,8 +2361,12 @@ export function BooksShowcase({
           {/* 4. Human Project Narrative (Warm Archival Linen Tone) */}
           <p
             className={cn(
-              `mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[#E2DACB] text-[12px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.58] sm:leading-[1.72] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${dpChild(160)}`,
+              'mt-2.5 sm:mt-4 max-w-[54ch] font-sans font-normal text-[12px] xs:text-[12.5px] sm:text-[clamp(13.5px,1.02vw,15.5px)] leading-[1.58] sm:leading-[1.72]',
+              stackedDetail
+                ? 'text-[#4A4238]'
+                : 'text-[#E2DACB] drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]',
               stackedDetail ? 'line-clamp-4' : '',
+              dpChild(160),
             )}
           >
             {stackedDetail ? selectedCfg?.mobileDesc || selectedCfg?.desc : selectedCfg?.desc}
@@ -2399,7 +2377,16 @@ export function BooksShowcase({
             {(selectedCfg?.tech || ['Three.js', 'WebGL', 'GLSL Shaders', 'React', 'Tailwind CSS']).map((techItem) => (
               <span
                 key={techItem}
-                className="group/tag inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-3.5 sm:py-1.5 rounded-md sm:rounded-lg border border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)] [filter:drop-shadow(0_1px_2px_rgba(21,20,19,0.12))] sm:[filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out"
+                className={
+                  'group/tag inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-3.5 sm:py-1.5 rounded-md sm:rounded-lg border ' +
+                  '[filter:drop-shadow(0_1px_2px_rgba(21,20,19,0.12))] sm:[filter:drop-shadow(0_1.5px_3px_rgba(21,20,19,0.12))] hover:[filter:drop-shadow(0_3px_10px_rgba(199,146,56,0.30))] hover:border-[#C79238]/85 hover:-translate-y-0.5 transition-all duration-300 ease-out ' +
+                  // On the pale stacked sheet the tags need a deeper vellum so they stay legible
+                  // against it; exactly one background class is emitted, so nothing has to
+                  // out-specify anything else.
+                  (stackedDetail
+                    ? 'border-[#C79238]/60 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.07)_0px_1.5px,transparent_1.5px_6px),radial-gradient(135%_145%_at_25%_20%,#F3E7CE_0%,#E9D8B6_58%,#D9C29A_100%)]'
+                    : 'border-[#C79238]/45 [background:repeating-linear-gradient(115deg,rgba(199,146,56,0.06)_0px_1.5px,transparent_1.5px_6px),radial-gradient(130%_140%_at_25%_20%,#F7F1E4_0%,#ECE1CD_60%,#E0CEB2_100%)]')
+                }
               >
                 {/* Miniature Antique Venetian Gold Star ✦ */}
                 <span className="font-serif text-[8.5px] sm:text-[10px] leading-none text-[#B88228] select-none transition-transform duration-300 group-hover/tag:scale-125">
@@ -2461,21 +2448,31 @@ export function BooksShowcase({
                 href={selectedCfg.demoURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group pointer-events-auto relative inline-flex items-center gap-1.5 sm:gap-2.5 px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent]
-                border border-[#C79238]/60 [background:rgba(21,20,19,0.55)] backdrop-blur-md
-                hover:border-[#DFBA5A] hover:bg-[#151413]/75
-                [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]"
+                className={cn(
+                  'group pointer-events-auto relative inline-flex items-center gap-1.5 sm:gap-2.5 px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 active:scale-95 [-webkit-tap-highlight-color:transparent] border',
+                  stackedDetail
+                    ? 'border-[#C79238]/55 bg-[#F3E8D2] hover:bg-[#EFE0C2] hover:border-[#C79238] [filter:drop-shadow(0_2px_6px_rgba(21,20,19,0.16))]'
+                    : 'border-[#C79238]/60 [background:rgba(21,20,19,0.55)] backdrop-blur-md hover:border-[#DFBA5A] hover:bg-[#151413]/75 [filter:drop-shadow(0_3px_8px_rgba(0,0,0,0.35))]',
+                )}
               >
-                <span className="font-serif text-[9.5px] sm:text-[11px] text-[#DFBA5A] transition-transform duration-300 group-hover:scale-125">
+                <span className={cn('font-serif text-[9.5px] sm:text-[11px] transition-transform duration-300 group-hover:scale-125', stackedDetail ? 'text-[#B88228]' : 'text-[#DFBA5A]')}>
                   ✦
                 </span>
-                <span className="font-cinzel text-[10px] sm:text-[11.5px] font-semibold tracking-[0.15em] sm:tracking-[0.18em] uppercase text-[#FBF9F5]">
+                <span
+                  className={cn(
+                    'font-cinzel text-[10px] sm:text-[11.5px] font-semibold tracking-[0.15em] sm:tracking-[0.18em] uppercase',
+                    stackedDetail ? 'text-[#262018]' : 'text-[#FBF9F5]',
+                  )}
+                >
                   Live Demo
                 </span>
                 <svg
                   viewBox="0 0 20 20"
                   fill="none"
-                  className="h-3.5 w-3.5 text-[#DFBA5A] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                  className={cn(
+                    'h-3.5 w-3.5 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5',
+                    stackedDetail ? 'text-[#B88228]' : 'text-[#DFBA5A]',
+                  )}
                 >
                   <path
                     d="M5.5 14.5L14.5 5.5M6.5 5.5h8v8"
@@ -2489,6 +2486,16 @@ export function BooksShowcase({
             )}
           </div>
 
+          {/* Scroll cue: a soft veil of the sheet's own paper at the foot of the drawer while
+              more copy remains below. It sticks to the scrollport rather than masking the
+              element, so the linen surface still reaches the very bottom of the screen
+              (home-indicator area included). */}
+          {stackedDetail && dossierOverflow && !dossierScrolled && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none sticky bottom-0 -mt-12 h-12 w-full bg-gradient-to-t from-[#F7F0E0] via-[#F7F0E0]/85 to-transparent"
+            />
+          )}
         </div>
       )}
     </div>

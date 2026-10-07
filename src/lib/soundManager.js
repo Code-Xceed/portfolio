@@ -49,13 +49,17 @@ class SoundManager {
     this.isBgPlaying = false;
     this.bgMusicWanted = false;
 
+    // Autoplay-policy bridge (see _armBgMusicAutostart)
+    this.bgAutostartArmed = false;
+    this.bgAutostartDetach = null;
+
     // Master Mute State (Controls ALL audio: SFX + Background Music)
     this.isMuted = false;
     try {
       if (typeof window !== 'undefined') {
         this.isMuted = localStorage.getItem('atelier_master_muted') === 'true';
       }
-    } catch (e) {}
+    } catch {}
 
     this.listeners = new Set();
     this.isPreloaded = false;
@@ -85,7 +89,7 @@ class SoundManager {
     this.listeners.forEach((fn) => {
       try {
         fn({ isMuted: this.isMuted, isBgPlaying: this.isBgPlaying });
-      } catch (e) {}
+      } catch {}
     });
   }
 
@@ -99,6 +103,19 @@ class SoundManager {
         this.masterGain = this.ctx.createGain();
         this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
         this.masterGain.connect(this.ctx.destination);
+
+        // The definitive "audio is now permitted" signal. resume()'s promise cannot be
+        // relied on for this: when a browser blocks autoplay it usually leaves that
+        // promise pending forever rather than rejecting, so the context flipping to
+        // "running" is the only trustworthy cue that the loop may actually be heard.
+        this.ctx.onstatechange = () => {
+          if (this.ctx && this.ctx.state === 'running') {
+            this.isUnlocked = true;
+            if (this.bgMusicWanted && !this.isMuted && !this.isBgPlaying) {
+              this._startBgMusicNow();
+            }
+          }
+        };
       }
     } catch (e) {
       console.warn('SoundManager: Web Audio API initialization failed', e);
@@ -109,21 +126,27 @@ class SoundManager {
   // Unlock AudioContext on user gesture to satisfy browser autoplay restrictions
   unlock() {
     this.initContext();
-    if (!this.ctx) return;
+
+    // No Web Audio support at all: the HTML5 element is the only route, and only a real
+    // gesture can make it audible, so leave the autoplay bridge armed.
+    if (!this.ctx) {
+      if (this.bgMusicWanted && !this.isMuted && !this.isBgPlaying) {
+        this._startBgMusicNow();
+      }
+      return;
+    }
+
+    this.isUnlocked = true;
 
     if (this.ctx.state === 'suspended') {
-      this.ctx.resume().then(() => {
-        this.isUnlocked = true;
-        // Start background music immediately if wanted and not muted
-        if (this.bgMusicWanted && !this.isMuted) {
-          this.startBgMusic();
-        }
-      }).catch(() => {});
-    } else if (this.ctx.state === 'running') {
-      this.isUnlocked = true;
-      if (this.bgMusicWanted && !this.isMuted && !this.isBgPlaying) {
-        this.startBgMusic();
-      }
+      // Fire-and-forget. Whether this resolves now or much later, the statechange hook
+      // registered in initContext() starts the loop the instant audio becomes allowed.
+      this.ctx.resume().catch(() => {});
+      return;
+    }
+
+    if (this.bgMusicWanted && !this.isMuted && !this.isBgPlaying) {
+      this._startBgMusicNow();
     }
   }
 
@@ -139,7 +162,7 @@ class SoundManager {
         audio.preload = 'auto';
         audio.src = url;
         this.audioFallbacks[key] = audio;
-      } catch (e) {}
+      } catch {}
 
       if (this.ctx) {
         try {
@@ -171,7 +194,7 @@ class SoundManager {
         bgAudio.loop = true;
         bgAudio.preload = 'auto';
         this.bgAudioElement = bgAudio;
-      } catch (e) {}
+      } catch {}
 
       if (this.ctx) {
         try {
@@ -197,7 +220,7 @@ class SoundManager {
 
     try {
       await Promise.allSettled([...sfxPromises, bgPromise]);
-    } catch (e) {}
+    } catch {}
 
     this.isPreloaded = true;
     return true;
@@ -211,7 +234,7 @@ class SoundManager {
     this.isMuted = !this.isMuted;
     try {
       localStorage.setItem('atelier_master_muted', this.isMuted ? 'true' : 'false');
-    } catch (e) {}
+    } catch {}
 
     if (this.isMuted) {
       // Mute everything: halt active SFX and pause background music immediately
@@ -246,20 +269,20 @@ class SoundManager {
       try {
         this.bgSourceNode.stop();
         this.bgSourceNode.disconnect();
-      } catch (e) {}
+      } catch {}
       this.bgSourceNode = null;
     }
     if (this.bgGainNode) {
       try {
         this.bgGainNode.disconnect();
-      } catch (e) {}
+      } catch {}
       this.bgGainNode = null;
     }
     if (this.bgAudioElement) {
       try {
         this.bgAudioElement.pause();
         this.bgAudioElement.currentTime = 0;
-      } catch (e) {}
+      } catch {}
     }
     this.isBgPlaying = false;
   }
@@ -290,8 +313,7 @@ class SoundManager {
 
       this.bgSourceNode = source;
       this.bgGainNode = gainNode;
-      this.isBgPlaying = true;
-      this.notifyListeners();
+      this._markBgPlaying();
     } catch (e) {
       console.warn('SoundManager: Web Audio background music failed, trying HTML5 Audio', e);
       this._startHtml5Loop();
@@ -312,83 +334,129 @@ class SoundManager {
       if (playPromise && typeof playPromise.catch === 'function') {
         playPromise
           .then(() => {
-            this.isBgPlaying = true;
-            this.notifyListeners();
+            // Confirm it is genuinely rolling before claiming playback — a stale promise
+            // from an element that has since been paused must not resurrect the state.
+            if (this.bgAudioElement && !this.bgAudioElement.paused) {
+              this._markBgPlaying();
+            }
           })
           .catch(() => {
-            // Autoplay blocked until gesture
+            // Autoplay refused. The bridge armed by startBgMusic() re-attempts the moment
+            // the browser permits it, so there is nothing to schedule here.
           });
       } else {
-        this.isBgPlaying = true;
-        this.notifyListeners();
+        this._markBgPlaying();
       }
     } catch (e) {
       console.warn('SoundManager: HTML5 Audio background music play failed', e);
     }
   }
 
-  // Start background audio loop immediately after loading
-  // STRICTLY SINGLE-INSTANCE: will NEVER spawn a second playing instance
+  // Records a genuinely audible loop and retires the autoplay bridge.
+  _markBgPlaying() {
+    if (this.isBgPlaying) return;
+    this.isBgPlaying = true;
+    this._disarmBgMusicAutostart();
+    this.notifyListeners();
+  }
+
+  // One synchronous best-effort start. Returns true only when a source actually began.
+  _startBgMusicNow() {
+    if (this.isMuted || !this.bgMusicWanted || this.isBgPlaying) return this.isBgPlaying;
+
+    this.initContext();
+
+    // Prefer the sample-accurate Web Audio loop, which may only be scheduled once the
+    // context is actually running. Until then the HTML5 element is the only chance — and
+    // it too is refused without a gesture, hence the armed retry in startBgMusic().
+    if (this.ctx && this.ctx.state === 'running' && this.bgBuffer) {
+      this._startWebAudioLoop();
+      return this.isBgPlaying;
+    }
+
+    this._startHtml5Loop();
+    return this.isBgPlaying;
+  }
+
+  // =========================================================================
+  // AUTOPLAY BRIDGE
+  // Every mainstream browser refuses audible playback until the visitor interacts, and
+  // a blocked AudioContext.resume() typically stays *pending* rather than rejecting — so
+  // any promise-based fallback silently never fires. These listeners are therefore armed
+  // unconditionally once the atelier finishes loading, and stay armed across as many
+  // interactions as it takes until the loop is genuinely playing, then remove themselves.
+  // =========================================================================
+  _armBgMusicAutostart() {
+    if (typeof window === 'undefined' || this.bgAutostartArmed) return;
+
+    const GESTURES = ['pointerdown', 'pointerup', 'click', 'mousedown', 'keydown', 'touchstart', 'touchend', 'wheel', 'scroll'];
+
+    const detach = () => {
+      if (!this.bgAutostartArmed) return;
+      GESTURES.forEach((evt) => window.removeEventListener(evt, onGesture, true));
+      document.removeEventListener('visibilitychange', onVisibility);
+      this.bgAutostartArmed = false;
+      this.bgAutostartDetach = null;
+    };
+
+    const attempt = () => {
+      // Muted by choice: restarting on a stray interaction would be wrong, and the master
+      // toggle owns playback from here.
+      if (this.isMuted) {
+        detach();
+        return;
+      }
+      if (!this.bgMusicWanted) return;
+      if (this.isBgPlaying) {
+        detach();
+        return;
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+      if (this._startBgMusicNow()) detach();
+    };
+
+    const onGesture = () => attempt();
+    const onVisibility = () => {
+      if (!document.hidden) attempt();
+    };
+
+    GESTURES.forEach((evt) => window.addEventListener(evt, onGesture, { capture: true, passive: true }));
+    document.addEventListener('visibilitychange', onVisibility);
+
+    this.bgAutostartArmed = true;
+    this.bgAutostartDetach = detach;
+  }
+
+  _disarmBgMusicAutostart() {
+    if (this.bgAutostartDetach) this.bgAutostartDetach();
+  }
+
+  // Start the ambient loop immediately after loading.
+  // STRICTLY SINGLE-INSTANCE: will NEVER spawn a second playing instance, and is safe to
+  // call repeatedly (each section nav, every re-render). If the browser is still waiting
+  // for a gesture the autoplay bridge finishes the job on the visitor's first interaction.
   startBgMusic() {
     if (typeof window === 'undefined') return;
     this.bgMusicWanted = true;
 
-    // If master is muted or already actively playing on Web Audio, DO NOT duplicate
-    if (this.isMuted || (this.isBgPlaying && this.bgSourceNode)) return;
+    if (this.isMuted) return;
+
+    // Already audible — never restart it, or the loop would audibly jump back to bar one.
+    if (this.isBgPlaying) return;
+
+    this._armBgMusicAutostart();
 
     this.initContext();
-
-    // 1. If AudioContext is currently suspended (browser autoplay policy), handle aggressively:
     if (this.ctx && this.ctx.state === 'suspended') {
-      // Attempt immediate resume (will succeed if user clicked or tapped anywhere during loading)
-      this.ctx.resume().then(() => {
-        this.isUnlocked = true;
-        if (this.bgMusicWanted && !this.isMuted) {
-          if (this.bgBuffer) {
-            this._startWebAudioLoop();
-          } else {
-            this._startHtml5Loop();
-          }
-        }
-      }).catch(() => {
-        // If browser blocked it, register one-time instantaneous triggers on any user interaction
-        const triggerAutoplayOnGesture = () => {
-          ['pointerdown', 'click', 'keydown', 'touchstart', 'wheel'].forEach((evt) =>
-            window.removeEventListener(evt, triggerAutoplayOnGesture, true)
-          );
-          if (this.ctx && this.ctx.state === 'suspended') {
-            this.ctx.resume().then(() => {
-              this.isUnlocked = true;
-              if (this.bgMusicWanted && !this.isMuted && !this.isBgPlaying) {
-                if (this.bgBuffer) {
-                  this._startWebAudioLoop();
-                } else {
-                  this._startHtml5Loop();
-                }
-              }
-            }).catch(() => {});
-          }
-        };
-        ['pointerdown', 'click', 'keydown', 'touchstart', 'wheel'].forEach((evt) =>
-          window.addEventListener(evt, triggerAutoplayOnGesture, { capture: true, once: true, passive: true })
-        );
-      });
-
-      // Also attempt HTML5 audio in parallel in case HTML media is allowed by browser policy
-      if (!this.isBgPlaying) {
-        this._startHtml5Loop();
-      }
-      return;
+      // Nudges the context awake. Inside a handled gesture this resolves at once; on a
+      // cold load it may stay pending until the visitor interacts, which is precisely the
+      // case the bridge covers.
+      this.ctx.resume().catch(() => {});
     }
 
-    // 2. If Web Audio context is running and buffer is ready:
-    if (this.ctx && this.ctx.state === 'running' && this.bgBuffer) {
-      this._startWebAudioLoop();
-      return;
-    }
-
-    // 3. Fallback to HTML5 Audio
-    this._startHtml5Loop();
+    this._startBgMusicNow();
   }
 
   // Pause background music with gentle fade-out
@@ -410,9 +478,9 @@ class SoundManager {
             currentSource.stop();
             currentSource.disconnect();
             currentGain.disconnect();
-          } catch (e) {}
+          } catch {}
         }, 650);
-      } catch (e) {}
+      } catch {}
       this.bgSourceNode = null;
       this.bgGainNode = null;
     }
@@ -420,7 +488,7 @@ class SoundManager {
     if (this.bgAudioElement) {
       try {
         this.bgAudioElement.pause();
-      } catch (e) {}
+      } catch {}
     }
 
     this.isBgPlaying = false;
@@ -485,20 +553,20 @@ class SoundManager {
             source.stop();
             source.disconnect();
             gain.disconnect();
-          } catch (e) {}
+          } catch {}
         }, 26);
-      } catch (e) {
-        try { source.stop(); } catch (err) {}
+      } catch {
+        try { source.stop(); } catch {}
       }
     } else if (this.currentSource) {
-      try { this.currentSource.stop(); } catch (e) {}
+      try { this.currentSource.stop(); } catch {}
     }
 
     if (this.currentAudioFallback) {
       try {
         this.currentAudioFallback.pause();
         this.currentAudioFallback.currentTime = 0;
-      } catch (e) {}
+      } catch {}
       this.currentAudioFallback = null;
     }
 
@@ -569,7 +637,7 @@ class SoundManager {
           try {
             source.disconnect();
             gainNode.disconnect();
-          } catch (e) {}
+          } catch {}
         };
 
         source.onended = onFinished;

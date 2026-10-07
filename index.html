@@ -7,9 +7,10 @@
 
     <!--
       ============================================================================
-      TODO(deploy): replace every occurrence of https://YOUR-DOMAIN.example with the
-      production origin (no trailing slash). Canonical, og:url, og:image, twitter
-      cards, the JSON-LD block, public/robots.txt and public/sitemap.xml all use it.
+      Site origin (single source of truth): https://codex.is-a.dev
+      Canonical, og:url, og:image, the Twitter card and the JSON-LD block all read
+      from it. If the site ever moves to another host, this origin changes in exactly
+      four places: this file, public/robots.txt, public/sitemap.xml and public/CNAME.
       ============================================================================
     -->
     <title>Aditya Rathore — Web Developer, Product Builder &amp; Minecraft Modder</title>
@@ -19,7 +20,7 @@
     />
     <meta name="author" content="Aditya Rathore" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <link rel="canonical" href="https://YOUR-DOMAIN.example/" />
+    <link rel="canonical" href="https://codex.is-a.dev/" />
     <meta name="theme-color" content="#FBF9F5" />
     <meta name="color-scheme" content="light" />
 
@@ -31,8 +32,8 @@
       property="og:description"
       content="Websites, web apps and product solutions for problems of any format. Built in India by Aditya Rathore."
     />
-    <meta property="og:url" content="https://YOUR-DOMAIN.example/" />
-    <meta property="og:image" content="https://YOUR-DOMAIN.example/og-image.jpg" />
+    <meta property="og:url" content="https://codex.is-a.dev/" />
+    <meta property="og:image" content="https://codex.is-a.dev/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Aditya Rathore — portfolios, projects and Minecraft mods" />
@@ -45,7 +46,7 @@
       name="twitter:description"
       content="Websites, web apps and product solutions for problems of any format. Built in India by Aditya Rathore."
     />
-    <meta name="twitter:image" content="https://YOUR-DOMAIN.example/og-image.jpg" />
+    <meta name="twitter:image" content="https://codex.is-a.dev/og-image.jpg" />
 
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -94,11 +95,11 @@
         "@graph": [
           {
             "@type": "Person",
-            "@id": "https://YOUR-DOMAIN.example/#person",
+            "@id": "https://codex.is-a.dev/#person",
             "name": "Aditya Rathore",
             "jobTitle": "Web Developer & Product Builder",
             "email": "mailto:aditya.rathore10101@gmail.com",
-            "url": "https://YOUR-DOMAIN.example/",
+            "url": "https://codex.is-a.dev/",
             "address": { "@type": "PostalAddress", "addressCountry": "IN" },
             "knowsAbout": [
               "Web Development",
@@ -118,11 +119,11 @@
           },
           {
             "@type": "WebSite",
-            "@id": "https://YOUR-DOMAIN.example/#website",
-            "url": "https://YOUR-DOMAIN.example/",
+            "@id": "https://codex.is-a.dev/#website",
+            "url": "https://codex.is-a.dev/",
             "name": "Aditya Rathore — Atelier Portfolio",
             "inLanguage": "en",
-            "author": { "@id": "https://YOUR-DOMAIN.example/#person" }
+            "author": { "@id": "https://codex.is-a.dev/#person" }
           }
         ]
       }

@@ -23,6 +23,18 @@
     color: var(--ink-primary);
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    /*
+     * The site is a single 100svh stage whose section changes are driven by wheel and
+     * swipe handlers, so the document itself must never scroll or rubber-band.
+     * `overscroll-behavior: none` on the ROOT element is what actually stops Chrome
+     * Android's pull-to-refresh from hijacking a downward swipe — without it the
+     * browser cancels our touch gesture (touchcancel) and reloads the page, which is
+     * exactly why swiping back up a section used to be impossible on phones.
+     * `touch-action: manipulation` keeps pan + pinch but removes the 300ms
+     * double-tap-zoom delay on every seal, tag and card.
+     */
+    overscroll-behavior: none;
+    touch-action: manipulation;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,6 +52,7 @@
     padding: 0;
     overflow-x: hidden;
     background-color: var(--canvas-bg);
+    overscroll-behavior: none;
   }
 
   /*
@@ -69,6 +82,22 @@
 
 .font-sans {
   font-family: var(--font-sans);
+}
+
+/*
+ * Hero scroll cue — layout guard.
+ *
+ * The mobile/tablet hero stack (masthead + about statement + Connect Me + medallions) needs
+ * roughly 570px of viewport height before it fits at all, even with the height-aware masthead.
+ * Below that the stack spills past the fold, so the pinned "Gallery · Explore" cue would land
+ * directly on the Connect Me block it is anchored above. There is no room for both, and a
+ * collision reads as a bug where a missing hint does not — the section is still reachable by
+ * swipe, wheel, arrow keys and the section rail.
+ */
+@media (max-width: 1023px) and (max-height: 580px) {
+  .hero-scroll-cue {
+    display: none;
+  }
 }
 
 /* Linen Canvas Texture Overlay */
@@ -276,13 +305,13 @@
 
 .animate-marquee-flow {
   display: flex !important;
-  animation: marqueeScroll 58s linear infinite !important;
+  animation: marqueeScroll 78s linear infinite !important;
   will-change: transform;
 }
 
 .animate-marquee-flow-slower {
   display: flex !important;
-  animation: marqueeScroll 70s linear infinite !important;
+  animation: marqueeScroll 94s linear infinite !important;
   will-change: transform;
 }
 
@@ -346,6 +375,8 @@
   .animate-glaze-slow,
   .animate-glaze-reverse,
   .animate-bounce,
+  .animate-marquee-flow,
+  .animate-marquee-flow-slower,
   .animate-fadeIn {
     animation: none;
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import soundManager from '../lib/soundManager';
 import { preloadAllSiteAssets } from '../lib/assetPreloader';
 
@@ -55,15 +55,15 @@ const ATELIER_QUOTES = [
 ];
 
 export default function AtelierLoader({ onLoaded }) {
-  // Pick random quote once per session
-  const quoteData = useMemo(() => {
-    const idx = Math.floor(Math.random() * ATELIER_QUOTES.length);
-    return ATELIER_QUOTES[idx];
-  }, []);
+  // One random quote per session. A lazy state initialiser (rather than a render-time
+  // Math.random) keeps the render pure — the quote is chosen once, before first paint,
+  // and never re-rolled by a re-render.
+  const [quoteData] = useState(
+    () => ATELIER_QUOTES[Math.floor(Math.random() * ATELIER_QUOTES.length)],
+  );
 
   const [isFading, setIsFading] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let isCancelled = false;
@@ -72,12 +72,10 @@ export default function AtelierLoader({ onLoaded }) {
       const startTime = performance.now();
       const minDuration = 1400; // serene atelier presentation
 
-      // 1. Preload & GPU-decode every critical high-res texture, 3D book logo, font, audio, and all 10 videos into RAM
-      await preloadAllSiteAssets((p) => {
-        if (!isCancelled) {
-          setProgress(p);
-        }
-      });
+      // 1. Preload & GPU-decode every critical high-res texture, 3D cover, font, audio and
+      //    all ten films into RAM. The gate has no progress bar of its own (the screen is a
+      //    quote and a hairline rule), so the reported fraction is intentionally ignored.
+      await preloadAllSiteAssets(() => {});
 
       // 2. Ensure minimum duration has also passed
       const elapsed = performance.now() - startTime;
@@ -85,11 +83,21 @@ export default function AtelierLoader({ onLoaded }) {
         await new Promise((resolve) => setTimeout(resolve, minDuration - elapsed));
       }
 
-      // 3. Guarantee that the browser paints the underlying WebGL & canvas pipeline
+      // 3. Guarantee that the browser paints the underlying WebGL & canvas pipeline.
+      //    Two frames is the ideal hand-off, but rAF is suspended outright in a
+      //    backgrounded or non-compositing tab and can be throttled elsewhere — and an
+      //    unbounded wait there means a visitor stuck on the loading screen with the
+      //    score never starting. Race it against a short timer so the gate can never be
+      //    the reason the experience fails to open.
       await new Promise((resolve) => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(resolve);
-        });
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(finish));
+        setTimeout(finish, 320);
       });
 
       if (isCancelled) return;

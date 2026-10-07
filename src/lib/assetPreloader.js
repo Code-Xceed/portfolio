@@ -92,12 +92,15 @@ export function areVideosPreloaded() {
   return videosPreloadComplete;
 }
 
-// Every entry here blocks the loading gate, so this list is deliberately limited to
-// assets that are actually painted on screen. Seven former entries
+// Every entry here blocks the loading gate, so the list is nailed to what is genuinely
+// painted on screen — nothing is preloaded "just in case". Two rounds of pruning have
+// taken ~9 MB out of this gate: seven leftovers from an earlier scene design
 // (hero-painting-mobile, dark-hero-painting, wanderer-refined, sanctuary-foreground,
-// sanctuary-bg-clean, gallery-hall-bg and the .jpg twin of gallery-corner-flowers)
-// were left over from an earlier scene design and cost ~4 MB of first-load bandwidth
-// for images that were never displayed.
+// sanctuary-bg-clean, gallery-hall-bg, the .jpg twin of gallery-corner-flowers) and six
+// classical gallery plates (rembrandt_peale_washington, hubert_robert_ponte_salario,
+// louis_francois_rome, henry_singleton_landscape, thomas_doughty_landscape,
+// roman_arch_ruins) that no component ever rendered. Their files are gone too — a
+// preload entry for an asset nobody displays is a visitor paying for nothing.
 export const CRITICAL_PRELOAD_ASSETS = [
   // 1. Hero & Nature Environments
   '/alpine-sanctuary-reference.jpg',
@@ -105,28 +108,20 @@ export const CRITICAL_PRELOAD_ASSETS = [
   '/hero-painting.jpg',
   '/hero-canvas-impasto.jpg',
   '/hero-tuscan-mist.jpg',
-  '/gallery-corner-flowers.png',
+  '/gallery-corner-flowers.webp',
 
   // 2. Artisanal Crumpled Paper Cursors
   '/Crumpled Paper Animated Cursor--cursor--SweezyCursors.png',
   '/Crumpled Paper Animated Cursor--pointer--SweezyCursors.png',
 
-  // 3. Classical Curatorial Gallery Plates
-  '/gallery/rembrandt_peale_washington.jpg',
-  '/gallery/hubert_robert_ponte_salario.jpg',
-  '/gallery/louis_francois_rome.jpg',
-  '/gallery/henry_singleton_landscape.jpg',
-  '/gallery/thomas_doughty_landscape.jpg',
-  '/gallery/roman_arch_ruins.jpg',
-
-  // 4. 3D Monograph Publication Logos (All 7 Authentic Logos)
-  '/gallery/Xmusic-Logo.png',
-  '/gallery/FrameGIT-logo.png',
-  '/gallery/Xdrop-logo.png',
-  '/gallery/Xoppor-AI.png',
-  '/gallery/vault-logo.png',
-  '/gallery/CodeX-logo.png',
-  '/gallery/YT-media-logo.png',
+  // 3. 3D Monograph Publication Covers (all 7 projects)
+  '/gallery/Xmusic-Logo.webp',
+  '/gallery/FrameGIT-logo.webp',
+  '/gallery/Xdrop-logo.webp',
+  '/gallery/Xoppor-AI.webp',
+  '/gallery/vault-logo.webp',
+  '/gallery/CodeX-logo.webp',
+  '/gallery/YT-media-logo.webp',
 ];
 
 export const CRITICAL_PRELOAD_VIDEOS = [
@@ -196,21 +191,41 @@ export const preloadVideo = preloadVideoFully;
  */
 export function preloadImage(src, onComplete) {
   return new Promise((resolve) => {
+    let settled = false;
+    let budget = null;
+    let img = null;
+
     const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      if (budget !== null) clearTimeout(budget);
       onComplete?.();
       resolve(result);
     };
 
-    // If it's a project thumbnail logo, route through getProjectImage so the store is warmed up
-    if (src.startsWith('/gallery/') && src.endsWith('.png')) {
-      const existing = getProjectImage(src, () => finish(existing));
+    // Image decode is driven by the rendering lifecycle, so a document that is not producing
+    // frames — a backgrounded or occluded tab, an embedded panel — can leave img.decode()
+    // starved indefinitely instead of rejecting it. A single stalled texture must never hold
+    // the loading gate (and the ambient score queued behind it) for the whole safety timeout,
+    // so every image carries a hard budget of its own. None of these images is cancelled: a
+    // late texture simply paints whenever it is ready.
+    budget = setTimeout(() => {
+      finish(img && img.complete && img.naturalWidth > 0 ? img : getProjectImage(src) || null);
+    }, 8000);
+
+    // Project covers are the only images under /gallery/ (the films there are videos and go
+    // through preloadVideoFully). Routing them via getProjectImage means the shared image store
+    // is already warm when the 3D monographs ask for their cover texture — and it keeps working
+    // whatever format a cover ships in, which a `.png` suffix test quietly stopped doing.
+    if (src.startsWith('/gallery/') && !src.endsWith('.mp4')) {
+      const existing = getProjectImage(src, () => finish(existing || null));
       if (existing) {
         finish(existing);
         return;
       }
     }
 
-    const img = new Image();
+    img = new Image();
     if (/^https?:\/\//i.test(src)) {
       img.crossOrigin = 'anonymous';
     }
@@ -274,21 +289,32 @@ export async function preloadAllSiteAssets(onProgress) {
   );
 
   const fontPromise = (async () => {
-    if (typeof document !== 'undefined' && document.fonts) {
-      try {
-        await document.fonts.ready;
-        const fontFaces = [
-          '400 24px "Bodoni Moda"',
-          '600 24px "Bodoni Moda"',
-          '300 24px "Cinzel"',
-          '600 24px "Cinzel"',
-          'italic 300 24px "Cormorant Garamond"',
-          '500 20px "Plus Jakarta Sans"',
-        ];
-        await Promise.allSettled(fontFaces.map((f) => document.fonts.load(f)));
-      } catch (e) {
-        // Non-blocking fallback
-      }
+    if (typeof document === 'undefined' || !document.fonts) return;
+
+    const fontFaces = [
+      '400 24px "Bodoni Moda"',
+      '600 24px "Bodoni Moda"',
+      '300 24px "Cinzel"',
+      '600 24px "Cinzel"',
+      'italic 300 24px "Cormorant Garamond"',
+      '500 20px "Plus Jakarta Sans"',
+    ];
+
+    // Web fonts are the only asset here fetched from a third-party CDN, and both
+    // document.fonts.ready and fonts.load() stay pending for as long as that request does.
+    // A stalled, throttled or blocked fonts.gstatic.com therefore used to hold the entire
+    // loading gate — and the ambient score waiting behind it — for the full 30s safety
+    // timeout. The whole font phase now shares one 2.5s budget; anything later simply swaps
+    // in, which is what the faces' own `display: swap` already does.
+    const budget = new Promise((resolve) => setTimeout(resolve, 2500));
+    try {
+      await Promise.race([document.fonts.ready, budget]);
+      await Promise.race([
+        Promise.allSettled(fontFaces.map((f) => document.fonts.load(f))),
+        budget,
+      ]);
+    } catch {
+      // Non-blocking fallback
     }
   })();
 
@@ -312,8 +338,12 @@ export async function preloadAllSiteAssets(onProgress) {
     sfxPromise,
   ]);
 
-  // Generous timeout (30s) as a safety net only — normal path waits for every video blob
-  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 30000));
+  // Absolute ceiling on how long the gate may stay shut. The normal path waits for every
+  // video blob and every decoded texture, but a visitor must never be held on the loading
+  // screen — with the score muted behind it — because one download or decode misbehaved.
+  // Anything unfinished here still streams in afterwards (see areVideosPreloaded), so a
+  // visitor on a slow connection gets the site and its music sooner, not a stalled gate.
+  const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 12000));
   await Promise.race([allAssets, safetyTimeout]);
 
   // Signal that the video phase has settled, so gallery cards may safely fall back

@@ -470,7 +470,7 @@ export default function FluidShaderCanvas({
           gl.deleteBuffer(quadBuffer);
           gl.deleteTexture(imageTexture);
           gl.deleteProgram(program);
-        } catch (e) {}
+        } catch {}
       }
     };
   }, [imageSrc, mobileImageSrc]);

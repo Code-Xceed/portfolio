@@ -18,10 +18,10 @@ export default function CinematicFullpage({
   onSectionChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // A ref, not state: nothing rendered depends on the lock, and `setActiveIndex` already
+  // re-renders the section layers — so keeping the lock out of state removes a render
+  // pass from the middle of every cinematic transition.
   const transitioningRef = useRef(false);
-  const touchStartY = useRef(0);
-  const touchStartX = useRef(0);
 
   const goToSection = useCallback(
     (index) => {
@@ -31,13 +31,11 @@ export default function CinematicFullpage({
       soundManager.play('hold');
 
       transitioningRef.current = true;
-      setIsTransitioning(true);
       setActiveIndex(index);
       onSectionChange?.(index);
 
       setTimeout(() => {
         transitioningRef.current = false;
-        setIsTransitioning(false);
       }, 1100);
     },
     [activeIndex, sections.length, onSectionChange]
@@ -92,37 +90,108 @@ export default function CinematicFullpage({
     };
   }, [activeIndex, nextSection, prevSection, sections.length]);
 
-  // Touch gesture listener
+  // Touch gesture listener.
+  //
+  // This deliberately works on `touchmove` (not `touchend`) for two reasons:
+  //
+  //  1. PULL-TO-REFRESH. A downward swipe used to be claimed by Chrome/Android, which
+  //     fired `touchcancel` instead of `touchend` — so our handler never ran (backwards
+  //     scrolling "did nothing") and the browser reloaded the page. We now wait until
+  //     the gesture proves it is vertical, call `preventDefault()` on a non-passive
+  //     `touchmove`, and the native overscroll gesture can no longer start.
+  //  2. RESPONSIVENESS. Reacting to travel (instead of only to the release point)
+  //     makes a swipe change section at the moment the finger crosses the threshold,
+  //     which feels identical to the wheel/trackpad path on desktop.
+  //
+  // Genuinely scrollable regions inside a section (the mobile project dossier sheet)
+  // keep their native momentum scrolling: when the touch starts inside one we stay out
+  // of the way entirely.
   useEffect(() => {
-    const onTouchStart = (e) => {
-      if (e.touches.length !== 1) return;
-      touchStartY.current = e.touches[0].clientY;
-      touchStartX.current = e.touches[0].clientX;
+    const SWIPE_THRESHOLD = 46;
+    const AXIS_SLOP = 8;
+    let tracking = false;
+    let axis = null;
+    let fired = false;
+    let startY = 0;
+    let startX = 0;
+    let nativeScroller = null;
+
+    // Walk up from the touch target to the nearest element that actually scrolls
+    // vertically and has somewhere to go.
+    const findVerticalScroller = (node) => {
+      let el = node instanceof Element ? node : null;
+      while (el && el !== document.body && el !== document.documentElement) {
+        const style = window.getComputedStyle(el);
+        if (
+          /(auto|scroll)/.test(style.overflowY) &&
+          el.scrollHeight > el.clientHeight + 1 &&
+          el.clientHeight > 0
+        ) {
+          return el;
+        }
+        el = el.parentElement;
+      }
+      return null;
     };
 
-    const onTouchEnd = (e) => {
+    const onTouchStart = (e) => {
+      tracking = e.touches.length === 1;
+      axis = null;
+      fired = false;
+      nativeScroller = null;
+      if (!tracking) return;
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+      nativeScroller = findVerticalScroller(e.target);
+    };
+
+    const onTouchMove = (e) => {
+      if (!tracking || e.touches.length !== 1) return;
+
+      const dy = startY - e.touches[0].clientY;
+      const dx = startX - e.touches[0].clientX;
+
+      if (axis === null) {
+        if (Math.abs(dy) < AXIS_SLOP && Math.abs(dx) < AXIS_SLOP) return;
+        // Vertical intent wins over a horizontal carousel / monograph drag.
+        axis = Math.abs(dy) > Math.abs(dx) * 1.15 ? 'y' : 'x';
+      }
+      if (axis !== 'y') return;
+
+      // Own the gesture from here: no native overscroll, no pull-to-refresh, no
+      // rubber-band — on any device, in both directions.
+      if (e.cancelable && !nativeScroller) e.preventDefault();
+
+      if (nativeScroller || fired || transitioningRef.current) return;
       if (document.querySelector('.bs-detail-open')) return;
-      if (transitioningRef.current) return;
-      if (e.changedTouches.length !== 1) return;
 
-      const dy = touchStartY.current - e.changedTouches[0].clientY;
-      const dx = touchStartX.current - e.changedTouches[0].clientX;
+      if (Math.abs(dy) < SWIPE_THRESHOLD) return;
 
-      // Ensure vertical swipe has priority over horizontal carousel drag
-      if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.5) {
-        if (dy > 0 && activeIndex < sections.length - 1) {
-          nextSection();
-        } else if (dy < 0 && activeIndex > 0) {
-          prevSection();
-        }
+      if (dy > 0 && activeIndex < sections.length - 1) {
+        fired = true;
+        nextSection();
+      } else if (dy < 0 && activeIndex > 0) {
+        fired = true;
+        prevSection();
       }
     };
 
+    // A gesture the browser still manages to cancel should never leave stale state.
+    const onTouchEnd = () => {
+      tracking = false;
+      axis = null;
+      nativeScroller = null;
+    };
+
     window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
     return () => {
       window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
     };
   }, [activeIndex, nextSection, prevSection, sections.length]);
 

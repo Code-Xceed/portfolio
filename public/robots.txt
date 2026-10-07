@@ -1,5 +1,5 @@
 # Aditya Rathore — Atelier Portfolio
-# TODO(deploy): replace YOUR-DOMAIN.example with the production origin.
+# Site origin: https://codex.is-a.dev (mirrored in index.html, sitemap.xml and CNAME).
 
 User-agent: *
 Allow: /
@@ -7,4 +7,4 @@ Allow: /
 # The site is a single interactive experience, so there is nothing to disallow.
 # Source media (source-videos/, *.exr) never enters the deployed bundle.
 
-Sitemap: https://YOUR-DOMAIN.example/sitemap.xml
+Sitemap: https://codex.is-a.dev/sitemap.xml
