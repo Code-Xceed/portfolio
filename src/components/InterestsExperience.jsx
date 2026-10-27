@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 /**
- * Curated Dispatches / Technical Writing
+ * Curated Blog Posts / Technical Writing
  */
 const BLOGS = [
   {
@@ -81,9 +81,9 @@ export default function InterestsExperience() {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_1.18fr] gap-8 md:gap-11 lg:gap-13 items-stretch">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: VISUAL MEDIA CARDS (Taller, balanced scale) */}
+        {/* LEFT COLUMN: VISUAL MEDIA CARDS (Refined proportions)    */}
         {/* ======================================================== */}
-        <div className="flex flex-col gap-6 sm:gap-7 justify-between">
+        <div className="flex flex-col gap-5 sm:gap-6 justify-between">
           
           {/* Card 1: Minecraft Speedrunning & Competitive Gaming */}
           <article className="group relative rounded-2xl bg-[#FCFCFB] border border-stone-200/70 hover:border-stone-300 p-4 sm:p-5 transition-all duration-300 shadow-[0_1px_3px_rgba(22,21,20,0.02)] hover:shadow-[0_8px_20px_rgba(22,21,20,0.04)] flex flex-col justify-between">
@@ -93,9 +93,9 @@ export default function InterestsExperience() {
                 Minecraft &amp; Competitive Esports
               </h3>
 
-              {/* Taller, Balanced Cinematic Thumbnail */}
+              {/* Balanced Cinematic Thumbnail */}
               <div 
-                className="relative w-full h-[140px] sm:h-[150px] rounded-xl overflow-hidden bg-stone-900 my-3 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+                className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
                 onMouseEnter={() => mcVideoRef.current?.play()}
               >
                 <video 
@@ -115,7 +115,7 @@ export default function InterestsExperience() {
               </div>
             </div>
 
-            {/* Sub-thumbnail Details: Pro in Minecraft & Also Plays Pills */}
+            {/* Sub-thumbnail Details: Pro in Minecraft & Also Plays (PUBG & Chess.com) */}
             <div className="pt-2.5 border-t border-stone-200/60 flex flex-col gap-2">
               {/* Primary Game Display */}
               <div className="flex items-center justify-between">
@@ -130,23 +130,18 @@ export default function InterestsExperience() {
                 </span>
               </div>
 
-              {/* Secondary Also Plays Strip (Single clean row) */}
+              {/* Secondary Also Plays Strip (Clean single line, no Free Fire) */}
               <div className="flex items-center justify-between pt-0.5">
                 <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
                   Also plays:
                 </span>
-                <div className="flex items-center gap-1 sm:gap-1.5">
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/freefire.png" alt="Free Fire" className="h-2.5 w-auto object-contain" />
-                    <span>Free Fire</span>
-                  </div>
-
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
                     <img src="/icons/pubg.svg" alt="PUBG" className="w-3.5 h-2.5 object-contain" />
                     <span>PUBG</span>
                   </div>
 
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
                     <img src="/icons/chesscom.svg" alt="Chess.com" className="w-3 h-3 object-contain" />
                     <span>Chess.com</span>
                   </div>
@@ -163,9 +158,9 @@ export default function InterestsExperience() {
                 Video Direction &amp; Motion Design
               </h3>
 
-              {/* Taller, Balanced Cinematic Thumbnail */}
+              {/* Balanced Cinematic Thumbnail */}
               <div 
-                className="relative w-full h-[140px] sm:h-[150px] rounded-xl overflow-hidden bg-stone-900 my-3 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+                className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
                 onMouseEnter={() => editVideoRef.current?.play()}
               >
                 <video 
@@ -185,22 +180,22 @@ export default function InterestsExperience() {
               </div>
             </div>
 
-            {/* Sub-thumbnail Details: Proficiency in DaVinci Resolve & Also Uses Pills */}
+            {/* Sub-thumbnail Details: Good at DaVinci Resolve & Also Uses (Premiere, AE, Blender) */}
             <div className="pt-2.5 border-t border-stone-200/60 flex flex-col gap-2">
               {/* Primary Creative Tool Display */}
               <div className="flex items-center justify-between">
                 <div className="inline-flex items-center gap-1.5">
                   <img src="/icons/davinci.svg" alt="DaVinci Resolve" className="w-3.5 h-3.5 object-contain" />
                   <span className="text-[12px] font-semibold text-[#161514] tracking-tight">
-                    Proficiency in DaVinci Resolve
+                    Good at DaVinci Resolve
                   </span>
                 </div>
                 <span className="text-[9.5px] font-mono text-stone-600 bg-stone-100/90 border border-stone-300/60 px-2 py-0.5 rounded font-medium">
-                  Color &amp; Motion
+                  Video &amp; Motion
                 </span>
               </div>
 
-              {/* Secondary Also Uses Strip (Single clean row) */}
+              {/* Secondary Also Uses Strip (Premiere, AE, Blender) */}
               <div className="flex items-center justify-between pt-0.5">
                 <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
                   Also uses:
@@ -213,7 +208,7 @@ export default function InterestsExperience() {
 
                   <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
                     <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain" />
-                    <span>After Effects</span>
+                    <span>AE</span>
                   </div>
 
                   <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
@@ -229,17 +224,17 @@ export default function InterestsExperience() {
 
         {/* ======================================================== */}
         {/* RIGHT COLUMN: PURE TEXT & LINEWORK DIRECTLY ON CANVAS    */}
-        {/* (Zero panels, zero card backgrounds, pristine hierarchy) */}
+        {/* (Blogs & Experience, no footer as requested)            */}
         {/* ======================================================== */}
         <div className="flex flex-col justify-between pt-0.5">
           
-          {/* Top Block: Recent Dispatches (Directly on canvas, no card background) */}
-          <section aria-labelledby="dispatches-heading">
+          {/* Top Block: Curated Blogs (Exact user request: # Blogs) */}
+          <section aria-labelledby="blogs-heading">
             {/* Header with Divider Line */}
             <div className="flex items-center gap-2.5 mb-2.5">
-              <span id="dispatches-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
+              <span id="blogs-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-stone-500" />
-                <span># Dispatches</span>
+                <span># Blogs</span>
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80" />
               <span className="text-[10px] font-mono text-stone-400 font-medium">4 notes</span>
@@ -287,7 +282,7 @@ export default function InterestsExperience() {
             </div>
           </section>
 
-          {/* Bottom Block: Career Experience Log (Title on top, time in front, company below) */}
+          {/* Bottom Block: Career Experience Log (Title on top, time in front, company below, NO FOOTER) */}
           <section aria-labelledby="experience-heading" className="pt-6 sm:pt-7">
             {/* Header with Divider Line */}
             <div className="flex items-center gap-2.5 mb-2.5">
@@ -326,15 +321,6 @@ export default function InterestsExperience() {
                   )}
                 </div>
               ))}
-            </div>
-
-            {/* Bottom Status Footnote */}
-            <div className="pt-2.5 border-t border-stone-200/60 mt-3 flex items-center justify-between text-[10.5px] font-mono text-stone-400">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                <span className="text-stone-600 font-medium">Available for hire</span>
-              </span>
-              <span className="text-[10px] text-stone-400">Remote &amp; Contract</span>
             </div>
           </section>
 
