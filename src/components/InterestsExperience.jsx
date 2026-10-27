@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { 
   ArrowUpRight, 
-  BookOpen
+  BookOpen,
+  Briefcase
 } from 'lucide-react';
 
 /**
@@ -90,7 +91,7 @@ export default function InterestsExperience() {
             {/* Header with Divider Line */}
             <div className="flex items-center gap-2 mb-2">
               <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
-                # Minecraft &amp; Esports
+                # Minecraft Speedrunner
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80" />
             </div>
@@ -118,17 +119,14 @@ export default function InterestsExperience() {
 
             {/* Sub-thumbnail Details: TWO SEPARATE ROWS (Pro App + Extra Apps) */}
             <div className="pt-2 border-t border-stone-200/60 flex flex-col gap-1.5">
-              {/* Row 1: Pro in Minecraft on left, Badge on right */}
-              <div className="flex items-center justify-between">
+              {/* Row 1: Pro in Minecraft */}
+              <div className="flex items-center">
                 <div className="inline-flex items-center gap-1.5">
                   <img src="/icons/minecraft-brand.svg" alt="Minecraft" className="w-3.5 h-3.5 object-contain" />
                   <span className="text-[11.5px] font-semibold text-[#161514] tracking-tight">
                     Pro in Minecraft
                   </span>
                 </div>
-                <span className="text-[9px] font-mono text-emerald-800 bg-emerald-50/80 border border-emerald-500/20 px-1.5 py-0.5 rounded font-medium">
-                  RSG Speedrunner
-                </span>
               </div>
 
               {/* Row 2: Extra Games (Also plays) */}
@@ -156,7 +154,7 @@ export default function InterestsExperience() {
             {/* Header with Divider Line */}
             <div className="flex items-center gap-2 mb-2">
               <span id="video-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
-                # Video &amp; Motion Design
+                # Video Editing &amp; Motion Design
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80" />
             </div>
@@ -184,17 +182,14 @@ export default function InterestsExperience() {
 
             {/* Sub-thumbnail Details: TWO SEPARATE ROWS (Pro Tool + Extra Tools) */}
             <div className="pt-2 border-t border-stone-200/60 flex flex-col gap-1.5">
-              {/* Row 1: Good at DaVinci Resolve on left, Badge on right */}
-              <div className="flex items-center justify-between">
+              {/* Row 1: Good at DaVinci Resolve */}
+              <div className="flex items-center">
                 <div className="inline-flex items-center gap-1.5">
                   <img src="/icons/davinci.svg" alt="DaVinci Resolve" className="w-3.5 h-3.5 object-contain" />
                   <span className="text-[11.5px] font-semibold text-[#161514] tracking-tight">
                     Good at DaVinci Resolve
                   </span>
                 </div>
-                <span className="text-[9px] font-mono text-stone-600 bg-stone-100/90 border border-stone-300/60 px-1.5 py-0.5 rounded font-medium">
-                  Video &amp; Motion
-                </span>
               </div>
 
               {/* Row 2: Extra Tools (Also uses) */}
@@ -268,30 +263,18 @@ export default function InterestsExperience() {
                 </a>
               ))}
             </div>
-
-            {/* Bottom Archive Link */}
-            <div className="pt-2.5 border-t border-stone-200/60 flex items-center justify-between text-[10.5px] font-mono text-stone-400 mt-1">
-              <span>Tech &amp; video essays</span>
-              <a 
-                href="https://github.com/Code-Xceed" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-stone-600 hover:text-black flex items-center gap-1 transition-colors"
-              >
-                <span>Read archive</span>
-                <ArrowUpRight className="w-2.5 h-2.5" />
-              </a>
-            </div>
           </section>
 
           {/* Bottom Block: Career Experience Log (Title on top, time in front, company below, NO FOOTER) */}
           <section aria-labelledby="experience-heading" className="pt-6 sm:pt-7">
             {/* Header with Divider Line */}
             <div className="flex items-center gap-2.5 mb-2.5">
-              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
-                # Experience
+              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
+                <Briefcase className="w-3.5 h-3.5 text-stone-500" />
+                <span># Experience</span>
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <span className="text-[10px] font-mono text-stone-400 font-medium">2 years</span>
             </div>
 
             {/* Experience Rows (Title on top, time in front on right, at company below it) */}
