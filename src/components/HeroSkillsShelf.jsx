@@ -28,18 +28,21 @@ const CATEGORIES = [
   { 
     id: 'web', 
     label: 'Web & Full-Stack', 
+    shortLabel: 'Web',
     icon: Globe,
     count: 14 
   },
   { 
     id: 'creative', 
     label: 'Creative', 
+    shortLabel: 'Creative',
     icon: Palette,
     count: 5 
   },
   { 
     id: 'minecraft', 
     label: 'Minecraft & Modding', 
+    shortLabel: 'Minecraft',
     icon: MinecraftIcon,
     count: 7 
   },
@@ -263,15 +266,16 @@ export default function HeroSkillsShelf() {
       {/* 
         ==================================================
         FIXED-IN-PLACE SELECTOR TOOLBAR
-        - Fixed non-wrapping track with overflow-x-auto for small viewports
-        - Three distinct domains: Web & Full-Stack, Creative, Minecraft & Modding
-        - Clean segmented pill frame, zero layout shift
+        - 100% full-width 3-tab segmented control on mobile: NO horizontal scroll required!
+        - Single-tap effortless switching between domains
+        - Clean responsive layout: compact "Web" / "Minecraft" on small screens, full domain labels on sm+
+        - Rock-solid segmented pill frame, zero layout shift
         ==================================================
       */}
-      <div className="w-full flex items-center justify-start mb-3 px-0.5 overflow-x-auto scrollbar-none">
-        {/* Segmented Tab Controls */}
+      <div className="w-full mb-3 px-0.5">
+        {/* Segmented Tab Controls: Grid on mobile, inline-flex on sm+ */}
         <div 
-          className="inline-flex items-center p-1 rounded-xl bg-stone-100/90 sm:bg-white/80 border border-stone-200/80 shadow-[inset_0_1px_2px_rgba(22,21,20,0.03)] backdrop-blur-md shrink-0"
+          className="w-full grid grid-cols-3 sm:inline-flex sm:w-auto p-1 rounded-xl bg-stone-100/90 sm:bg-white/80 border border-stone-200/80 shadow-[inset_0_1px_2px_rgba(22,21,20,0.03)] backdrop-blur-md gap-1 sm:gap-0.5"
           role="tablist"
           aria-label="Filter skills by engineering & creative domain"
         >
@@ -285,14 +289,15 @@ export default function HeroSkillsShelf() {
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => setActiveTab(cat.id)}
-                className={`pressable relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-[11.5px] font-medium transition-all duration-150 cursor-pointer select-none whitespace-nowrap ${
+                className={`pressable relative flex items-center justify-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-1.5 sm:py-1.5 rounded-lg text-[11px] sm:text-[11.5px] font-medium transition-all duration-150 cursor-pointer select-none whitespace-nowrap touch-manipulation ${
                   isActive
                     ? 'bg-white text-[#161514] font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_1px_rgba(0,0,0,0.04)] border border-black/[0.04]'
-                    : 'text-[#78716C] hover:text-[#161514] hover:bg-white/50'
+                    : 'text-[#78716C] hover:text-[#161514] hover:bg-white/50 active:bg-white/30'
                 }`}
               >
                 <IconComponent className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#161514]' : 'text-[#78716C]'}`} />
-                <span>{cat.label}</span>
+                <span className="sm:hidden">{cat.shortLabel}</span>
+                <span className="hidden sm:inline">{cat.label}</span>
                 <span 
                   className={`text-[9.5px] font-mono px-1.5 py-0.2 rounded-md transition-colors ${
                     isActive 
@@ -318,7 +323,9 @@ export default function HeroSkillsShelf() {
         ==================================================
       */}
       <div 
-        className="min-h-[164px] flex flex-wrap items-start content-start gap-2 sm:gap-2.5 pt-0.5"
+        key={activeTab}
+        className="min-h-[164px] flex flex-wrap items-start content-start gap-2 sm:gap-2.5 pt-0.5 animate-fade-in-up"
+        style={{ animationDuration: '220ms' }}
         role="region"
         aria-live="polite"
       >

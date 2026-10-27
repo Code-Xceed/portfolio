@@ -532,7 +532,7 @@ export default function SelectedWorks() {
   return (
     <section 
       id="projects" 
-      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-14 sm:pb-20"
+      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-14 sm:pb-20 scroll-mt-8 sm:scroll-mt-12"
     >
       {/* PROJECTS LIST: Structured Editorial Spec Stack */}
       <div className="flex flex-col gap-4 sm:gap-5">
