@@ -546,7 +546,7 @@ export default function SelectedWorks() {
         ))}
       </div>
 
-      {/* BOTTOM FOOTER CUE TO INTERESTS & EXPERIENCE */}
+      {/* BOTTOM FOOTER CUE / SECTION DIVIDER (Identical to Hero footer) */}
       <footer className="relative z-10 w-full flex items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 mt-8 sm:mt-10">
         <span className="flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-amber-500/80" />

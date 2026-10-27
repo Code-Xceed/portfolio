@@ -1,586 +1,441 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { 
-  Sparkles, 
   Gamepad2, 
-  Briefcase, 
-  Pin, 
+  Film, 
   ArrowUpRight, 
-  Layers,
-  ChevronDown,
-  Target,
-  Crown,
-  BookOpen,
-  Play,
-  Film
+  BookOpen, 
+  Sparkles,
+  Flame,
+  Crosshair,
+  Trophy
 } from 'lucide-react';
 
 /**
- * Minimal Japanese Seigaiha Line Art (Consistent with SelectedWorks)
+ * Custom High-Craft Minimal Vector Chess Knight Icon
  */
-function SeigaihaLines() {
+function ChessKnightIcon({ className = "w-3 h-3" }) {
   return (
-    <svg className="w-full h-full opacity-[0.06]" viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="0.8">
-      <path d="M0 60 A25 25 0 0 1 50 60" />
-      <path d="M10 60 A15 15 0 0 1 40 60" />
-      <path d="M50 60 A25 25 0 0 1 100 60" />
-      <path d="M60 60 A15 15 0 0 1 90 60" />
-      <path d="M25 60 A25 25 0 0 1 75 60" opacity="0.6" />
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19 22H5v-2h14v2M17.5 13.5c0 1.25-.4 2.4-1.1 3.3l1.1 1.2H6.5l1.1-1.2c-.7-.9-1.1-2-1.1-3.3 0-1.8.8-3.4 2-4.5V7c0-2.8 2.2-5 5-5 .4 0 .7.1 1 .2-.3.6-.5 1.3-.5 2 0 1.5.8 2.8 2 3.5v2.8c1.5.7 2.5 2.2 2.5 3.5z" />
     </svg>
   );
 }
 
 /**
- * Chess Knight Minimalist Vector Emblem
+ * Free Fire Flame Icon
  */
-function ChessKnightEmblem({ color = "#44403C" }) {
-  return (
-    <svg className="w-10 h-10" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 40h20M17 40v-4c0-2 1-3 3-4l4-2c2-1 3-3 3-5v-3c0-1-1-2-2-2h-3l-2-2c-1-1-1-3 0-4l2-2c1-1 3-1 4 0l3 3c2 2 3 5 3 8v3c0 3-2 6-4 8l-3 2v5" opacity="0.85" />
-      <circle cx="21" cy="19" r="1.5" fill={color} />
-      <path d="M16 26c2 1 4 0 5-2" opacity="0.7" />
-    </svg>
-  );
+function FreeFireIcon({ className = "w-3 h-3" }) {
+  return <Flame className={`${className} text-orange-500`} />;
 }
 
 /**
- * Tactical Esports Crosshairs Emblem
+ * PUBG Tactical Target Icon
  */
-function TacticalCrosshairEmblem({ color = "#D97706" }) {
-  return (
-    <svg className="w-10 h-10" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.2">
-      <circle cx="24" cy="24" r="15" strokeDasharray="3 3" opacity="0.6" />
-      <circle cx="24" cy="24" r="7" opacity="0.85" />
-      <circle cx="24" cy="24" r="2" fill={color} />
-      <line x1="24" y1="5" x2="24" y2="13" strokeLinecap="round" />
-      <line x1="24" y1="35" x2="24" y2="43" strokeLinecap="round" />
-      <line x1="5" y1="24" x2="13" y2="24" strokeLinecap="round" />
-      <line x1="35" y1="24" x2="43" y2="24" strokeLinecap="round" />
-    </svg>
-  );
+function PubgIcon({ className = "w-3 h-3" }) {
+  return <Crosshair className={`${className} text-amber-500`} />;
 }
 
 /**
- * Technical Dispatch / Article Emblem
+ * Recent Dispatches / Notes
  */
-function ArticleEmblem({ color = "#7C3AED" }) {
-  return (
-    <svg className="w-10 h-10" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round">
-      <rect x="11" y="9" width="26" height="30" rx="3" opacity="0.85" />
-      <line x1="17" y1="17" x2="31" y2="17" />
-      <line x1="17" y1="23" x2="28" y2="23" />
-      <line x1="17" y1="29" x2="24" y2="29" />
-      <circle cx="31" cy="29" r="1.5" fill={color} />
-    </svg>
-  );
-}
-
-/**
- * ALL CURATED ITEMS: Interests & Experience
- */
-const ITEMS = [
-  // ==========================================
-  // 1. MINECRAFT SPEEDRUNNING (HIGHLIGHTED HERO)
-  // ==========================================
+const BLOGS = [
   {
-    id: 'minecraft-speedrunning',
-    category: 'interest',
-    isFeatured: true,
-    index: '01',
-    kanji: '疾',
-    status: 'featured · sub-20',
-    statusType: 'featured',
-    accent: '#059669',
-    ambientGradient: 'from-[#059669]/14 via-[#10B981]/5 to-transparent',
-    title: 'Minecraft Speedrunning (1.16+ RSG)',
-    role: 'RSG Mechanical Runner & Nether Strategist',
-    subtitle: 'Personal Best: 18m 42s · Leaderboard Verified',
-    description: 'Competitive Random Seed Glitchless runner specializing in fast Nether Bastion treasure routing, blind travel triangulation, and zero-pause mechanical execution.',
-    videoSrc: '/gallery/videos/GixelMC.mp4',
+    id: 'folia-concurrency',
+    title: 'Zero-Tick Concurrency in Folia',
+    category: 'Server Engine',
+    date: "Oct '26",
+    readTime: '4 min',
     link: 'https://github.com/Code-Xceed',
-    linkText: 'Highlights',
-    skills: [
-      { name: '1.16+ RSG', icon: '/icons/minecraft-brand.svg' },
-      { name: 'Bastion Routing' },
-      { name: 'Blind Travel' },
-      { name: 'FastReset' },
-      { name: 'Zero-Pause' },
-    ],
   },
-
-  // ==========================================
-  // 2. BIG BROTHERS MEDIA AGENCY (PINNED CURRENT)
-  // ==========================================
   {
-    id: 'big-brothers-media',
-    category: 'experience',
-    isPinned: true,
-    index: '02',
-    kanji: '創',
-    status: 'pinned · current',
-    statusType: 'current',
-    accent: '#DC2626',
-    ambientGradient: 'from-[#DC2626]/12 via-[#F43F5E]/4 to-transparent',
-    title: 'Big Brothers Media Agency',
-    role: 'Lead Video Editor & Motion Designer',
-    subtitle: '2024 — Present · Digital Agency',
-    description: 'Directing retention-optimized YouTube edits, cinematic sound design layers, and dynamic kinetic typography for creator channels with millions of cumulative impressions.',
-    videoSrc: '/gallery/videos/Debatable.mp4',
+    id: 'sumi-e-ui',
+    title: 'Japanese Zen Aesthetics in Web UI',
+    category: 'Interface Polish',
+    date: "Sep '26",
+    readTime: '3 min',
     link: 'https://github.com/Code-Xceed',
-    linkText: 'Media Case',
-    skills: [
-      { name: 'DaVinci Resolve', icon: '/icons/davinci.svg' },
-      { name: 'Premiere Pro', icon: '/icons/premiere.svg' },
-      { name: 'After Effects', icon: '/icons/aftereffects.svg' },
-      { name: 'Sound Design' },
-      { name: 'Retention Curves' },
-    ],
   },
-
-  // ==========================================
-  // 3. HELX STUDIO (PAST BACKEND ROLE)
-  // ==========================================
   {
-    id: 'helx-studio',
-    category: 'experience',
-    index: '03',
-    kanji: '基',
-    status: '2023 — 2024',
-    statusType: 'past',
-    accent: '#2563EB',
-    ambientGradient: 'from-[#2563EB]/12 via-[#38BDF8]/4 to-transparent',
-    title: 'Helx Studio',
-    role: 'Backend Developer & Systems Architect',
-    subtitle: '2023 — 2024 · Minecraft Infrastructure',
-    description: 'Engineered high-throughput Java server plugins, custom packet pipelines, and zero-tick-drop network architecture across multi-region game server clusters.',
-    videoSrc: '/gallery/videos/HelxStudio.mp4',
+    id: 'foley-retention',
+    title: 'Kinetic Pacing & Audio Foley Math',
+    category: 'Video Editing',
+    date: "Aug '26",
+    readTime: '5 min',
     link: 'https://github.com/Code-Xceed',
-    linkText: 'Infra Spec',
-    skills: [
-      { name: 'Java', icon: '/icons/java.svg' },
-      { name: 'PaperMC', icon: '/icons/papermc.svg' },
-      { name: 'Folia', icon: '/icons/folia.svg' },
-      { name: 'Packet Pipelines' },
-      { name: 'Multi-Threading' },
-    ],
   },
-
-  // ==========================================
-  // 4. MOTION DESIGN & VISUAL CRAFT
-  // ==========================================
   {
-    id: 'motion-design-craft',
-    category: 'interest',
-    index: '04',
-    kanji: '映',
-    status: 'visual craft',
-    statusType: 'motion',
-    accent: '#E11D48',
-    ambientGradient: 'from-[#E11D48]/12 via-[#FB7185]/4 to-transparent',
-    title: 'Motion Design & Visual Systems',
-    role: 'Kinetic Animator & Visual Stylist',
-    subtitle: 'Typography Motion · 3D Lighting & Brand Reels',
-    description: 'Crafting high-fidelity promotional reels, kinetic typography lockups, and procedural motion physics across DaVinci Resolve, Premiere Pro, and Figma.',
-    videoSrc: '/gallery/videos/Portfolio-template.mp4',
+    id: 'speedrun-mechanics',
+    title: 'Sub-20m Nether Routing & Tick Math',
+    category: 'Game Physics',
+    date: "Jul '26",
+    readTime: '4 min',
     link: 'https://github.com/Code-Xceed',
-    linkText: 'Watch Reel',
-    skills: [
-      { name: 'DaVinci Resolve', icon: '/icons/davinci.svg' },
-      { name: 'Premiere Pro', icon: '/icons/premiere.svg' },
-      { name: 'Figma', icon: '/icons/figma.svg' },
-      { name: 'After Effects', icon: '/icons/aftereffects.svg' },
-      { name: 'Kinetic Type' },
-    ],
-  },
-
-  // ==========================================
-  // 5. COMPETITIVE GAMING / ESPORTS
-  // ==========================================
-  {
-    id: 'competitive-gaming',
-    category: 'interest',
-    index: '05',
-    kanji: '戦',
-    status: 'competitive gaming',
-    statusType: 'gaming',
-    accent: '#D97706',
-    ambientGradient: 'from-[#D97706]/12 via-[#F59E0B]/4 to-transparent',
-    title: 'Tactical FPS & Battle Royale',
-    role: 'Competitive Fragger & In-Game Shotcaller',
-    subtitle: 'Free Fire · PUBG Mobile · Tactical Shooters',
-    description: 'High-pace tactical player focused on zone rotation prediction, high-stakes 1v4 clutch composure, precision recoil mechanics, and real-time squad shotcalling.',
-    emblem: <TacticalCrosshairEmblem color="#D97706" />,
-    skills: [
-      { name: 'Free Fire' },
-      { name: 'PUBG Mobile' },
-      { name: 'Zone Prediction' },
-      { name: 'Shotcalling' },
-      { name: 'Clutch Reflex' },
-    ],
-  },
-
-  // ==========================================
-  // 6. RAPID & BLITZ CHESS
-  // ==========================================
-  {
-    id: 'chess-strategy',
-    category: 'interest',
-    index: '06',
-    kanji: '棋',
-    status: 'tactics · rapid',
-    statusType: 'chess',
-    accent: '#57534E',
-    ambientGradient: 'from-[#57534E]/10 via-[#78716C]/4 to-transparent',
-    title: 'Rapid & Blitz Chess',
-    role: 'Positional Strategist & Tactical Solver',
-    subtitle: 'Chess.com & Lichess · Rapid & Blitz Formats',
-    description: 'Training deep calculation under strict clock pressure, Sicilian / Caro-Kann middle-game conversions, and calm tactical problem-solving under time crunches.',
-    emblem: <ChessKnightEmblem color="#57534E" />,
-    skills: [
-      { name: 'Blitz (3+2)' },
-      { name: 'Rapid (10+0)' },
-      { name: 'Calculation' },
-      { name: 'Positional Squeeze' },
-    ],
-  },
-
-  // ==========================================
-  // 7. ENGINEERING LOGS & SPEEDRUN NOTES
-  // ==========================================
-  {
-    id: 'engineering-logs',
-    category: 'experience',
-    isPinned: true,
-    index: '07',
-    kanji: '論',
-    status: 'pinned · dispatches',
-    statusType: 'blog',
-    accent: '#7C3AED',
-    ambientGradient: 'from-[#7C3AED]/12 via-[#8B5CF6]/4 to-transparent',
-    title: 'Engineering Logs & Speedrun Strats',
-    role: 'Technical Writer & Systems Researcher',
-    subtitle: 'Architecture Notes & Mechanical Essays',
-    description: 'Documented deep-dives into Java JVM memory compaction, tick loop synchronization physics, and optimal trigonometric blind travel angles in Minecraft speedruns.',
-    emblem: <ArticleEmblem color="#7C3AED" />,
-    link: 'https://github.com/Code-Xceed',
-    linkText: 'Read Notes',
-    skills: [
-      { name: 'Technical Writing' },
-      { name: 'JVM Profiling' },
-      { name: 'Tick Loop Theory' },
-      { name: 'Speedrun Math' },
-    ],
   },
 ];
 
 /**
- * Filter Categories for Segmented Control
+ * Career Milestones & Experience (Exact User Image 2 Match)
  */
-const TABS = [
-  { id: 'all', label: 'All', shortLabel: 'All', count: 7 },
-  { id: 'interest', label: 'Interests & Gaming', shortLabel: 'Interests', count: 4, icon: Gamepad2 },
-  { id: 'experience', label: 'Experience & Logs', shortLabel: 'Experience', count: 3, icon: Briefcase },
+const EXPERIENCES = [
+  {
+    year: '2026',
+    role: 'Video Editor',
+    company: 'Big Brothers Media Agency',
+    period: "Aug '26 – Present",
+    status: 'current',
+  },
+  {
+    year: '2025',
+    role: 'Backend Developer',
+    company: 'Helx Studio',
+    period: "Jan '25 – May '26",
+    status: 'past',
+  },
+  {
+    year: '2024',
+    role: 'Full Stack Developer',
+    company: '[Freelance]',
+    period: '2024 – Present',
+    status: 'active',
+  },
 ];
 
-/**
- * Single Item Card (Matching EditorialProjectCard Precision & Craft)
- */
-function ExperienceCard({ item }) {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const handleMouseEnter = () => {
-    if (videoRef.current) {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  return (
-    <article
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`group relative w-full rounded-2xl bg-white border shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col md:flex-row gap-5 sm:gap-6 overflow-hidden ${
-        item.isFeatured 
-          ? 'border-emerald-600/30 ring-1 ring-emerald-500/15' 
-          : 'border-[rgba(22,21,20,0.08)] hover:border-[rgba(22,21,20,0.16)]'
-      }`}
-    >
-      {/* Corner Technical Registration Crosshairs (+) */}
-      <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
-      <span className="absolute top-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
-      <span className="absolute bottom-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
-      <span className="absolute bottom-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
-
-      {/* ======================================================== */}
-      {/* LEFT: THUMBNAIL PLATE / VIDEO / EMBLEM                  */}
-      {/* ======================================================== */}
-      <div 
-        className={`relative w-full md:w-[200px] lg:w-[215px] h-[135px] md:h-auto rounded-xl bg-gradient-to-br ${item.ambientGradient} bg-stone-50/70 p-3 flex flex-col justify-between shrink-0 overflow-hidden border border-[rgba(22,21,20,0.08)] group-hover:border-[rgba(22,21,20,0.18)] transition-all duration-200`}
-      >
-        {/* If Video Available: Autoplay / Hover Play */}
-        {item.videoSrc ? (
-          <div className="absolute inset-0 w-full h-full">
-            <video
-              ref={videoRef}
-              src={item.videoSrc}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            {/* Soft overlay gradient so text stays readable */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
-            
-            {/* Play indicator watermark if not playing */}
-            <div className={`absolute bottom-2 left-2 flex items-center gap-1 text-[10px] font-mono text-white/80 transition-opacity duration-200 ${isPlaying ? 'opacity-0' : 'opacity-80'}`}>
-              <Play className="w-2.5 h-2.5 fill-white/80" />
-              <span>preview</span>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Subtle Architectural Blueprint Grid */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-30"
-              style={{
-                backgroundImage: `
-                  repeating-linear-gradient(0deg, rgba(22, 21, 20, 0.05) 0px, rgba(22, 21, 20, 0.05) 1px, transparent 1px, transparent 16px),
-                  repeating-linear-gradient(90deg, rgba(22, 21, 20, 0.05) 0px, rgba(22, 21, 20, 0.05) 1px, transparent 1px, transparent 16px)
-                `,
-              }}
-              aria-hidden="true"
-            />
-
-            {/* Japanese Seigaiha Line Art Accent */}
-            <div 
-              className="absolute -right-3 -bottom-3 w-28 h-16 pointer-events-none text-current"
-              style={{ color: item.accent }}
-              aria-hidden="true"
-            >
-              <SeigaihaLines />
-            </div>
-
-            {/* Emblem Center */}
-            <div className="relative z-10 my-auto py-2 flex items-center justify-center">
-              <div className="transform group-hover:scale-110 transition-transform duration-200 ease-out">
-                {item.emblem}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Kanji Seal Watermark */}
-        <span 
-          className="absolute right-2 bottom-1 text-[40px] font-serif font-black select-none pointer-events-none opacity-[0.14] transition-transform duration-200 group-hover:scale-105 z-10"
-          style={{ color: item.videoSrc ? '#FFFFFF' : item.accent }}
-        >
-          {item.kanji}
-        </span>
-
-        {/* Status Line Top-Right */}
-        <div className="relative z-10 flex items-center justify-end">
-          {item.statusType === 'featured' ? (
-            <span className="font-mono text-[9.5px] font-semibold tracking-wide text-emerald-400 bg-emerald-950/70 border border-emerald-500/40 px-2 py-0.5 rounded-full select-none backdrop-blur-xs">
-              ★ {item.status}
-            </span>
-          ) : item.statusType === 'current' ? (
-            <span className="font-mono text-[9.5px] font-medium tracking-wide text-rose-300 bg-rose-950/70 border border-rose-500/40 px-2 py-0.5 rounded-full select-none flex items-center gap-1 backdrop-blur-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-              {item.status}
-            </span>
-          ) : (
-            <span 
-              className="font-mono text-[10px] font-medium tracking-wide select-none pb-0.5 border-b-[1.5px]"
-              style={{ 
-                color: item.videoSrc ? '#FFFFFF' : item.accent,
-                borderColor: item.videoSrc ? 'rgba(255,255,255,0.7)' : `${item.accent}99`
-              }}
-            >
-              {item.status}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* ======================================================== */}
-      {/* RIGHT: EDITORIAL SPEC & CONTENT                          */}
-      {/* ======================================================== */}
-      <div className="flex-1 flex flex-col justify-between pt-0.5">
-        <div>
-          {/* Header Row: Title & Link */}
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-[19px] sm:text-[20px] font-bold text-[#161514] tracking-tight group-hover:text-black transition-colors duration-150">
-                  {item.title}
-                </h3>
-                {item.isPinned && (
-                  <Pin className="w-3.5 h-3.5 text-rose-500 rotate-45 shrink-0" title="Pinned Milestone" />
-                )}
-              </div>
-
-              {/* Role & Timeline Subtitle */}
-              <p className="text-[12px] sm:text-[12.5px] mt-1 text-[#57534E] leading-relaxed">
-                <span className="font-medium text-[#161514]">{item.role}</span>
-                <span className="mx-1.5 text-stone-300 select-none">·</span>
-                <span className="font-mono text-[11px] sm:text-[11.5px] text-[#8C867E]">{item.subtitle}</span>
-              </p>
-            </div>
-
-            {/* Launch / Details Link Button */}
-            {item.link && (
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pressable group/btn relative overflow-hidden px-3 py-1.5 rounded-lg bg-[#161514] hover:bg-black text-white text-[11px] font-medium flex items-center gap-1.5 transition-all duration-150 active:scale-95 shadow-2xs shrink-0"
-              >
-                <span>{item.linkText || 'View'}</span>
-                <ArrowUpRight className="w-3 h-3 transition-transform duration-150 ease-out group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-              </a>
-            )}
-          </div>
-
-          {/* Clean, Human Description */}
-          <p className="text-[13px] sm:text-[13.5px] text-[#57534E] leading-[1.6] mt-2.5">
-            {item.description}
-          </p>
-        </div>
-
-        {/* Skills & Tag Pills: Refined Dashed Tags matching the whole site */}
-        <div className="pt-3.5 border-t border-stone-100/80 mt-3.5">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {item.skills.map((skill) => (
-              <div
-                key={skill.name}
-                className="pressable inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-[#161514]/40 hover:-translate-y-0.5 active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-150 cursor-default select-none"
-              >
-                {skill.icon && (
-                  <img
-                    src={skill.icon}
-                    alt={`${skill.name} icon`}
-                    className="w-3 h-3 object-contain shrink-0"
-                  />
-                )}
-                <span className="text-[11px] font-medium text-[#161514] tracking-[-0.01em] whitespace-nowrap">
-                  {skill.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/**
- * Interests & Experience Section
- * 
- * Museum-grade section directly below Selected Works:
- * - Segmented tab filter (All, Interests, Experience) with zero layout jump
- * - Minecraft speedrunning specially highlighted with emerald accent & video preview
- * - Big Brothers Media Agency (current pinned role) & Helx Studio (past backend role)
- * - Esports (Free Fire, PUBG), Chess strategy, and technical blogging dispatches
- * - Seamless Japanese Zen aesthetic with corner crosshairs, Seigaiha waves & dashed pills
- */
 export default function InterestsExperience() {
-  const [activeTab, setActiveTab] = useState('all');
-
-  const filteredItems = activeTab === 'all' 
-    ? ITEMS 
-    : ITEMS.filter(item => item.category === activeTab);
+  const mcVideoRef = useRef(null);
+  const editVideoRef = useRef(null);
 
   return (
     <section 
       id="interests-experience" 
       className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-16 sm:pb-24 scroll-mt-8 sm:scroll-mt-12"
     >
-      {/* SECTION HEADER & CONTEXT */}
-      <div className="mb-6 sm:mb-7 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono tracking-widest text-[#8C867E] uppercase">
-              四 · 経験と関心
+      {/* ======================================================== */}
+      {/* 2-COLUMN VIEWPORT GRID (Interests Left, Experience Right) */}
+      {/* ======================================================== */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-stretch">
+        
+        {/* ======================================================== */}
+        {/* LEFT COLUMN: INTERESTS (Gaming Highlight & Video Craft)   */}
+        {/* ======================================================== */}
+        <div className="flex flex-col gap-5 sm:gap-6 justify-between">
+          
+          {/* Card 1: Minecraft Speedrunning & Competitive Gaming (Hero Highlight) */}
+          <article className="group relative rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
+            {/* Technical Registration Crosshairs (+) */}
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute top-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+
+            {/* Kanji Watermark */}
+            <span className="absolute -right-1 -top-1 text-[38px] font-serif font-black select-none pointer-events-none opacity-[0.05] text-emerald-800">
+              速
             </span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#161514] mt-1">
-            Interests &amp; Experience
-          </h2>
-          <p className="text-[13px] sm:text-[14px] text-[#57534E] mt-1.5 max-w-xl">
-            Where mechanical speedruns, studio video editing, and backend architecture converge.
-          </p>
-        </div>
 
-        {/* 100% Full-Width Segmented Tab Filter on Mobile, Inline-Flex on sm+ */}
-        <div 
-          className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex p-1 rounded-xl bg-stone-100/90 sm:bg-white/80 border border-stone-200/80 shadow-[inset_0_1px_2px_rgba(22,21,20,0.03)] backdrop-blur-md gap-1 sm:gap-0.5 shrink-0"
-          role="tablist"
-          aria-label="Filter by interests or experience"
-        >
-          {TABS.map((tab) => {
-            const isActive = activeTab === tab.id;
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setActiveTab(tab.id)}
-                className={`pressable relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-[11.5px] font-medium transition-all duration-150 cursor-pointer select-none whitespace-nowrap touch-manipulation ${
-                  isActive
-                    ? 'bg-white text-[#161514] font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_1px_rgba(0,0,0,0.04)] border border-black/[0.04]'
-                    : 'text-[#78716C] hover:text-[#161514] hover:bg-white/50 active:bg-white/30'
-                }`}
-              >
-                {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#161514]' : 'text-[#78716C]'}`} />}
-                <span className="sm:hidden">{tab.shortLabel}</span>
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span 
-                  className={`text-[9.5px] font-mono px-1.5 py-0.2 rounded-md transition-colors ${
-                    isActive 
-                      ? 'bg-stone-100 text-[#161514] font-semibold' 
-                      : 'bg-black/[0.03] text-[#A8A29E]'
-                  }`}
-                >
-                  {tab.count}
+            <div>
+              {/* Header: Track metadata + Role Badge */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10.5px] font-mono text-emerald-700 font-semibold tracking-wide uppercase flex items-center gap-1.5">
+                  <Gamepad2 className="w-3 h-3 text-emerald-600" />
+                  <span>01 // Gaming Passion</span>
                 </span>
-              </button>
-            );
-          })}
+                <span className="font-mono text-[9.5px] font-semibold tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-500/25 px-2 py-0.5 rounded-md flex items-center gap-1">
+                  <Trophy className="w-2.5 h-2.5 text-emerald-600" />
+                  <span>Speedrunner</span>
+                </span>
+              </div>
+
+              {/* Title & Concise Copy */}
+              <h3 className="text-[16px] sm:text-[17px] font-bold text-[#161514] tracking-tight group-hover:text-black transition-colors">
+                Minecraft &amp; Competitive Esports
+              </h3>
+              <p className="text-[12px] sm:text-[12.5px] text-[#57534E] leading-[1.55] mt-1">
+                Sub-20m nether routing, mechanical block placement, tick timing, and building high-concurrency custom server engines.
+              </p>
+            </div>
+
+            {/* Live Gameplay / Server Teaser Plate */}
+            <div 
+              className="relative w-full h-[98px] sm:h-[104px] rounded-xl overflow-hidden bg-stone-900 my-3 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] group/video"
+              onMouseEnter={() => mcVideoRef.current?.play()}
+            >
+              <video 
+                ref={mcVideoRef}
+                src="/gallery/videos/GixelMC.mp4" 
+                autoPlay
+                loop 
+                muted 
+                playsInline 
+                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-between p-2">
+                <span className="text-[9.5px] font-mono text-white/95 font-medium flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>RSG Runner · 1.16+ / 1.20+ Engine</span>
+                </span>
+                <span className="text-[9px] font-mono text-emerald-300/90 bg-black/50 px-1.5 py-0.5 rounded border border-white/10">
+                  Sub-20m
+                </span>
+              </div>
+            </div>
+
+            {/* Other Competitive Games Roster */}
+            <div className="pt-2 border-t border-stone-100/90 flex flex-wrap items-center gap-1.5">
+              <span className="text-[9.5px] font-mono text-stone-400 mr-1 select-none">Roster:</span>
+              
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <FreeFireIcon />
+                <span>Free Fire</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <PubgIcon />
+                <span>PUBG</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <ChessKnightIcon />
+                <span>Chess</span>
+              </div>
+            </div>
+          </article>
+
+          {/* Card 2: Video Editing & Creative Craft */}
+          <article className="group relative rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
+            {/* Technical Registration Crosshairs (+) */}
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute top-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+
+            {/* Kanji Watermark */}
+            <span className="absolute -right-1 -top-1 text-[38px] font-serif font-black select-none pointer-events-none opacity-[0.05] text-purple-900">
+              創
+            </span>
+
+            <div>
+              {/* Header: Track metadata + Role Badge */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10.5px] font-mono text-purple-700 font-semibold tracking-wide uppercase flex items-center gap-1.5">
+                  <Film className="w-3 h-3 text-purple-600" />
+                  <span>02 // Creative Craft</span>
+                </span>
+                <span className="font-mono text-[9.5px] font-semibold tracking-wide bg-purple-50 text-purple-700 border border-purple-500/25 px-2 py-0.5 rounded-md flex items-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5 text-purple-600" />
+                  <span>Editor &amp; Motion</span>
+                </span>
+              </div>
+
+              {/* Title & Concise Copy */}
+              <h3 className="text-[16px] sm:text-[17px] font-bold text-[#161514] tracking-tight group-hover:text-black transition-colors">
+                Video Direction &amp; Motion Design
+              </h3>
+              <p className="text-[12px] sm:text-[12.5px] text-[#57534E] leading-[1.55] mt-1">
+                Engineering high-retention narrative cuts, sound design foley, and fluid kinetic motion graphics for digital agencies.
+              </p>
+            </div>
+
+            {/* Showcase Video Strip */}
+            <div 
+              className="relative w-full h-[98px] sm:h-[104px] rounded-xl overflow-hidden bg-stone-900 my-3 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] group/video"
+              onMouseEnter={() => editVideoRef.current?.play()}
+            >
+              <video 
+                ref={editVideoRef}
+                src="/gallery/videos/Showcase-2.mp4" 
+                autoPlay
+                loop 
+                muted 
+                playsInline 
+                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-between p-2">
+                <span className="text-[9.5px] font-mono text-white/95 font-medium">
+                  Kinetic Pacing &amp; Foley Mixing
+                </span>
+                <span className="text-[9px] font-mono text-purple-300/90 bg-black/50 px-1.5 py-0.5 rounded border border-white/10">
+                  4K / 60fps
+                </span>
+              </div>
+            </div>
+
+            {/* Editing Tools Pills */}
+            <div className="pt-2 border-t border-stone-100/90 flex flex-wrap items-center gap-1.5">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <img src="/icons/premiere.svg" alt="Premiere Pro" className="w-3 h-3 object-contain shrink-0" />
+                <span>Premiere Pro</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain shrink-0" />
+                <span>After Effects</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <img src="/icons/davinci.svg" alt="DaVinci" className="w-3 h-3 object-contain shrink-0" />
+                <span>DaVinci</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-stone-400 text-[10.5px] font-medium text-[#161514] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all">
+                <img src="/icons/blender.svg" alt="Blender" className="w-3 h-3 object-contain shrink-0" />
+                <span>Blender</span>
+              </div>
+            </div>
+          </article>
+
         </div>
-      </div>
 
-      {/* ITEMS LIST: Structured Editorial Spec Stack */}
-      <div 
-        key={activeTab}
-        className="flex flex-col gap-4 sm:gap-5 animate-fade-in-up"
-        style={{ animationDuration: '240ms' }}
-      >
-        {filteredItems.map((item) => (
-          <ExperienceCard key={item.id} item={item} />
-        ))}
-      </div>
+        {/* ======================================================== */}
+        {/* RIGHT COLUMN: BLOGS (TOP) & CAREER EXPERIENCE (BOTTOM)    */}
+        {/* ======================================================== */}
+        <div className="flex flex-col gap-5 sm:gap-6 justify-between">
+          
+          {/* Top Panel: Recent Dispatches & Writing (Compact Editorial Cards) */}
+          <article className="group relative rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
+            {/* Technical Registration Crosshairs (+) */}
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute top-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
 
-      {/* FOOTER CUE & SIGN-OFF */}
-      <footer className="relative z-10 w-full flex flex-col sm:flex-row items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-6 mt-12 sm:mt-16 gap-3">
-        <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Available for select engineering &amp; media collaborations</span>
-        </span>
-        <span className="text-[11px] text-[#A8A29E]">
-          © {new Date().getFullYear()} CodeX · Tokyo &amp; Global
-        </span>
-      </footer>
+            {/* Kanji Watermark */}
+            <span className="absolute -right-1 -top-1 text-[38px] font-serif font-black select-none pointer-events-none opacity-[0.05] text-stone-800">
+              筆
+            </span>
+
+            <div>
+              {/* Header with Divider Line (Matching Image 2 Style) */}
+              <div className="flex items-center gap-2.5 mb-2">
+                <span className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-stone-500" />
+                  <span># Dispatches</span>
+                </span>
+                <div className="flex-1 h-[1px] bg-stone-100" />
+                <span className="text-[10px] font-mono text-stone-400 font-medium">4 notes</span>
+              </div>
+
+              {/* Compact Note Entries */}
+              <div className="divide-y divide-stone-100/90">
+                {BLOGS.map((blog) => (
+                  <a
+                    key={blog.id}
+                    href={blog.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pressable group/item block py-2 sm:py-2.5 -mx-1.5 px-1.5 rounded-lg hover:bg-stone-50/70 transition-all duration-150"
+                  >
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-[12.5px] sm:text-[13px] font-semibold text-[#161514] group-hover/item:text-black tracking-tight truncate transition-colors">
+                          {blog.title}
+                        </h4>
+                        <div className="flex items-center gap-1.5 mt-0.5 text-[10.5px] font-mono text-stone-400">
+                          <span>{blog.date}</span>
+                          <span>·</span>
+                          <span className="text-stone-500 font-medium">{blog.category}</span>
+                          <span>·</span>
+                          <span>{blog.readTime}</span>
+                        </div>
+                      </div>
+                      <span className="text-stone-300 group-hover/item:text-[#161514] transition-all duration-150 group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5 shrink-0 mt-0.5">
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Footer Note */}
+            <div className="pt-2 border-t border-stone-100/90 flex items-center justify-between text-[10.5px] font-mono text-stone-400 mt-1">
+              <span>Tech &amp; video essays</span>
+              <a 
+                href="https://github.com/Code-Xceed" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-stone-600 hover:text-black flex items-center gap-1 transition-colors"
+              >
+                <span>Read archive</span>
+                <ArrowUpRight className="w-2.5 h-2.5" />
+              </a>
+            </div>
+          </article>
+
+          {/* Bottom Panel: Career Experience Log (Exact User Image 2 Match) */}
+          <article className="group relative rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col justify-between overflow-hidden">
+            {/* Technical Registration Crosshairs (+) */}
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute top-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 select-none pointer-events-none transition-colors">+</span>
+
+            {/* Kanji Watermark */}
+            <span className="absolute -right-1 -top-1 text-[38px] font-serif font-black select-none pointer-events-none opacity-[0.05] text-stone-800">
+              歴
+            </span>
+
+            <div>
+              {/* Header with Divider Line (Exact Image 2 Style) */}
+              <div className="flex items-center gap-2.5 mb-2.5">
+                <span className="text-xs font-mono font-bold text-[#161514] tracking-tight">
+                  # Experience
+                </span>
+                <div className="flex-1 h-[1px] bg-stone-100" />
+              </div>
+
+              {/* Experience Log Rows (Zero-Truncation Clean 2-Line Architecture) */}
+              <div className="space-y-2 sm:space-y-2.5">
+                {EXPERIENCES.map((exp) => (
+                  <div 
+                    key={exp.role + exp.year} 
+                    className="group/row flex items-start gap-2.5 sm:gap-3 hover:bg-stone-50/70 -mx-1.5 px-1.5 py-1.5 rounded-lg transition-colors"
+                  >
+                    {/* Left Year Column */}
+                    <span className="font-mono text-[#8C867E] text-[11px] sm:text-xs shrink-0 w-8 sm:w-9 pt-0.5 select-none">
+                      {exp.year}
+                    </span>
+
+                    {/* Center & Right Combined Content */}
+                    <div className="min-w-0 flex-1">
+                      {/* Top Line: Role on Left, Date & Diamond on Right */}
+                      <div className="flex items-baseline justify-between gap-1.5">
+                        <span className="font-semibold text-[#161514] text-[12px] sm:text-[12.5px] group-hover/row:text-black transition-colors">
+                          {exp.role}
+                        </span>
+                        <div className="flex items-center gap-1 text-[10px] sm:text-[10.5px] font-mono text-[#8C867E] shrink-0">
+                          <span>{exp.period}</span>
+                          <span className={`text-[9px] select-none ${exp.status === 'current' ? 'text-emerald-500 font-bold' : 'text-stone-300'}`}>
+                            ◇
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Second Line: Company Name */}
+                      {exp.company && (
+                        <div className="text-[11px] text-[#78716C] mt-0.5 flex items-center gap-1">
+                          <span className="text-[#A8A29E] text-[10.5px] select-none">at</span>
+                          <span className="font-medium text-[#44403C]">{exp.company}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Status Footnote */}
+            <div className="pt-2 border-t border-stone-100/90 mt-2 flex items-center justify-between text-[10.5px] font-mono text-stone-400">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="text-stone-600 font-medium">Available for hire</span>
+              </span>
+              <span className="text-[10px] text-stone-400">Remote &amp; Contract</span>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
     </section>
   );
 }
