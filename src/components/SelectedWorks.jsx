@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Sparkles, ChevronDown } from 'lucide-react';
 
 function GithubIcon({ className = "w-3.5 h-3.5" }) {
   return (
@@ -529,10 +529,15 @@ function EditorialProjectCard({ project }) {
  * - Zero unwanted metric badges or robotic CLI text
  */
 export default function SelectedWorks() {
+  const handleScrollToNext = () => {
+    const el = document.getElementById('interests-experience');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section 
       id="projects" 
-      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-14 sm:pb-20 scroll-mt-8 sm:scroll-mt-12"
+      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-4 sm:pb-6 scroll-mt-8 sm:scroll-mt-12"
     >
       {/* PROJECTS LIST: Structured Editorial Spec Stack */}
       <div className="flex flex-col gap-4 sm:gap-5">
@@ -540,6 +545,23 @@ export default function SelectedWorks() {
           <EditorialProjectCard key={project.id} project={project} />
         ))}
       </div>
+
+      {/* BOTTOM FOOTER CUE TO INTERESTS & EXPERIENCE */}
+      <footer className="relative z-10 w-full flex items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 mt-8 sm:mt-10">
+        <span className="flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500/80" />
+          <span>Craft, Play &amp; Trajectory</span>
+        </span>
+
+        <button
+          type="button"
+          onClick={handleScrollToNext}
+          className="pressable group inline-flex items-center gap-1 text-[#57534E] hover:text-[#161514] cursor-pointer"
+        >
+          <span>Interests &amp; Experience</span>
+          <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-y-0.5" />
+        </button>
+      </footer>
     </section>
   );
 }

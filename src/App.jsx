@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import Hero from './components/Hero';
 import SelectedWorks from './components/SelectedWorks';
+import InterestsExperience from './components/InterestsExperience';
 import BotanicalBorders from './components/BotanicalBorders';
 import JapaneseZenEffects from './components/JapaneseZenEffects';
 
@@ -48,6 +49,9 @@ export default function App() {
 
         {/* Step 2: Selected Works / Projects Section */}
         <SelectedWorks />
+
+        {/* Step 3: Interests and Experience Section */}
+        <InterestsExperience />
       </main>
 
       {/* 5. Floating Zen Quick-Nav / Back-to-Top Indicator */}
