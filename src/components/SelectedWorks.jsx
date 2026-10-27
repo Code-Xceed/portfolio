@@ -546,19 +546,22 @@ export default function SelectedWorks() {
         ))}
       </div>
 
-      {/* BOTTOM FOOTER CUE / SECTION DIVIDER (Identical to Hero footer) */}
-      <footer className="relative z-10 w-full flex items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 mt-8 sm:mt-10">
-        <span className="flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500/80" />
-          <span>Craft, Play &amp; Trajectory</span>
+      {/* BOTTOM FOOTER CUE / SECTION DIVIDER (Identical to Hero footer, fully responsive on mobile) */}
+      <footer className="relative z-10 w-full flex items-center justify-between text-[11px] sm:text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 mt-8 sm:mt-10">
+        <span className="flex items-center gap-1.5 shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500/80 shrink-0" />
+          <span>Craft &amp; Play</span>
+          <span className="hidden sm:inline"> &amp; Trajectory</span>
         </span>
 
         <button
           type="button"
           onClick={handleScrollToNext}
-          className="pressable group inline-flex items-center gap-1 text-[#57534E] hover:text-[#161514] cursor-pointer"
+          className="pressable group inline-flex items-center gap-1 text-[#57534E] hover:text-[#161514] cursor-pointer py-1.5 -my-1.5 px-1 -mx-1 shrink-0"
+          aria-label="Scroll to Interests and Experience section"
         >
-          <span>Interests &amp; Experience</span>
+          <span>Interests</span>
+          <span className="hidden sm:inline"> &amp; Experience</span>
           <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-y-0.5" />
         </button>
       </footer>

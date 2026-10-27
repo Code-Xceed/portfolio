@@ -82,9 +82,9 @@ export default function InterestsExperience() {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-12 lg:gap-14 items-stretch">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: PURE CANVAS SECTIONS (Compact, not wide)    */}
+        {/* LEFT COLUMN: PURE CANVAS SECTIONS (Full width mobile, compact desktop) */}
         {/* ======================================================== */}
-        <div className="flex flex-col justify-between pt-0.5 max-w-[310px] w-full">
+        <div className="flex flex-col justify-between pt-0.5 w-full md:max-w-[310px]">
           
           {/* Top Block: Minecraft & Competitive Esports */}
           <section aria-labelledby="gaming-heading">
@@ -98,7 +98,7 @@ export default function InterestsExperience() {
 
             {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
             <div 
-              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[124px] lg:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => mcVideoRef.current?.play()}
             >
               <video 
@@ -134,11 +134,11 @@ export default function InterestsExperience() {
               </div>
 
               {/* Row 2: Extra Games (Also plays) */}
-              <div className="flex items-center gap-2 pt-0.5">
-                <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
+              <div className="flex items-baseline gap-2 pt-0.5">
+                <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none mt-1">
                   Also:
                 </span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <div 
                     title="PlayerUnknown's Battlegrounds"
                     className="group/pill inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
@@ -171,7 +171,7 @@ export default function InterestsExperience() {
 
             {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
             <div 
-              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[124px] lg:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => editVideoRef.current?.play()}
             >
               <video 
@@ -207,8 +207,8 @@ export default function InterestsExperience() {
               </div>
 
               {/* Row 2: Extra Tools (Also uses - Blender replaced with Mine-imator Vexel Build) */}
-              <div className="flex items-center gap-2 pt-0.5">
-                <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
+              <div className="flex items-baseline gap-2 pt-0.5">
+                <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none mt-1">
                   Also:
                 </span>
                 <div className="flex items-center gap-1.5 flex-wrap">
