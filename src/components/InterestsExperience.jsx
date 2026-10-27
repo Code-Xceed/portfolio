@@ -78,147 +78,136 @@ export default function InterestsExperience() {
       {/* ======================================================== */}
       {/* 2-COLUMN VIEWPORT GRID (Wider right column, Zen space)   */}
       {/* ======================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.18fr] gap-8 md:gap-11 lg:gap-13 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-11 lg:gap-12 items-stretch">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: VISUAL MEDIA CARDS (Refined proportions)    */}
+        {/* LEFT COLUMN: PURE CANVAS SECTIONS (Zero Card BG, Zen)    */}
         {/* ======================================================== */}
-        <div className="flex flex-col gap-5 sm:gap-6 justify-between">
+        <div className="flex flex-col justify-between pt-0.5">
           
-          {/* Card 1: Minecraft Speedrunning & Competitive Gaming */}
-          <article className="group relative rounded-2xl bg-[#FCFCFB] border border-stone-200/70 hover:border-stone-300 p-4 sm:p-5 transition-all duration-300 shadow-[0_1px_3px_rgba(22,21,20,0.02)] hover:shadow-[0_8px_20px_rgba(22,21,20,0.04)] flex flex-col justify-between">
-            <div>
-              {/* Title / Headline */}
-              <h3 className="text-[15px] sm:text-[16px] font-semibold text-[#161514] tracking-tight group-hover:text-black transition-colors">
-                Minecraft &amp; Competitive Esports
-              </h3>
+          {/* Top Block: Minecraft & Competitive Esports */}
+          <section aria-labelledby="gaming-heading">
+            {/* Header with Divider Line (Directly on canvas, matching # Blogs) */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
+                # Minecraft &amp; Esports
+              </span>
+              <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50/80 border border-emerald-500/20 px-2 py-0.5 rounded font-medium">
+                RSG Speedrunner
+              </span>
+            </div>
 
-              {/* Balanced Cinematic Thumbnail */}
-              <div 
-                className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
-                onMouseEnter={() => mcVideoRef.current?.play()}
-              >
-                <video 
-                  ref={mcVideoRef}
-                  src="/gallery/videos/GixelMC.mp4" 
-                  autoPlay
-                  loop 
-                  muted 
-                  playsInline 
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2.5">
-                  <span className="text-[9.5px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2.5 py-0.5 rounded border border-white/10 font-medium">
-                    Sub-20m · RSG
-                  </span>
-                </div>
+            {/* Video Thumbnail (Clean framing on canvas) */}
+            <div 
+              className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+              onMouseEnter={() => mcVideoRef.current?.play()}
+            >
+              <video 
+                ref={mcVideoRef}
+                src="/gallery/videos/GixelMC.mp4" 
+                autoPlay
+                loop 
+                muted 
+                playsInline 
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2.5">
+                <span className="text-[9.5px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2.5 py-0.5 rounded border border-white/10 font-medium">
+                  Sub-20m · RSG
+                </span>
               </div>
             </div>
 
-            {/* Sub-thumbnail Details: Pro in Minecraft & Also Plays (PUBG & Chess.com) */}
-            <div className="pt-2.5 border-t border-stone-200/60 flex flex-col gap-2">
-              {/* Primary Game Display */}
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-1.5">
-                  <img src="/icons/minecraft-brand.svg" alt="Minecraft" className="w-3.5 h-3.5 object-contain" />
-                  <span className="text-[12px] font-semibold text-[#161514] tracking-tight">
-                    Pro in Minecraft
-                  </span>
-                </div>
-                <span className="text-[9.5px] font-mono text-emerald-800 bg-emerald-50/80 border border-emerald-500/20 px-2 py-0.5 rounded font-medium">
-                  RSG Speedrunning
+            {/* Sub-thumbnail Details: Pro in Minecraft & Also Plays */}
+            <div className="pt-2 border-t border-stone-200/60 flex items-center justify-between">
+              <div className="inline-flex items-center gap-1.5">
+                <img src="/icons/minecraft-brand.svg" alt="Minecraft" className="w-3.5 h-3.5 object-contain" />
+                <span className="text-[11.5px] sm:text-[12px] font-semibold text-[#161514] tracking-tight">
+                  Pro in Minecraft
                 </span>
               </div>
 
-              {/* Secondary Also Plays Strip (Clean single line, no Free Fire) */}
-              <div className="flex items-center justify-between pt-0.5">
-                <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
-                  Also plays:
+              {/* Also Plays Pills */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider select-none">
+                  Also:
                 </span>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/pubg.svg" alt="PUBG" className="w-3.5 h-2.5 object-contain" />
-                    <span>PUBG</span>
-                  </div>
-
-                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/chesscom.svg" alt="Chess.com" className="w-3 h-3 object-contain" />
-                    <span>Chess.com</span>
-                  </div>
+                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <img src="/icons/pubg.svg" alt="PUBG" className="w-3.5 h-2.5 object-contain" />
+                  <span>PUBG</span>
+                </div>
+                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <img src="/icons/chesscom.svg" alt="Chess.com" className="w-3 h-3 object-contain" />
+                  <span>Chess.com</span>
                 </div>
               </div>
             </div>
-          </article>
+          </section>
 
-          {/* Card 2: Video Direction & Creative Craft */}
-          <article className="group relative rounded-2xl bg-[#FCFCFB] border border-stone-200/70 hover:border-stone-300 p-4 sm:p-5 transition-all duration-300 shadow-[0_1px_3px_rgba(22,21,20,0.02)] hover:shadow-[0_8px_20px_rgba(22,21,20,0.04)] flex flex-col justify-between">
-            <div>
-              {/* Title / Headline */}
-              <h3 className="text-[15px] sm:text-[16px] font-semibold text-[#161514] tracking-tight group-hover:text-black transition-colors">
-                Video Direction &amp; Motion Design
-              </h3>
+          {/* Bottom Block: Video Direction & Motion Design */}
+          <section aria-labelledby="video-heading" className="pt-6 sm:pt-7">
+            {/* Header with Divider Line (Directly on canvas, matching # Experience) */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <span id="video-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
+                # Video &amp; Motion Design
+              </span>
+              <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <span className="text-[9.5px] font-mono text-stone-600 bg-stone-100/90 border border-stone-300/60 px-2 py-0.5 rounded font-medium">
+                Video &amp; Motion
+              </span>
+            </div>
 
-              {/* Balanced Cinematic Thumbnail */}
-              <div 
-                className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
-                onMouseEnter={() => editVideoRef.current?.play()}
-              >
-                <video 
-                  ref={editVideoRef}
-                  src="/gallery/videos/Showcase-2.mp4" 
-                  autoPlay
-                  loop 
-                  muted 
-                  playsInline 
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2.5">
-                  <span className="text-[9.5px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2.5 py-0.5 rounded border border-white/10 font-medium">
-                    Kinetic Pacing · 4K
-                  </span>
-                </div>
+            {/* Video Thumbnail (Clean framing on canvas) */}
+            <div 
+              className="relative w-full h-[130px] sm:h-[138px] rounded-xl overflow-hidden bg-stone-900 my-2.5 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+              onMouseEnter={() => editVideoRef.current?.play()}
+            >
+              <video 
+                ref={editVideoRef}
+                src="/gallery/videos/Showcase-2.mp4" 
+                autoPlay
+                loop 
+                muted 
+                playsInline 
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2.5">
+                <span className="text-[9.5px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2.5 py-0.5 rounded border border-white/10 font-medium">
+                  Kinetic Pacing · 4K
+                </span>
               </div>
             </div>
 
-            {/* Sub-thumbnail Details: Good at DaVinci Resolve & Also Uses (Premiere, AE, Blender) */}
-            <div className="pt-2.5 border-t border-stone-200/60 flex flex-col gap-2">
-              {/* Primary Creative Tool Display */}
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-1.5">
-                  <img src="/icons/davinci.svg" alt="DaVinci Resolve" className="w-3.5 h-3.5 object-contain" />
-                  <span className="text-[12px] font-semibold text-[#161514] tracking-tight">
-                    Good at DaVinci Resolve
-                  </span>
-                </div>
-                <span className="text-[9.5px] font-mono text-stone-600 bg-stone-100/90 border border-stone-300/60 px-2 py-0.5 rounded font-medium">
-                  Video &amp; Motion
+            {/* Sub-thumbnail Details: Good at DaVinci Resolve & Also Uses */}
+            <div className="pt-2 border-t border-stone-200/60 flex items-center justify-between gap-1">
+              <div className="inline-flex items-center gap-1.5 shrink-0">
+                <img src="/icons/davinci.svg" alt="DaVinci Resolve" className="w-3.5 h-3.5 object-contain" />
+                <span className="text-[11px] sm:text-[11.5px] font-semibold text-[#161514] tracking-tight whitespace-nowrap">
+                  Good at DaVinci Resolve
                 </span>
               </div>
 
-              {/* Secondary Also Uses Strip (Premiere, AE, Blender) */}
-              <div className="flex items-center justify-between pt-0.5">
-                <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
-                  Also uses:
+              {/* Also Uses Pills */}
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider select-none">
+                  Also:
                 </span>
-                <div className="flex items-center gap-1 sm:gap-1.5">
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/premiere.svg" alt="Premiere Pro" className="w-3 h-3 object-contain" />
-                    <span>Premiere</span>
-                  </div>
-
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain" />
-                    <span>AE</span>
-                  </div>
-
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] sm:text-[10.5px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/blender.svg" alt="Blender" className="w-3 h-3 object-contain" />
-                    <span>Blender</span>
-                  </div>
+                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <img src="/icons/premiere.svg" alt="Premiere Pro" className="w-3 h-3 object-contain" />
+                  <span>Premiere</span>
+                </div>
+                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain" />
+                  <span>AE</span>
+                </div>
+                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
+                  <img src="/icons/blender.svg" alt="Blender" className="w-3 h-3 object-contain" />
+                  <span>Blender</span>
                 </div>
               </div>
             </div>
-          </article>
+          </section>
 
         </div>
 
