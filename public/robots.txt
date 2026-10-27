@@ -1,0 +1,10 @@
+# Aditya Rathore — Atelier Portfolio
+# Site origin: https://codex.is-a.dev (mirrored in index.html, sitemap.xml and CNAME).
+
+User-agent: *
+Allow: /
+
+# The site is a single interactive experience, so there is nothing to disallow.
+# Source media (source-videos/, *.exr) never enters the deployed bundle.
+
+Sitemap: https://codex.is-a.dev/sitemap.xml

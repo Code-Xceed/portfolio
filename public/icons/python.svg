@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <path fill="url(#python_blue)" d="M63.6 1.8c-14.8 0-25.2 6.5-25.2 18.9v14.1h25.6v3.6H27.5C12.1 38.4 0 50.1 0 66.5c0 16.8 10.9 26.5 25.2 26.5h8.2v-12.7c0-14.4 12.3-27.1 26.8-27.1h25.8c7.3 0 13.1-6 13.1-13.4V19.8C99.1 7.2 88.6 1.8 63.6 1.8zm-13.5 8c2.8 0 5.1 2.3 5.1 5.1s-2.3 5.1-5.1 5.1-5.1-2.3-5.1-5.1 2.3-5.1 5.1-5.1z"/>
+  <path fill="url(#python_yellow)" d="M64.4 126.2c14.8 0 25.2-6.5 25.2-18.9V93.2H64V89.6h36.5c15.4 0 27.5-11.7 27.5-28.1 0-16.8-10.9-26.5-25.2-26.5h-8.2v12.7c0 14.4-12.3 27.1-26.8 27.1H42c-7.3 0-13.1 6-13.1 13.4v20c0 12.6 10.5 18 35.5 18zm13.5-8c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1z"/>
+  <defs>
+    <linearGradient id="python_blue" x1="12.5%" y1="10%" x2="87.5%" y2="90%">
+      <stop offset="0%" stop-color="#387EB8"/>
+      <stop offset="100%" stop-color="#366994"/>
+    </linearGradient>
+    <linearGradient id="python_yellow" x1="12.5%" y1="10%" x2="87.5%" y2="90%">
+      <stop offset="0%" stop-color="#FFE873"/>
+      <stop offset="100%" stop-color="#FFD43B"/>
+    </linearGradient>
+  </defs>
+</svg>
