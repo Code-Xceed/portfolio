@@ -89,16 +89,16 @@ export default function InterestsExperience() {
           {/* Top Block: Minecraft & Competitive Esports */}
           <section aria-labelledby="gaming-heading">
             {/* Header with Divider Line */}
-            <div className="flex items-center gap-2 mb-2">
-              <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
+            <div className="flex items-center gap-2 mb-2 group/header">
+              <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150">
                 # Minecraft Speedrunner
               </span>
-              <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
             </div>
 
-            {/* Video Thumbnail (Less wide, balanced proportions) */}
+            {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
             <div 
-              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => mcVideoRef.current?.play()}
             >
               <video 
@@ -108,10 +108,10 @@ export default function InterestsExperience() {
                 loop 
                 muted 
                 playsInline 
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 group-hover/video:scale-[1.025] transition-all duration-500 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
-                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium">
+                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
                   Sub-20m · RSG
                 </span>
               </div>
@@ -121,9 +121,13 @@ export default function InterestsExperience() {
             <div className="pt-2 border-t border-stone-200/60 flex flex-col gap-1.5">
               {/* Row 1: Pro in Minecraft */}
               <div className="flex items-center">
-                <div className="inline-flex items-center gap-1.5">
-                  <img src="/icons/minecraft-brand.svg" alt="Minecraft" className="w-3.5 h-3.5 object-contain" />
-                  <span className="text-[11.5px] font-semibold text-[#161514] tracking-tight">
+                <div className="group/pro inline-flex items-center gap-1.5 cursor-default select-none">
+                  <img 
+                    src="/icons/minecraft-brand.svg" 
+                    alt="Minecraft" 
+                    className="w-3.5 h-3.5 object-contain group-hover/pro:scale-110 transition-transform duration-150" 
+                  />
+                  <span className="text-[11.5px] font-semibold text-[#161514] group-hover/pro:text-black tracking-tight transition-colors duration-150">
                     Pro in Minecraft
                   </span>
                 </div>
@@ -135,13 +139,19 @@ export default function InterestsExperience() {
                   Also:
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/pubg.svg" alt="PUBG" className="w-3.5 h-2.5 object-contain" />
+                  <div 
+                    title="PlayerUnknown's Battlegrounds"
+                    className="group/pill inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <img src="/icons/pubg.svg" alt="PUBG" className="w-3.5 h-2.5 object-contain group-hover/pill:scale-110 transition-transform duration-150" />
                     <span>PUBG</span>
                   </div>
 
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/chesscom.svg" alt="Chess.com" className="w-3 h-3 object-contain" />
+                  <div 
+                    title="Chess.com"
+                    className="group/pill inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <img src="/icons/chesscom.svg" alt="Chess.com" className="w-3 h-3 object-contain group-hover/pill:scale-110 transition-transform duration-150" />
                     <span>Chess.com</span>
                   </div>
                 </div>
@@ -152,16 +162,16 @@ export default function InterestsExperience() {
           {/* Bottom Block: Video Direction & Motion Design */}
           <section aria-labelledby="video-heading" className="pt-5 sm:pt-6">
             {/* Header with Divider Line */}
-            <div className="flex items-center gap-2 mb-2">
-              <span id="video-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight">
+            <div className="flex items-center gap-2 mb-2 group/header">
+              <span id="video-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150">
                 # Video Editing &amp; Motion Design
               </span>
-              <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
             </div>
 
-            {/* Video Thumbnail (Less wide, balanced proportions) */}
+            {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
             <div 
-              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] group/video"
+              className="relative w-full h-[124px] sm:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => editVideoRef.current?.play()}
             >
               <video 
@@ -171,10 +181,10 @@ export default function InterestsExperience() {
                 loop 
                 muted 
                 playsInline 
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 group-hover/video:scale-[1.025] transition-all duration-500 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
-                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium">
+                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
                   Kinetic Pacing · 4K
                 </span>
               </div>
@@ -184,33 +194,53 @@ export default function InterestsExperience() {
             <div className="pt-2 border-t border-stone-200/60 flex flex-col gap-1.5">
               {/* Row 1: Good at DaVinci Resolve */}
               <div className="flex items-center">
-                <div className="inline-flex items-center gap-1.5">
-                  <img src="/icons/davinci.svg" alt="DaVinci Resolve" className="w-3.5 h-3.5 object-contain" />
-                  <span className="text-[11.5px] font-semibold text-[#161514] tracking-tight">
+                <div className="group/pro inline-flex items-center gap-1.5 cursor-default select-none">
+                  <img 
+                    src="/icons/davinci.svg" 
+                    alt="DaVinci Resolve" 
+                    className="w-3.5 h-3.5 object-contain group-hover/pro:rotate-45 group-hover/pro:scale-110 transition-transform duration-300 ease-out" 
+                  />
+                  <span className="text-[11.5px] font-semibold text-[#161514] group-hover/pro:text-black tracking-tight transition-colors duration-150">
                     Good at DaVinci Resolve
                   </span>
                 </div>
               </div>
 
-              {/* Row 2: Extra Tools (Also uses) */}
+              {/* Row 2: Extra Tools (Also uses - Blender replaced with Mine-imator Vexel Build) */}
               <div className="flex items-center gap-2 pt-0.5">
                 <span className="text-[9.5px] font-mono text-stone-400 uppercase tracking-wider shrink-0 select-none">
                   Also:
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/premiere.svg" alt="Premiere Pro" className="w-3 h-3 object-contain" />
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <div 
+                    title="Adobe Premiere Pro"
+                    className="group/pill inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <img src="/icons/premiere.svg" alt="Premiere Pro" className="w-3 h-3 object-contain group-hover/pill:scale-110 transition-transform duration-150" />
                     <span>Premiere</span>
                   </div>
 
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain" />
+                  <div 
+                    title="Adobe After Effects"
+                    className="group/pill inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <img src="/icons/aftereffects.svg" alt="After Effects" className="w-3 h-3 object-contain group-hover/pill:scale-110 transition-transform duration-150" />
                     <span>AE</span>
                   </div>
 
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 transition-colors">
-                    <img src="/icons/blender.svg" alt="Blender" className="w-3 h-3 object-contain" />
-                    <span>Blender</span>
+                  <div 
+                    title="Mine-imator (Vexel Build)"
+                    className="group/pill inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-stone-100/70 border border-stone-200/70 text-[10px] font-medium text-stone-700 hover:text-black hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:scale-[0.96] transition-all duration-150 ease-out cursor-default select-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <img 
+                      src="/icons/mineimator.webp" 
+                      alt="Mine-imator (Vexel Build)" 
+                      className="w-3.5 h-3.5 object-contain group-hover/pill:scale-110 transition-transform duration-150" 
+                    />
+                    <span>Mine-imator</span>
+                    <span className="text-[7.5px] font-mono text-orange-700/90 bg-orange-500/10 px-1 py-[0.5px] rounded font-semibold tracking-tight border border-orange-500/20 uppercase">
+                      vexel
+                    </span>
                   </div>
                 </div>
               </div>
@@ -228,16 +258,16 @@ export default function InterestsExperience() {
           {/* Top Block: Curated Blogs (Exact user request: # Blogs) */}
           <section aria-labelledby="blogs-heading">
             {/* Header with Divider Line */}
-            <div className="flex items-center gap-2.5 mb-2.5">
-              <span id="blogs-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-stone-500" />
+            <div className="flex items-center gap-2.5 mb-2.5 group/header">
+              <span id="blogs-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5 group-hover/header:text-black transition-colors duration-150">
+                <BookOpen className="w-3.5 h-3.5 text-stone-500 group-hover/header:text-stone-700 group-hover/header:-rotate-6 transition-all duration-200 ease-out" />
                 <span># Blogs</span>
               </span>
-              <div className="flex-1 h-[1px] bg-stone-200/80" />
-              <span className="text-[10px] font-mono text-stone-400 font-medium">4 notes</span>
+              <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
+              <span className="text-[10px] font-mono text-stone-400 group-hover/header:text-stone-500 font-medium transition-colors duration-150">4 notes</span>
             </div>
 
-            {/* Cleaner Note Entries (Only title, arrow icon, date below it) */}
+            {/* Cleaner Note Entries (Only title, arrow icon, date below it, with smooth microanimations) */}
             <div className="divide-y divide-stone-200/60">
               {BLOGS.map((blog) => (
                 <a
@@ -245,18 +275,18 @@ export default function InterestsExperience() {
                   href={blog.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pressable group/item block py-2.5 sm:py-3 -mx-1.5 px-1.5 rounded-lg hover:bg-black/[0.03] transition-colors"
+                  className="group/item block py-2.5 sm:py-3 -mx-2 px-2 rounded-lg hover:bg-stone-500/[0.04] active:scale-[0.985] transition-all duration-200 ease-out"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-[13px] sm:text-[13.5px] font-semibold text-[#161514] group-hover/item:text-black tracking-tight transition-colors">
+                      <h4 className="text-[13px] sm:text-[13.5px] font-semibold text-[#161514] group-hover/item:text-black tracking-tight transition-colors duration-150">
                         {blog.title}
                       </h4>
-                      <div className="text-[11px] font-mono text-stone-400 mt-0.5">
+                      <div className="text-[11px] font-mono text-stone-400 group-hover/item:text-stone-500 mt-0.5 transition-colors duration-150">
                         {blog.date}
                       </div>
                     </div>
-                    <span className="text-stone-300 group-hover/item:text-[#161514] transition-all duration-150 group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5 shrink-0 mt-0.5">
+                    <span className="text-stone-300 group-hover/item:text-[#161514] transition-all duration-200 ease-out group-hover/item:translate-x-1 group-hover/item:-translate-y-1 shrink-0 mt-0.5">
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -268,30 +298,34 @@ export default function InterestsExperience() {
           {/* Bottom Block: Career Experience Log (Title on top, time in front, company below, NO FOOTER) */}
           <section aria-labelledby="experience-heading" className="pt-6 sm:pt-7">
             {/* Header with Divider Line */}
-            <div className="flex items-center gap-2.5 mb-2.5">
-              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
-                <Briefcase className="w-3.5 h-3.5 text-stone-500" />
+            <div className="flex items-center gap-2.5 mb-2.5 group/header">
+              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5 group-hover/header:text-black transition-colors duration-150">
+                <Briefcase className="w-3.5 h-3.5 text-stone-500 group-hover/header:text-stone-700 group-hover/header:rotate-6 transition-all duration-200 ease-out" />
                 <span># Experience</span>
               </span>
-              <div className="flex-1 h-[1px] bg-stone-200/80" />
-              <span className="text-[10px] font-mono text-stone-400 font-medium">2 years</span>
+              <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
+              <span className="text-[10px] font-mono text-stone-400 group-hover/header:text-stone-500 font-medium transition-colors duration-150">2 years</span>
             </div>
 
-            {/* Experience Rows (Title on top, time in front on right, at company below it) */}
+            {/* Experience Rows (Title on top, time in front on right, at company below it, with smooth microanimations) */}
             <div className="space-y-3 sm:space-y-3.5">
               {EXPERIENCES.map((exp) => (
                 <div 
                   key={exp.role + exp.company} 
-                  className="group/row -mx-1.5 px-1.5 py-1.5 sm:py-2 rounded-lg hover:bg-black/[0.03] transition-colors"
+                  className="group/row -mx-2 px-2 py-1.5 sm:py-2 rounded-lg hover:bg-stone-500/[0.04] active:scale-[0.985] transition-all duration-200 ease-out cursor-default select-none"
                 >
                   {/* Top Line: Role / Title on Left, Period / Time in front on Right */}
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-[#161514] text-[13px] sm:text-[13.5px] group-hover/row:text-black tracking-tight transition-colors">
+                    <span className="font-semibold text-[#161514] text-[13px] sm:text-[13.5px] group-hover/row:text-black tracking-tight transition-colors duration-150">
                       {exp.role}
                     </span>
-                    <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono text-[#8C867E] shrink-0">
+                    <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono text-[#8C867E] group-hover/row:text-stone-600 transition-colors duration-150 shrink-0">
                       <span>{exp.period}</span>
-                      <span className={`text-[9px] select-none ${exp.status === 'current' ? 'text-emerald-500 font-bold' : 'text-stone-300'}`}>
+                      <span className={`text-[9px] select-none inline-block transition-transform duration-200 ease-out group-hover/row:scale-125 ${
+                        exp.status === 'current' 
+                          ? 'text-emerald-500 font-bold drop-shadow-[0_0_4px_rgba(16,185,129,0.3)]' 
+                          : 'text-stone-300'
+                      }`}>
                         ◇
                       </span>
                     </div>
@@ -299,9 +333,9 @@ export default function InterestsExperience() {
 
                   {/* Bottom Line: Company Name */}
                   {exp.company && (
-                    <div className="text-[11.5px] text-[#78716C] mt-0.5 flex items-center gap-1">
+                    <div className="text-[11.5px] text-[#78716C] group-hover/row:text-stone-600 mt-0.5 flex items-center gap-1 transition-colors duration-150">
                       <span className="text-[#A8A29E] text-[11px] select-none">at</span>
-                      <span className="font-medium text-[#44403C]">{exp.company}</span>
+                      <span className="font-medium text-[#44403C] group-hover/row:text-stone-800 transition-colors duration-150">{exp.company}</span>
                     </div>
                   )}
                 </div>
