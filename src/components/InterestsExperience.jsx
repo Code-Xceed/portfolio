@@ -295,35 +295,35 @@ export default function InterestsExperience() {
             </div>
           </section>
 
-          {/* Bottom Block: Career Experience Log (Title on top, time in front, company below, NO FOOTER) */}
+          {/* Bottom Block: Career Experience Log (Static, pure non-interactive editorial text) */}
           <section aria-labelledby="experience-heading" className="pt-6 sm:pt-7">
             {/* Header with Divider Line */}
-            <div className="flex items-center gap-2.5 mb-2.5 group/header">
-              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5 group-hover/header:text-black transition-colors duration-150">
-                <Briefcase className="w-3.5 h-3.5 text-stone-500 group-hover/header:text-stone-700 group-hover/header:rotate-6 transition-all duration-200 ease-out" />
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <span id="experience-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight flex items-center gap-1.5">
+                <Briefcase className="w-3.5 h-3.5 text-stone-500" />
                 <span># Experience</span>
               </span>
-              <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
-              <span className="text-[10px] font-mono text-stone-400 group-hover/header:text-stone-500 font-medium transition-colors duration-150">2 years</span>
+              <div className="flex-1 h-[1px] bg-stone-200/80" />
+              <span className="text-[10px] font-mono text-stone-400 font-medium">2 years</span>
             </div>
 
-            {/* Experience Rows (Title on top, time in front on right, at company below it, with smooth microanimations) */}
+            {/* Experience Rows: Pure Static Plain Text (No hover, no animations) */}
             <div className="space-y-3 sm:space-y-3.5">
               {EXPERIENCES.map((exp) => (
                 <div 
                   key={exp.role + exp.company} 
-                  className="group/row -mx-2 px-2 py-1.5 sm:py-2 rounded-lg hover:bg-stone-500/[0.04] active:scale-[0.985] transition-all duration-200 ease-out cursor-default select-none"
+                  className="py-1 sm:py-1.5"
                 >
                   {/* Top Line: Role / Title on Left, Period / Time in front on Right */}
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-semibold text-[#161514] text-[13px] sm:text-[13.5px] group-hover/row:text-black tracking-tight transition-colors duration-150">
+                    <span className="font-semibold text-[#161514] text-[13px] sm:text-[13.5px] tracking-tight">
                       {exp.role}
                     </span>
-                    <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono text-[#8C867E] group-hover/row:text-stone-600 transition-colors duration-150 shrink-0">
+                    <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono text-[#8C867E] shrink-0">
                       <span>{exp.period}</span>
-                      <span className={`text-[9px] select-none inline-block transition-transform duration-200 ease-out group-hover/row:scale-125 ${
+                      <span className={`text-[9px] select-none inline-block ${
                         exp.status === 'current' 
-                          ? 'text-emerald-500 font-bold drop-shadow-[0_0_4px_rgba(16,185,129,0.3)]' 
+                          ? 'text-emerald-500 font-bold' 
                           : 'text-stone-300'
                       }`}>
                         ◇
@@ -333,9 +333,9 @@ export default function InterestsExperience() {
 
                   {/* Bottom Line: Company Name */}
                   {exp.company && (
-                    <div className="text-[11.5px] text-[#78716C] group-hover/row:text-stone-600 mt-0.5 flex items-center gap-1 transition-colors duration-150">
+                    <div className="text-[11.5px] text-[#78716C] mt-0.5 flex items-center gap-1">
                       <span className="text-[#A8A29E] text-[11px] select-none">at</span>
-                      <span className="font-medium text-[#44403C] group-hover/row:text-stone-800 transition-colors duration-150">{exp.company}</span>
+                      <span className="font-medium text-[#44403C]">{exp.company}</span>
                     </div>
                   )}
                 </div>
