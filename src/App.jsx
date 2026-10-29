@@ -3,6 +3,7 @@ import { ArrowUp } from 'lucide-react';
 import Hero from './components/Hero';
 import SelectedWorks from './components/SelectedWorks';
 import InterestsExperience from './components/InterestsExperience';
+import Footer from './components/Footer';
 import BotanicalBorders from './components/BotanicalBorders';
 import JapaneseZenEffects from './components/JapaneseZenEffects';
 
@@ -11,7 +12,8 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 320);
+      const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+      setShowScrollTop(window.scrollY > 320 && !isBottom);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -52,6 +54,9 @@ export default function App() {
 
         {/* Step 3: Interests and Experience Section */}
         <InterestsExperience />
+
+        {/* Step 4: Ultra-Minimal Single-Row Zen Footer */}
+        <Footer onScrollToTop={handleScrollToTop} />
       </main>
 
       {/* 5. Floating Zen Quick-Nav / Back-to-Top Indicator (Compact circle on mobile, text pill on desktop) */}

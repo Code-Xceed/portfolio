@@ -74,7 +74,7 @@ export default function InterestsExperience() {
   return (
     <section 
       id="interests-experience" 
-      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-6 sm:pt-8 pb-20 sm:pb-28 scroll-mt-8 sm:scroll-mt-12"
+      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 scroll-mt-8 sm:scroll-mt-12"
     >
       {/* ======================================================== */}
       {/* 2-COLUMN VIEWPORT GRID (Wide gap, compact media width)   */}
