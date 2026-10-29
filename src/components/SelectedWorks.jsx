@@ -290,7 +290,7 @@ function EditorialProjectCard({ project }) {
     <article
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative w-full rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_2px_8px_rgba(22,21,20,0.015)] hover:shadow-[0_14px_30px_rgba(22,21,20,0.05)] hover:-translate-y-0.5 transition-all duration-300 ease-out p-4 sm:p-5 flex flex-col md:flex-row gap-5 sm:gap-6 overflow-hidden"
+      className="group relative w-full rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] hover:border-stone-300 shadow-[0_1px_3px_rgba(22,21,20,0.02)] transition-colors duration-200 p-4 sm:p-5 flex flex-col md:flex-row gap-5 sm:gap-6 overflow-hidden"
     >
       {/* Corner Technical Registration Crosshairs (+) */}
       <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
@@ -493,14 +493,14 @@ function EditorialProjectCard({ project }) {
         </div>
 
         {/* ======================================================== */}
-        {/* SKILLS TAGS: Refined Dashed Pills with Micro-Hover Lift  */}
+        {/* SKILLS TAGS: Refined Dashed Pills with Grounded Tactile Hover */}
         {/* ======================================================== */}
         <div className="pt-3.5 border-t border-stone-100/80 mt-3.5">
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {project.skills.map((skill) => (
               <div
                 key={skill.name}
-                className="pressable inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-[#161514]/40 hover:-translate-y-0.5 active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-150 cursor-default select-none"
+                className="pressable inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-white border border-dashed border-[#D6D3D1] hover:border-solid hover:border-[#161514]/35 hover:bg-stone-50/80 active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-colors duration-150 cursor-default select-none"
               >
                 <img
                   src={skill.icon}
