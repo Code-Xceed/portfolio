@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import { 
   ArrowUpRight, 
-  BookOpen,
-  Briefcase
+  BookOpen, 
+  Briefcase,
+  Sparkles,
+  ChevronDown
 } from 'lucide-react';
 
 /**
@@ -74,17 +76,34 @@ export default function InterestsExperience() {
   return (
     <section 
       id="interests-experience" 
-      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 scroll-mt-8 sm:scroll-mt-12"
+      className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 scroll-mt-8 sm:scroll-mt-12"
     >
       {/* ======================================================== */}
-      {/* 2-COLUMN VIEWPORT GRID (Wide gap, compact media width)   */}
+      {/* SECTION DIVIDER HEADER (Craft, Play, Trajectory & Exp)    */}
       {/* ======================================================== */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-12 lg:gap-14 items-stretch">
+      <header className="w-full flex items-center justify-between text-[11px] sm:text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.08)] pt-4 mb-7 sm:mb-9 select-none">
+        <span className="flex items-center gap-1.5 shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500/80 shrink-0" />
+          <span className="text-[#161514] font-medium">Craft &amp; Play</span>
+          <span className="hidden sm:inline text-stone-500 font-normal"> &amp; Trajectory</span>
+        </span>
+
+        <div className="inline-flex items-center gap-1 text-[#57534E] text-[11px] sm:text-xs">
+          <span>Interests</span>
+          <span className="hidden sm:inline"> &amp; Experience</span>
+          <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+        </div>
+      </header>
+
+      {/* ======================================================== */}
+      {/* 2-COLUMN VIEWPORT SPREAD (Balanced center space / Ma)     */}
+      {/* ======================================================== */}
+      <div className="flex flex-col md:flex-row justify-between items-stretch gap-10 md:gap-12">
         
         {/* ======================================================== */}
         {/* LEFT COLUMN: PURE CANVAS SECTIONS (Full width mobile, compact desktop) */}
         {/* ======================================================== */}
-        <div className="flex flex-col justify-between pt-0.5 w-full md:max-w-[310px]">
+        <div className="flex flex-col justify-between pt-0.5 w-full md:w-[320px] lg:w-[330px] shrink-0">
           
           {/* Top Block: Minecraft & Competitive Esports */}
           <section aria-labelledby="gaming-heading">
@@ -96,9 +115,9 @@ export default function InterestsExperience() {
               <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
             </div>
 
-            {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
+            {/* Video Thumbnail (Static crisp framing, no enlarge hover scale) */}
             <div 
-              className="relative w-full h-[142px] sm:h-[150px] md:h-[124px] lg:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => mcVideoRef.current?.play()}
             >
               <video 
@@ -108,7 +127,7 @@ export default function InterestsExperience() {
                 loop 
                 muted 
                 playsInline 
-                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 group-hover/video:scale-[1.025] transition-all duration-500 ease-out"
+                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 transition-opacity duration-300 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
                 <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
@@ -169,9 +188,9 @@ export default function InterestsExperience() {
               <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
             </div>
 
-            {/* Video Thumbnail (Smooth scale, subtle shadow bloom & glow on hover) */}
+            {/* Video Thumbnail (Static crisp framing, no enlarge hover scale) */}
             <div 
-              className="relative w-full h-[142px] sm:h-[150px] md:h-[124px] lg:h-[132px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
               onMouseEnter={() => editVideoRef.current?.play()}
             >
               <video 
@@ -181,7 +200,7 @@ export default function InterestsExperience() {
                 loop 
                 muted 
                 playsInline 
-                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 group-hover/video:scale-[1.025] transition-all duration-500 ease-out"
+                className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 transition-opacity duration-300 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
                 <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
@@ -253,7 +272,7 @@ export default function InterestsExperience() {
         {/* RIGHT COLUMN: PURE TEXT & LINEWORK DIRECTLY ON CANVAS    */}
         {/* (Blogs & Experience, no footer as requested)            */}
         {/* ======================================================== */}
-        <div className="flex flex-col justify-between pt-0.5">
+        <div className="flex flex-col justify-between pt-0.5 w-full md:w-[350px] lg:w-[365px] shrink-0">
           
           {/* Top Block: Curated Blogs (Exact user request: # Blogs) */}
           <section aria-labelledby="blogs-heading">

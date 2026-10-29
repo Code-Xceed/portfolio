@@ -3,28 +3,19 @@ import { ArrowUp, ArrowUpRight } from 'lucide-react';
 
 /**
  * Ultra-minimal, non-generic Zen footer task bar.
- * Expansive width with generous center breathing room (Ma), live emerald beacon,
+ * Expansive width with generous center breathing room (Ma),
  * and precision micro-interactions.
  */
 export default function Footer({ onScrollToTop }) {
   return (
-    <footer className="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-8 pt-3 sm:pt-4 pb-12 sm:pb-16">
+    <footer className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 mt-auto pt-4 sm:pt-6 pb-6 sm:pb-8">
       {/* 1px Minimal Divider Line with generous breathing room */}
       <div className="w-full border-t border-[rgba(22,21,20,0.08)] pt-4 sm:pt-5">
         
         {/* DESKTOP & TABLET VIEW (sm and up): Expansive single-row task bar with wide center Ma */}
         <div className="hidden sm:flex items-center justify-between text-xs font-mono text-[#8C867E]">
-          {/* Left: Live Status Beacon · Identity – Built with Vibe & Code */}
+          {/* Left: Identity – Built with Vibe & Code (No green dot as requested) */}
           <div className="flex items-center gap-2 select-none shrink-0">
-            {/* Live emerald beacon with soft breathing pulse */}
-            <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
-              <span 
-                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/50" 
-                style={{ animationDuration: '3s' }} 
-              />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
-            </span>
-
             {/* Identity */}
             <span className="font-sans font-medium text-[#161514] tracking-tight text-[12.5px] sm:text-[13px]">
               Aditya Rathore
@@ -38,7 +29,7 @@ export default function Footer({ onScrollToTop }) {
             </span>
           </div>
 
-          {/* Generous Center Space (Ma / 間) naturally formed by max-w-4xl and justify-between */}
+          {/* Generous Center Space (Ma / 間) naturally formed by max-w-[860px] and justify-between */}
 
           {/* Right: Discreet Tactile Links & Back to Top */}
           <div className="flex items-center gap-2.5 sm:gap-3 text-stone-500 select-none shrink-0">
@@ -80,16 +71,9 @@ export default function Footer({ onScrollToTop }) {
 
         {/* MOBILE VIEW (< sm): Perfectly balanced, never squished or clipped */}
         <div className="flex sm:hidden flex-col gap-2.5 text-[11px] font-mono text-[#8C867E]">
-          {/* Mobile Top Row: Beacon + Identity – Built with Vibe & Code */}
+          {/* Mobile Top Row: Identity – Built with Vibe & Code (No green dot) */}
           <div className="flex items-center justify-between select-none">
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
-                <span 
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/50" 
-                  style={{ animationDuration: '3s' }} 
-                />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
-              </span>
               <span className="font-sans font-medium text-[#161514] tracking-tight text-[12px] truncate">
                 Aditya Rathore
               </span>
