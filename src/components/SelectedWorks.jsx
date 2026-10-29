@@ -200,12 +200,6 @@ function EditorialProjectCard({ project }) {
     return () => ro.disconnect();
   }, []);
 
-  // When dimensions change, cleanly reset animation instances
-  React.useEffect(() => {
-    animsRef.current.forEach(a => a?.cancel());
-    animsRef.current = [];
-  }, [dimensions.width, dimensions.height]);
-
   const w = dimensions.width || 200;
   const h = dimensions.height || 175;
   const r = 12; // matching rounded-xl
@@ -216,65 +210,84 @@ function EditorialProjectCard({ project }) {
   // Half perimeter = top segment + corner + side + corner + bottom segment + overlap
   const halfLen = Math.ceil((w / 2 - r) + cornerArc + (h - 2 * r) + cornerArc + (w / 2 - r) + (overlap * 2));
 
-  const handleMouseEnter = () => {
+  // Pre-initialize and compile animations into GPU compositor on mount for 0ms hover latency
+  React.useEffect(() => {
     if (!pathRightRef.current || !pathLeftRef.current) return;
 
+    animsRef.current.forEach(a => a?.cancel());
+
     const timing = {
-      duration: 650, // snappy, butter-smooth 650ms dual-flow
-      easing: 'cubic-bezier(0.25, 1, 0.4, 1)', // Apple/Emil Kowalski buttery ease
+      duration: 550, // snappy, instant-response 550ms dual-flow
+      easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // Apple/Emil Kowalski fluid curve with instant initial velocity
       fill: 'forwards'
     };
 
-    if (animsRef.current.length > 0) {
-      animsRef.current.forEach(a => {
-        a.playbackRate = 1;
-        a.play();
-      });
-    } else {
-      const lenR = pathRightRef.current.getTotalLength?.() || halfLen;
-      const lenL = pathLeftRef.current.getTotalLength?.() || halfLen;
+    const lenR = pathRightRef.current.getTotalLength?.() || halfLen;
+    const lenL = pathLeftRef.current.getTotalLength?.() || halfLen;
 
-      const coreKeyframesR = [
-        { strokeDashoffset: `${lenR}px`, opacity: 0 },
-        { strokeDashoffset: `${lenR * 0.98}px`, opacity: 1, offset: 0.02 },
-        { strokeDashoffset: '0px', opacity: 1, offset: 1.0 }
-      ];
+    const coreKeyframesR = [
+      { strokeDashoffset: `${lenR}px`, opacity: 1 },
+      { strokeDashoffset: '0px', opacity: 1 }
+    ];
 
-      const coreKeyframesL = [
-        { strokeDashoffset: `${lenL}px`, opacity: 0 },
-        { strokeDashoffset: `${lenL * 0.98}px`, opacity: 1, offset: 0.02 },
-        { strokeDashoffset: '0px', opacity: 1, offset: 1.0 }
-      ];
+    const coreKeyframesL = [
+      { strokeDashoffset: `${lenL}px`, opacity: 1 },
+      { strokeDashoffset: '0px', opacity: 1 }
+    ];
 
-      const glowKeyframesR = [
-        { strokeDashoffset: `${lenR}px`, opacity: 0 },
-        { strokeDashoffset: `${lenR * 0.98}px`, opacity: 0.35, offset: 0.02 },
-        { strokeDashoffset: '0px', opacity: 0.18, offset: 1.0 }
-      ];
+    const glowKeyframesR = [
+      { strokeDashoffset: `${lenR}px`, opacity: 0.35 },
+      { strokeDashoffset: '0px', opacity: 0.18 }
+    ];
 
-      const glowKeyframesL = [
-        { strokeDashoffset: `${lenL}px`, opacity: 0 },
-        { strokeDashoffset: `${lenL * 0.98}px`, opacity: 0.35, offset: 0.02 },
-        { strokeDashoffset: '0px', opacity: 0.18, offset: 1.0 }
-      ];
+    const glowKeyframesL = [
+      { strokeDashoffset: `${lenL}px`, opacity: 0.35 },
+      { strokeDashoffset: '0px', opacity: 0.18 }
+    ];
 
-      animsRef.current = [
-        pathRightRef.current.animate(coreKeyframesR, timing),
-        pathLeftRef.current.animate(coreKeyframesL, timing),
-        glowRightRef.current ? glowRightRef.current.animate(glowKeyframesR, timing) : null,
-        glowLeftRef.current ? glowLeftRef.current.animate(glowKeyframesL, timing) : null,
-      ].filter(Boolean);
-    }
+    const anims = [
+      pathRightRef.current.animate(coreKeyframesR, timing),
+      pathLeftRef.current.animate(coreKeyframesL, timing),
+      glowRightRef.current ? glowRightRef.current.animate(glowKeyframesR, timing) : null,
+      glowLeftRef.current ? glowLeftRef.current.animate(glowKeyframesL, timing) : null,
+    ].filter(Boolean);
+
+    anims.forEach(a => {
+      a.pause();
+      a.currentTime = 0;
+    });
+
+    animsRef.current = anims;
+
+    return () => {
+      anims.forEach(a => a?.cancel());
+      animsRef.current = [];
+    };
+  }, [dimensions.width, dimensions.height, halfLen]);
+
+  const handleMouseEnter = () => {
+    if (!animsRef.current || animsRef.current.length === 0) return;
+
+    animsRef.current.forEach(a => {
+      if (!a) return;
+      // If animation completed forward or rewound to start, restart from 0 immediately without lag
+      if (a.playState === 'finished' || (a.currentTime != null && a.currentTime <= 0) || (a.currentTime != null && a.currentTime >= 550)) {
+        a.currentTime = 0;
+      }
+      a.playbackRate = 1;
+      a.play();
+    });
   };
 
   const handleMouseLeave = () => {
-    // Seamless reverse unwind back to top-middle starting point
-    if (animsRef.current.length > 0) {
-      animsRef.current.forEach(a => {
-        a.playbackRate = -1.4;
-        a.play();
-      });
-    }
+    if (!animsRef.current || animsRef.current.length === 0) return;
+
+    // Seamless reverse unwind back to top-middle starting point with snappy 1.6x speed
+    animsRef.current.forEach(a => {
+      if (!a) return;
+      a.playbackRate = -1.6;
+      a.play();
+    });
   };
 
   // Symmetrical Right Half: starts top-middle, goes right, down, ends bottom-middle with subpixel overlap
@@ -290,7 +303,7 @@ function EditorialProjectCard({ project }) {
     <article
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative w-full rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] hover:border-stone-300 shadow-[0_1px_3px_rgba(22,21,20,0.02)] transition-colors duration-200 p-4 sm:p-5 flex flex-col md:flex-row gap-5 sm:gap-6 overflow-hidden"
+      className="group relative w-full rounded-2xl bg-white border border-[rgba(22,21,20,0.08)] shadow-[0_1px_3px_rgba(22,21,20,0.02)] p-4 sm:p-5 flex flex-col md:flex-row gap-5 sm:gap-6 overflow-hidden"
     >
       {/* Corner Technical Registration Crosshairs (+) */}
       <span className="absolute top-2 left-2 text-[9px] font-mono text-stone-200 group-hover:text-stone-400 transition-colors select-none pointer-events-none z-10">+</span>
