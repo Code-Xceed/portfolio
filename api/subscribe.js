@@ -21,14 +21,14 @@ export default async function handler(req, res) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    const audienceId = process.env.RESEND_AUDIENCE_ID || '19edb32d-5a5d-4a09-9b6b-6de9106e78e5';
 
-    if (!apiKey || !audienceId) {
-      console.warn('RESEND_API_KEY or RESEND_AUDIENCE_ID is not configured yet in environment.');
+    if (!apiKey) {
+      console.warn('RESEND_API_KEY is not configured in environment.');
       // Return 200 with notice so the frontend stays graceful
       return res.status(200).json({
         success: true,
-        message: 'Saved locally. Configure RESEND_API_KEY and RESEND_AUDIENCE_ID in your environment.',
+        message: 'Saved locally. Configure RESEND_API_KEY in your hosting environment.',
       });
     }
 
