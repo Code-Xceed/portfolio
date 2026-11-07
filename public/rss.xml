@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Aditya Rathore — Notes &amp; Engineering Journal</title>
+    <link>https://codex.is-a.dev/</link>
+    <description>Notes on software engineering, creative web development, Minecraft modding, and video editing by Aditya Rathore.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 07 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://codex.is-a.dev/rss.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>How I Started</title>
+      <link>https://codex.is-a.dev/blogs/how-i-started/</link>
+      <guid isPermaLink="true">https://codex.is-a.dev/blogs/how-i-started/</guid>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[How Aditya Rathore started coding at 12 with an old Pentium laptop, learning HTML/CSS from Shradha Khapra, building games, and modding Minecraft.]]></description>
+    </item>
+
+    <item>
+      <title>How I Got My First Client</title>
+      <link>https://codex.is-a.dev/blogs/how-i-got-my-first-client/</link>
+      <guid isPermaLink="true">https://codex.is-a.dev/blogs/how-i-got-my-first-client/</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description><![CDATA[The unexpected story of how a software developer landed his first real client editing hotel videos from Instagram ads, leading to agency work and freelancing.]]></description>
+    </item>
+  </channel>
+</rss>

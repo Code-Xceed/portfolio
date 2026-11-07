@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { POSTS } from './blogPosts.js';
 import BlogSubscribeForm from './BlogSubscribeForm.jsx';
@@ -10,19 +10,31 @@ import BlogSubscribeForm from './BlogSubscribeForm.jsx';
  * - Edge-to-edge custom watercolor illustration (desktop wide + mobile portrait)
  * - Fixed background: artwork and paper texture remain 100% frozen in viewport
  * - Pure internal text scroll with ZERO scrollbar
- * - Clean prose sitting directly on the washi paper canvas (no enclosing card box)
+ * - Hairline reading progress indicator at viewport ceiling
+ * - Clean prose sitting directly on the washi paper canvas with adaptive lower-scroll diffusion
  * - Clickable links, Discord redirect & Blog subscription engine
  */
 
 export default function PostPage({ post, onNavigate }) {
   const scrollContainerRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   // Instant scroll-to-top whenever switching between blog posts
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
+      setScrollProgress(0);
     }
   }, [post.id]);
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    const maxScroll = scrollHeight - clientHeight;
+    if (maxScroll > 0) {
+      setScrollProgress(Math.min(1, Math.max(0, scrollTop / maxScroll)));
+    }
+  };
 
   const handleBack = (e) => {
     e.preventDefault();
@@ -88,9 +100,18 @@ export default function PostPage({ post, onNavigate }) {
         aria-hidden="true"
       />
 
+      {/* Hairline Reading Progress Rail at Viewport Ceiling */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] z-50 pointer-events-none bg-stone-900/10" aria-hidden="true">
+        <div
+          className="h-full bg-stone-800/80 transition-transform duration-75 ease-out origin-left"
+          style={{ transform: `scaleX(${scrollProgress})` }}
+        />
+      </div>
+
       {/* 4. The ONLY Scrolling Container: Text Layer with ZERO scrollbar */}
       <div
         ref={scrollContainerRef}
+        onScroll={handleScroll}
         tabIndex={0}
         className="relative z-20 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain focus:outline-none"
         style={{
@@ -108,14 +129,14 @@ export default function PostPage({ post, onNavigate }) {
             WebkitMaskImage: 'linear-gradient(to bottom, black calc(100% - 16px), transparent 100%)',
           }}
         >
-          <div className="flex items-center justify-between text-[11px] sm:text-xs font-mono text-[#8C867E]">
+          <div className="flex items-center justify-between text-[11px] sm:text-xs font-mono text-[#635E57] font-medium">
             <a
               href="/"
               onClick={handleBack}
               className="group inline-flex items-center gap-1.5 px-3 py-1.5 -ml-2 rounded-lg text-[#57534E] hover:text-[#161514] hover:bg-black/[0.04] active:scale-95 transition-all duration-150 cursor-pointer touch-manipulation"
               aria-label="Back to home page"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-stone-400 group-hover:-translate-x-0.5 transition-transform duration-150" />
+              <ArrowLeft className="w-3.5 h-3.5 text-stone-500 group-hover:-translate-x-0.5 transition-transform duration-150" />
               <span>Back</span>
             </a>
 
@@ -131,7 +152,7 @@ export default function PostPage({ post, onNavigate }) {
                     className={`pressable px-2.5 py-1 rounded-md text-[11px] font-mono transition-all duration-200 cursor-pointer select-none touch-manipulation ${
                       isActive
                         ? 'bg-white text-[#161514] font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-                        : 'text-[#78716C] hover:text-[#161514] hover:bg-white/40'
+                        : 'text-[#635E57] hover:text-[#161514] hover:bg-white/40'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
@@ -143,15 +164,15 @@ export default function PostPage({ post, onNavigate }) {
           </div>
         </header>
 
-        {/* 5. Article Content & Layout - Floating directly on washi canvas (no card box) */}
+        {/* 5. Article Content & Layout - Floating directly on washi canvas with gentle lower-scroll diffuser */}
         <main
           key={post.id}
-          className="w-full max-w-[680px] mx-auto px-6 sm:px-8 pt-4 sm:pt-8 pb-36 sm:pb-48 flex flex-col animate-fade-in"
+          className="w-full max-w-[680px] mx-auto px-6 sm:px-8 pt-4 sm:pt-8 pb-36 sm:pb-48 flex flex-col rounded-3xl bg-gradient-to-b from-transparent via-transparent to-white/30 animate-fade-in"
           style={{ animationDuration: '300ms' }}
         >
           {/* Article Meta Header */}
           <div className="mb-6 sm:mb-8">
-            <div className="inline-flex items-center gap-2 text-[11px] font-mono text-[#8C867E] tracking-wider uppercase mb-2 sm:mb-3">
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono text-[#635E57] font-medium tracking-wider uppercase mb-2 sm:mb-3">
               <span>#{post.number}</span>
               <span>·</span>
               <span>{post.date}</span>

@@ -93,23 +93,31 @@ export default function BlogSubscribeForm({ source = 'blog-post' }) {
       </div>
 
       {status === 'success' ? (
-        <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 text-[13.5px] font-medium animate-fade-in">
+        <div
+          aria-live="polite"
+          className="flex items-center gap-2.5 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 text-[13.5px] font-medium animate-fade-in"
+        >
           <Check className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>You&apos;re subscribed! I&apos;ll ping you directly when the next note drops.</span>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-2.5">
+          <label htmlFor="subscribe-email" className="sr-only">
+            Email address
+          </label>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input
+              id="subscribe-email"
               type="email"
               value={email}
+              aria-label="Your email address"
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (status === 'error') setStatus('idle');
               }}
               placeholder="Enter your email..."
               disabled={status === 'loading'}
-              className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/90 border border-stone-300/80 text-[13.5px] text-[#161514] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-500 transition-all duration-150 disabled:opacity-60"
+              className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/90 border border-stone-300/80 text-[13.5px] text-[#161514] placeholder:text-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-500 transition-all duration-150 disabled:opacity-60"
             />
             <button
               type="submit"
@@ -131,13 +139,13 @@ export default function BlogSubscribeForm({ source = 'blog-post' }) {
           </div>
 
           {status === 'error' && (
-            <div className="flex items-center gap-1.5 text-[12px] text-rose-600 font-medium pl-1">
+            <div role="alert" className="flex items-center gap-1.5 text-[12px] text-rose-600 font-medium pl-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          <div className="flex items-center justify-between text-[11px] font-mono text-[#8C867E] pt-0.5 px-1">
+          <div className="flex items-center justify-between text-[11px] font-mono text-[#635E57] font-medium pt-0.5 px-1">
             <span>Direct to your inbox</span>
             <span>Unsubscribe anytime</span>
           </div>

@@ -108,6 +108,10 @@ async function run() {
         from: `"Aditya Rathore" <${GMAIL_USER}>`,
         to: recipient,
         subject: `New Note: ${blog.title} 🚀`,
+        headers: {
+          'List-Unsubscribe': `<mailto:${GMAIL_USER}?subject=Unsubscribe%20${recipient}>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
         html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; padding: 32px 24px; background-color: #FAF8F5; border-radius: 16px; border: 1px solid #EAE5D9;">
             <div style="font-family: monospace; font-size: 11px; color: #8C867E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">

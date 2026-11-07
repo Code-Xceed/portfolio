@@ -9,13 +9,19 @@
       name="description"
       content="Portfolio of Aditya Rathore — Full-stack developer and creative engineer building scalable web products, developer tools, spatial audio experiences, and high-craft interfaces."
     />
+    <meta
+      name="keywords"
+      content="Aditya Rathore, Full-Stack Developer, Creative Engineer, Software Engineer, Web Developer, React, Tailwind CSS, NeoForge Modding, Video Editing, DaVinci Resolve, Portfolio"
+    />
     <meta name="author" content="Aditya Rathore" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="creator" content="Aditya Rathore" />
+    <meta name="publisher" content="Aditya Rathore" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://codex.is-a.dev/" />
     <meta name="theme-color" content="#FAFAF8" />
     <meta name="color-scheme" content="light" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Aditya Rathore" />
     <meta property="og:title" content="Aditya Rathore — Full-Stack Developer &amp; Creative Engineer" />
@@ -27,7 +33,8 @@
     <meta property="og:image" content="https://codex.is-a.dev/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_IN" />
+    <meta property="og:image:alt" content="Aditya Rathore — Full-Stack Developer &amp; Creative Engineer" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -37,8 +44,10 @@
       content="Building scalable web products, developer utilities, and high-craft interfaces with obsession over performance, feel, and simplicity."
     />
     <meta name="twitter:image" content="https://codex.is-a.dev/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Aditya Rathore — Full-Stack Developer &amp; Creative Engineer" />
 
-    <!-- Icons -->
+    <!-- Feed & Icons -->
+    <link rel="alternate" type="application/rss+xml" title="Aditya Rathore RSS Feed" href="https://codex.is-a.dev/rss.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -57,22 +66,54 @@
       rel="stylesheet"
     />
 
-    <!-- Structured Data (Schema.org) for Rich Results -->
+    <!-- Structured Data (Schema.org) for Rich Google Knowledge Graph Results -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "ProfilePage",
+            "@id": "https://codex.is-a.dev/#webpage",
+            "url": "https://codex.is-a.dev/",
+            "name": "Aditya Rathore — Full-Stack Developer & Creative Engineer",
+            "isPartOf": {
+              "@type": "WebSite",
+              "@id": "https://codex.is-a.dev/#website",
+              "url": "https://codex.is-a.dev/",
+              "name": "Aditya Rathore Portfolio"
+            },
+            "about": {
+              "@id": "https://codex.is-a.dev/#person"
+            },
+            "mainEntity": {
+              "@id": "https://codex.is-a.dev/#person"
+            }
+          },
+          {
             "@type": "Person",
             "@id": "https://codex.is-a.dev/#person",
             "name": "Aditya Rathore",
+            "alternateName": ["CodeX", "Code-Xceed"],
             "jobTitle": "Full-Stack Developer & Creative Engineer",
             "url": "https://codex.is-a.dev/",
+            "image": "https://codex.is-a.dev/profile-placeholder.svg",
             "sameAs": [
               "https://github.com/Code-Xceed",
               "https://www.linkedin.com/in/aditya-rathore-110125385",
               "https://discord.com/users/codexceed",
               "https://www.instagram.com/aditya.13201/"
+            ],
+            "knowsAbout": [
+              "JavaScript",
+              "React",
+              "Node.js",
+              "Tailwind CSS",
+              "Vite",
+              "NeoForge Modding",
+              "Video Editing",
+              "DaVinci Resolve",
+              "Motion Graphics",
+              "Web Performance & SEO"
             ],
             "description": "Full-stack developer and creative engineer building scalable web products, developer utilities, and tactile minimalist interfaces."
           },
@@ -97,7 +138,74 @@
     <link rel="prefetch" href="/videoeditor-bg.webp" as="image" type="image/webp" />
   </head>
   <body class="bg-[#FAFAF8] text-[#161514] antialiased selection:bg-[#EAE5D9] selection:text-[#161514]">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Semantic Static Fallback for Search Crawlers & Instant First Paint -->
+      <header class="max-w-[760px] mx-auto pt-16 px-6 font-sans">
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-[#161514]">Aditya Rathore</h1>
+        <p class="text-lg text-[#57534E] mt-3">Full-Stack Developer &amp; Creative Engineer</p>
+        <p class="text-[15px] text-[#78716C] mt-2 leading-relaxed">
+          Building scalable web products, developer utilities, and tactile minimalist interfaces with obsession over performance, feel, and simplicity.
+        </p>
+      </header>
+      <main class="max-w-[760px] mx-auto px-6 py-10 font-sans space-y-12">
+        <!-- Selected Works -->
+        <section id="works">
+          <h2 class="text-xl font-bold text-[#161514] mb-4">Selected Works</h2>
+          <ul class="space-y-4">
+            <li>
+              <h3 class="font-semibold text-base">Minimalist Atelier Portfolio</h3>
+              <p class="text-sm text-[#57534E]">High-craft portfolio with Japanese anime cel-art botanical borders, tactile paper texture, and zero-compromise performance.</p>
+            </li>
+            <li>
+              <h3 class="font-semibold text-base">Minecraft Modding &amp; Gaming</h3>
+              <p class="text-sm text-[#57534E]">Creator of custom NeoForge mods Avaritia Drops and MCSR Off Revived for YouTubers and competitive players.</p>
+              <a href="/interests/minecraft/" class="text-xs font-mono underline text-[#161514]">Explore Minecraft Modding &rarr;</a>
+            </li>
+            <li>
+              <h3 class="font-semibold text-base">Commercial Video Editing</h3>
+              <p class="text-sm text-[#57534E]">High-retention hotel video edits and agency post-production for Big Brothers Media with DaVinci Resolve color grading.</p>
+              <a href="/interests/video-editing/" class="text-xs font-mono underline text-[#161514]">Explore Video Editing &rarr;</a>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Technical Writing & Notes -->
+        <section id="notes">
+          <h2 class="text-xl font-bold text-[#161514] mb-4">Notes &amp; Writing</h2>
+          <div class="space-y-4">
+            <article>
+              <div class="text-xs font-mono text-[#78716C]">#1 · Nov '26 · 4 min read</div>
+              <h3 class="text-lg font-semibold"><a href="/blogs/how-i-started/" class="hover:underline">How I Started</a></h3>
+              <p class="text-sm text-[#57534E]">How Aditya Rathore started coding at 12 with an Intel Pentium laptop, learning HTML/CSS from Shradha Khapra, and modding Minecraft.</p>
+            </article>
+            <article>
+              <div class="text-xs font-mono text-[#78716C]">#2 · Oct '26 · 5 min read</div>
+              <h3 class="text-lg font-semibold"><a href="/blogs/how-i-got-my-first-client/" class="hover:underline">How I Got My First Client</a></h3>
+              <p class="text-sm text-[#57534E]">The unexpected story of how a software engineer landed his first proper client editing hotel videos, expanding into agency work.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Experience -->
+        <section id="experience">
+          <h2 class="text-xl font-bold text-[#161514] mb-4">Experience</h2>
+          <ul class="space-y-3 text-sm text-[#57534E]">
+            <li><strong>Video Editor</strong> · Big Brothers Media Agency (Sept '26 – Present)</li>
+            <li><strong>Backend Developer</strong> · Helx Studio (Mar '26 – Jun '26)</li>
+            <li><strong>Full Stack Developer</strong> · Freelance (2024 – 2025)</li>
+          </ul>
+        </section>
+
+        <!-- Social & Contact -->
+        <footer class="pt-8 border-t border-stone-200 text-xs font-mono text-[#78716C] flex flex-wrap gap-4">
+          <a href="https://github.com/Code-Xceed" target="_blank" rel="noopener noreferrer" class="hover:text-black">GitHub</a>
+          <a href="https://www.linkedin.com/in/aditya-rathore-110125385" target="_blank" rel="noopener noreferrer" class="hover:text-black">LinkedIn</a>
+          <a href="https://discord.com/users/codexceed" target="_blank" rel="noopener noreferrer" class="hover:text-black">Discord</a>
+          <a href="https://www.instagram.com/aditya.13201/" target="_blank" rel="noopener noreferrer" class="hover:text-black">Instagram</a>
+          <a href="https://codex.is-a.dev/rss.xml" class="hover:text-black">RSS Feed</a>
+        </footer>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
