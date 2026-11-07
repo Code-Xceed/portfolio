@@ -166,6 +166,16 @@ const CATEGORIES = [
         tool: 'DaVinci / Premiere',
         format: '9:16 Reel',
       },
+      {
+        id: 'br-3',
+        title: 'Cinematic Footwear Spec Commercial',
+        subtitle: 'Volumetric lighting, sole macro & sound design',
+        src: '/gallery/videos/sneaker-commercial-opt.mp4',
+        poster: '/gallery/videos/sneaker-commercial-poster.webp',
+        badge: 'Product Commercial',
+        tool: 'DaVinci & After Effects',
+        format: '9:16 Reel',
+      },
     ],
   },
 ];
