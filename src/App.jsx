@@ -241,6 +241,8 @@ export default function App() {
         <div
           ref={sheetContainerRef}
           className={`blog-sheet-container ${
+            activeRoute.type === 'blog' ? 'overflow-hidden' : 'overflow-y-auto'
+          } ${
             sheetState === 'entering'
               ? 'blog-sheet-enter'
               : sheetState === 'active'
