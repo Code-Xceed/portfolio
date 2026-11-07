@@ -27,14 +27,6 @@ const BLOGS = [
     readTime: '5 min',
     link: '/blogs/how-i-got-my-first-client/',
   },
-  {
-    id: 'building-next',
-    title: "What I'm Building Next",
-    category: 'Roadmap',
-    date: "Nov '26",
-    readTime: '3 min',
-    link: '/blogs/what-im-building-next/',
-  },
 ];
 
 /**
