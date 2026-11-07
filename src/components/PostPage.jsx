@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { POSTS } from './blogPosts.js';
+import BlogSubscribeForm from './BlogSubscribeForm.jsx';
 
 /**
  * PostPage
@@ -10,7 +11,7 @@ import { POSTS } from './blogPosts.js';
  * - Fixed background: artwork and paper texture remain 100% frozen in viewport
  * - Pure internal text scroll with ZERO scrollbar
  * - Clean prose sitting directly on the washi paper canvas (no enclosing card box)
- * - Clickable links & Discord redirect
+ * - Clickable links, Discord redirect & Blog subscription engine
  */
 
 export default function PostPage({ post, onNavigate }) {
@@ -341,100 +342,212 @@ export default function PostPage({ post, onNavigate }) {
                 </a>
               </div>
 
+              {/* Newsletter / Blog Subscription Engine */}
+              <BlogSubscribeForm source="blog-1-how-i-started" />
+
               <p className="pt-2 font-medium text-[#161514]">
                 See ya.
               </p>
             </article>
           ) : (
-            /* Blog 2: How I Got My First Client */
+            /* Blog 2: How I Got My First Client (Exact user story) */
             <article className="prose-clean text-[15px] sm:text-[16px] leading-[1.8] text-[#2B2927] space-y-5">
               <p className="text-[15.5px] sm:text-[16.5px] text-[#1E1D1B] font-normal leading-[1.75]">
-                Landing client zero is always the hardest part. You don't have testimonials, you don't have a stacked portfolio, and nobody is searching for your name yet.
+                So, as you know, I'm a software engineer and a web developer specifically. But what you probably didn't know is that the first proper client I got wanted me to edit his videos.
               </p>
 
-              <p className="font-medium text-[#161514]">
-                When I decided to take freelancing seriously, I didn't wait around for people to magically find me on freelance boards.
-              </p>
-
-              <p>
-                Nah, that was never going to work.
+              <p className="font-semibold text-[#161514] tracking-tight text-lg">
+                Damn. 😂
               </p>
 
               <p>
-                Instead, I hung out where creators and developers actually spend their time: Discord servers, Minecraft SMP communities, and indie creator spaces.
+                Before this, I had already done some paid work. For example, I built a website for a tournament company called VAULT OP, and got ₹2,000 for it.
               </p>
 
-              <p className="text-[#57534E] italic font-medium">
-                The approach that changed everything:
-              </p>
-
-              <p>
-                I didn't send generic cold DMs asking for work. Nobody answers "Hey, hire me, I edit videos and write code."
-              </p>
-
-              <p>
-                Instead, I found creators who were already putting in the grind and looked for one specific bottleneck I could solve immediately.
-              </p>
-
-              <div className="py-1">
-                <div className="w-12 h-[1px] bg-stone-300/80 my-4" />
-              </div>
-
-              <p>
-                For my first video client, a creator needed a punchy promo trailer for their community launch. Before even bringing up payment or contracts, I grabbed highlights from their public stream, spent an evening editing a tight 15-second teaser with custom sound design and motion typography, and sent it over:
-              </p>
-
-              <p className="p-3 rounded-xl bg-stone-900/[0.03] border border-stone-200/80 text-[13.5px] font-mono text-stone-700 leading-relaxed italic">
-                &ldquo;Hey, love what you're building with the community. Saw your stream and put this 15s teaser together for you. If you like it, it's yours to post. If you want more clips like this for the season, let's chat.&rdquo;
-              </p>
-
-              <p>
-                They replied within 20 minutes: <span className="font-medium text-[#161514]">&ldquo;Bro, this is sick. Can you edit 10 more of these for this month?&rdquo;</span>
-              </p>
-
-              <p className="font-semibold text-[#161514] tracking-tight">
-                Boom. Client zero unlocked.
-              </p>
-
-              <p>
-                The biggest lesson I learned from that was simple: don't ask people to take a risk on your promises. Give them undeniable proof of work before the pitch even starts.
-              </p>
-
-              <p>
-                When you solve someone's problem upfront, you're not selling—you're collaborating.
-              </p>
-
-              <div className="py-1">
-                <div className="w-12 h-[1px] bg-stone-300/80 my-4" />
-              </div>
-
-              <p className="font-medium text-[#161514]">
-                Still learning and building every single day.
-              </p>
-
-              <p>
-                If you're trying to land your first client, or if you're a creator looking to collaborate on video editing, web development, or creative tools, hit me up on Discord. Let's make something great.
-              </p>
-
-              {/* Clickable Discord Redirect Button */}
-              <div className="pt-3 pb-2">
+              {/* Link: VAULT OP */}
+              <div className="my-2">
                 <a
-                  href="https://discord.com/users/codexceed"
+                  href="https://vault-op-tournaments.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group pressable inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium text-[13.5px] shadow-[0_2px_10px_rgba(88,101,242,0.22)] hover:shadow-[0_4px_16px_rgba(88,101,242,0.32)] transition-all duration-200 active:scale-95 select-none"
-                  aria-label="Connect with me on Discord"
+                  className="group pressable inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900/5 hover:bg-stone-900/10 border border-stone-300/80 font-mono text-[13px] text-[#161514] shadow-2xs hover:border-stone-400 transition-all duration-150 active:scale-95"
                 >
-                  <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
-                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                  </svg>
-                  <span>Connect with me on Discord</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+                  <span className="font-medium underline decoration-stone-400 underline-offset-4 group-hover:decoration-stone-700">Check out VAULT OP</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
                 </a>
               </div>
 
-              <p className="pt-2 font-medium text-[#161514]">
-                Catch you there.
+              <p>
+                I've also built some paid Minecraft mods for a YouTuber:
+              </p>
+
+              {/* Links: Minecraft Mods */}
+              <div className="flex flex-wrap items-center gap-2.5 my-2">
+                <a
+                  href="https://github.com/Code-Xceed/AvaritiaDrops"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group pressable inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900/5 hover:bg-stone-900/10 border border-stone-300/80 font-mono text-[13px] text-[#161514] shadow-2xs hover:border-stone-400 transition-all duration-150 active:scale-95"
+                >
+                  <span className="font-medium underline decoration-stone-400 underline-offset-4 group-hover:decoration-stone-700">Avaritia Drops</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+                </a>
+                <a
+                  href="https://github.com/Code-Xceed/MCSRoff-revived"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group pressable inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900/5 hover:bg-stone-900/10 border border-stone-300/80 font-mono text-[13px] text-[#161514] shadow-2xs hover:border-stone-400 transition-all duration-150 active:scale-95"
+                >
+                  <span className="font-medium underline decoration-stone-400 underline-offset-4 group-hover:decoration-stone-700">MCSR Off Revived</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+                </a>
+              </div>
+
+              <p>
+                I got ₹600 for each of these, along with some other small paid work like Discord bots and stuff.
+              </p>
+
+              <p>
+                But honestly, I don't really count these as proper client work. Not because they weren't paid, but because the amounts were pretty small for the time and effort I was putting in. As a web developer, I really wanted to start earning thousands of rupees every month from my work.
+              </p>
+
+              <p className="font-medium text-[#161514]">
+                And that's what I was looking for.
+              </p>
+
+              <div className="py-2">
+                <div className="w-12 h-[1px] bg-stone-300/80 my-4" />
+              </div>
+
+              {/* Subhead: My first proper client */}
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#161514] pt-2">
+                My first proper client
+              </h2>
+
+              <p>
+                The first proper client I got was a real estate person who needed someone to edit videos of hotels.
+              </p>
+
+              <p className="text-[#161514] font-medium">
+                And guess what? He didn't need a website. He needed a video editor.
+              </p>
+
+              <p>
+                I found him while scrolling through Instagram. I came across an ad where he was looking for a video editor, so I contacted him and got the work.
+              </p>
+
+              <p>
+                I edited the videos exactly as he wanted. Here are some of the videos I made for him:
+              </p>
+
+              {/* Link: Hotel video edits */}
+              <div className="my-2">
+                <a
+                  href="https://drive.google.com/drive/folders/1dRv2C_nNoKmpDXFkCR0PY1fYJ3NDaJyW"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group pressable inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-stone-900/5 hover:bg-stone-900/10 border border-stone-300/80 font-mono text-[13px] text-[#161514] shadow-2xs hover:border-stone-400 transition-all duration-150 active:scale-95"
+                >
+                  <span className="font-medium underline decoration-stone-400 underline-offset-4 group-hover:decoration-stone-700">Watch my hotel video edits</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+                </a>
+              </div>
+
+              <p>
+                He liked my work, so he hired me. I ended up working with him for one whole month, and by the end of it, I had made ₹6,000.
+              </p>
+
+              <p className="p-3 rounded-xl bg-stone-900/[0.03] border border-stone-200/80 text-[13.5px] font-mono text-stone-700 leading-relaxed">
+                Not bad for my first proper client, I guess.
+              </p>
+
+              <p>
+                And I'm still working with him. He sends me videos, tells me what kind of edits he needs, and I work on them. It's been going pretty well so far.
+              </p>
+
+              <div className="py-2">
+                <div className="w-12 h-[1px] bg-stone-300/80 my-4" />
+              </div>
+
+              {/* Subhead: And then came another opportunity */}
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#161514] pt-2">
+                And then came another opportunity
+              </h2>
+
+              <p>
+                Currently, I'm working as both a freelance software developer and a video editor.
+              </p>
+
+              <p>
+                Last month, I also got connected with BIG BROTHERS MEDIA, which is a video editing agency, and I'm currently working with them too.
+              </p>
+
+              <p className="italic text-[#57534E]">
+                And guess where I found them?
+              </p>
+
+              <p>
+                Instagram ads. Again.
+              </p>
+
+              <p className="font-mono text-xs uppercase tracking-widest text-stone-600 font-semibold">
+                ALL THANKS TO MY INSTAGRAM FEED.
+              </p>
+
+              <p className="font-semibold text-[#161514]">
+                I don't watch brainrot, guys.
+              </p>
+
+              <div className="py-2">
+                <div className="w-12 h-[1px] bg-stone-300/80 my-4" />
+              </div>
+
+              {/* Subhead: Is this what I actually wanted? */}
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#161514] pt-2">
+                Is this what I actually wanted?
+              </h2>
+
+              <p className="font-medium text-[#161514]">
+                Not exactly.
+              </p>
+
+              <p>
+                I started learning web development because I wanted to build software, websites, products and eventually my own things. Video editing wasn't really part of the plan.
+              </p>
+
+              <p>
+                But I have to do what gets me work right now, and I'm earning enough from it. So I'm not complaining.
+              </p>
+
+              <p>
+                Still, I have some really good plans coming up. I've been working on a few things for a long time, and I'm planning to release them soon. My goal is to build something of my own, get more clients and earn more from both domains.
+              </p>
+
+              <p>
+                One thing I've learned from this experience is that your first client might not come from where you expect. I was looking for web development clients, but my first proper opportunity came from video editing.
+              </p>
+
+              <p className="font-medium text-[#161514]">
+                And that's completely fine. You have to start somewhere.
+              </p>
+
+              <p>
+                I'm still working on getting new clients, building my projects and figuring things out. There is a lot more coming, and I think it'll be worth sharing here.
+              </p>
+
+              <p className="text-[#161514] font-medium">
+                So, stay connected. You can subscribe to my blogs and I'll notify you directly in your inbox whenever I publish something new. No BS.
+              </p>
+
+              {/* Blog Subscription Mechanism */}
+              <BlogSubscribeForm source="blog-2-how-i-got-my-first-client" />
+
+              <p>
+                That's pretty much my experience with my first client. It was good, it was unexpected, and it was enough to get me started.
+              </p>
+
+              <p className="pt-2 font-bold text-[#161514] text-lg">
+                But definitely not the end goal.
               </p>
             </article>
           )}
