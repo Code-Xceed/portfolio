@@ -19,7 +19,8 @@ import {
   Layers,
   Palette,
   Sliders,
-  Maximize2
+  Maximize2,
+  Plus
 } from 'lucide-react';
 
 /**
@@ -89,11 +90,11 @@ const CATEGORIES = [
       },
       {
         id: 're-3',
-        title: 'Minimalist Architectural Villa Preview',
-        subtitle: 'Clean lines, stabilized cinematic glide',
-        src: '/gallery/videos/Showcase-2-916.mp4',
-        poster: '/gallery/videos/Showcase-2-916-poster.webp',
-        badge: 'Villa Showcase',
+        title: 'Modern Luxury Villa Architectural Tour',
+        subtitle: 'Clean lines, stabilized cinematic walkthrough',
+        src: '/gallery/videos/villa-architectural-opt.mp4',
+        poster: '/gallery/videos/villa-architectural-poster.webp',
+        badge: 'Architectural Tour',
         tool: 'DaVinci Resolve',
         format: '9:16 Reel',
       },
@@ -128,10 +129,10 @@ const CATEGORIES = [
       },
       {
         id: 'ev-3',
-        title: 'Automotive Festival Dynamic Aftermovie',
-        subtitle: 'Speed ramping & sound stage design',
-        src: '/gallery/videos/Mahindra-916.mp4',
-        poster: '/gallery/videos/Mahindra-916-poster.webp',
+        title: 'Live Concert & Festival Aftermovie',
+        subtitle: 'Stage lighting, crowd energy & bass drops',
+        src: '/gallery/videos/festival-concert-opt.mp4',
+        poster: '/gallery/videos/festival-concert-poster.webp',
         badge: 'Festival Aftermovie',
         tool: 'After Effects & Premiere',
         format: '9:16 Reel',
@@ -143,7 +144,7 @@ const CATEGORIES = [
     label: 'Brand Commercials',
     shortLabel: 'Brands',
     icon: Megaphone,
-    layout: 'reels', // 9:16 vertical 2-reel showcase
+    layout: 'reels', // 9:16 vertical showcase
     reels: [
       {
         id: 'br-1',
@@ -157,11 +158,11 @@ const CATEGORIES = [
       },
       {
         id: 'br-2',
-        title: 'Editorial Commercial Sequence',
-        subtitle: 'Minimalist brand storytelling & color',
-        src: '/gallery/videos/Debatable-916.mp4',
-        poster: '/gallery/videos/Debatable-916-poster.webp',
-        badge: 'Commercial Edit',
+        title: 'Luxury Fragrance Spec Commercial',
+        subtitle: 'Cinematic lighting, product macro & motion grade',
+        src: '/gallery/videos/perfume-commercial-opt.mp4',
+        poster: '/gallery/videos/perfume-commercial-poster.webp',
+        badge: 'Commercial Ad',
         tool: 'DaVinci / Premiere',
         format: '9:16 Reel',
       },
@@ -463,12 +464,8 @@ export default function VideoEditingExplorePage({ onNavigate }) {
             {/* CASE B: Vertical Reels Showcase Canvas (Fits 3 Reels Form) */}
             {activeCategory.layout === 'reels' && (
               <div className="flex flex-col gap-2">
-                {/* Horizontal Snap Scroll Track for Mobile / Grid for Tablet & Desktop */}
-                <div className={`flex sm:grid gap-3 sm:gap-3.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar pb-1 px-0.5 ${
-                  activeCategory.reels.length === 2 
-                    ? 'sm:grid-cols-2 max-w-2xl mx-auto w-full' 
-                    : 'sm:grid-cols-3 w-full'
-                }`}>
+                {/* Horizontal Snap Scroll Track for Mobile / Uniform 3-Column Grid for Tablet & Desktop */}
+                <div className="flex sm:grid sm:grid-cols-3 gap-3 sm:gap-3.5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar pb-1 px-0.5 w-full">
                   {activeCategory.reels.map((reel, idx) => {
                     const isReelActive = activeReelIndex === idx;
                     const isPlaying = reelPlayingStates[idx] ?? true;
@@ -574,6 +571,25 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                       </div>
                     );
                   })}
+
+                  {/* Reserved / Open slot for categories with fewer than 3 reels to preserve identical card dimensions */}
+                  {activeCategory.reels.length < 3 && (
+                    <div 
+                      className="hidden sm:flex flex-col items-center justify-center aspect-[9/16] rounded-2xl border-2 border-dashed border-stone-300/80 bg-stone-100/40 p-5 text-center select-none group transition-all"
+                      aria-label="Reserved slot for upcoming commercial reel"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-white border border-stone-200/80 shadow-xs flex items-center justify-center mb-2.5 text-stone-400 group-hover:text-amber-600 group-hover:scale-105 transition-all">
+                        <Plus className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-mono font-bold text-stone-700">Reserved Slot</span>
+                      <span className="text-[10px] font-mono text-stone-400 mt-1 max-w-[130px] leading-tight">
+                        Commercial in post-production
+                      </span>
+                      <div className="mt-3 px-2 py-0.5 rounded-md bg-stone-200/60 text-stone-600 text-[9px] font-mono uppercase tracking-wider font-semibold">
+                        9:16 Reel
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Mobile Dot Indicators */}
