@@ -12,36 +12,20 @@ import {
  */
 const BLOGS = [
   {
-    id: 'folia-concurrency',
-    title: 'Zero-Tick Concurrency in Folia',
-    category: 'Server Engine',
+    id: 'how-i-started',
+    title: 'How I Started',
+    category: 'Origins',
+    date: "Nov '26",
+    readTime: '4 min',
+    link: '/blogs/how-i-started/',
+  },
+  {
+    id: 'first-client',
+    title: 'How I Got My First Client',
+    category: 'Freelance',
     date: "Oct '26",
-    readTime: '4 min',
-    link: 'https://github.com/Code-Xceed',
-  },
-  {
-    id: 'sumi-e-ui',
-    title: 'Japanese Zen Aesthetics in Web UI',
-    category: 'Interface Polish',
-    date: "Sep '26",
-    readTime: '3 min',
-    link: 'https://github.com/Code-Xceed',
-  },
-  {
-    id: 'foley-retention',
-    title: 'Kinetic Pacing & Audio Foley Math',
-    category: 'Video Editing',
-    date: "Aug '26",
     readTime: '5 min',
-    link: 'https://github.com/Code-Xceed',
-  },
-  {
-    id: 'speedrun-mechanics',
-    title: 'Sub-20m Nether Routing & Tick Math',
-    category: 'Game Physics',
-    date: "Jul '26",
-    readTime: '4 min',
-    link: 'https://github.com/Code-Xceed',
+    link: '/blogs/how-i-got-my-first-client/',
   },
 ];
 
@@ -52,31 +36,32 @@ const EXPERIENCES = [
   {
     role: 'Video Editor',
     company: 'Big Brothers Media Agency',
-    period: "Aug '26 – Present",
+    period: "Sept '26 – Present",
     status: 'current',
   },
   {
     role: 'Backend Developer',
     company: 'Helx Studio',
-    period: "Jan '25 – May '26",
+    period: "Mar '26 – Jun '26",
     status: 'past',
   },
   {
     role: 'Full Stack Developer',
     company: '[Freelance]',
-    period: '2024 – Present',
-    status: 'active',
+    period: '2024 – 2025',
+    status: 'past',
   },
 ];
 
-export default function InterestsExperience() {
+export default function InterestsExperience({ onNavigate }) {
   const mcVideoRef = useRef(null);
   const editVideoRef = useRef(null);
 
   return (
     <section 
       id="interests-experience" 
-      className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 scroll-mt-8 sm:scroll-mt-12"
+      className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 scroll-mt-8 sm:scroll-mt-12 animate-fade-in-up"
+      style={{ animationDelay: '420ms' }}
     >
       {/* ======================================================== */}
       {/* SECTION DIVIDER HEADER (Craft, Play, Trajectory & Exp)    */}
@@ -84,8 +69,8 @@ export default function InterestsExperience() {
       <header className="w-full flex items-center justify-between text-[11px] sm:text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.08)] pt-4 mb-7 sm:mb-9 select-none">
         <span className="flex items-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5 text-amber-500/80 shrink-0" />
-          <span className="text-[#161514] font-medium">Craft &amp; Play</span>
-          <span className="hidden sm:inline text-stone-500 font-normal"> &amp; Trajectory</span>
+          <span className="text-[#161514] font-medium">Games I Play</span>
+          <span className="hidden sm:inline text-stone-500 font-normal"> &amp; Social work</span>
         </span>
 
         <div className="inline-flex items-center gap-1 text-[#57534E] text-[11px] sm:text-xs">
@@ -103,37 +88,48 @@ export default function InterestsExperience() {
         {/* ======================================================== */}
         {/* LEFT COLUMN: PURE CANVAS SECTIONS (Full width mobile, compact desktop) */}
         {/* ======================================================== */}
-        <div className="flex flex-col justify-between pt-0.5 w-full md:w-[320px] lg:w-[330px] shrink-0">
+        <div className="flex flex-col justify-between pt-0.5 w-full md:w-[360px] lg:w-[370px] shrink-0">
           
           {/* Top Block: Minecraft & Competitive Esports */}
           <section aria-labelledby="gaming-heading">
-            {/* Header with Divider Line */}
+            {/* Header with Divider Line & Explore More Button */}
             <div className="flex items-center gap-2 mb-2 group/header">
-              <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150">
+              <span id="gaming-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150 shrink-0">
                 # Minecraft Speedrunner
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('/interests/minecraft/')}
+                className="pressable group/btn inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-stone-400 hover:text-[#161514] hover:bg-black/[0.04] transition-all duration-150 cursor-pointer shrink-0 select-none whitespace-nowrap"
+                aria-label="Explore more about Minecraft Speedrunner"
+              >
+                <span>explore more</span>
+                <ArrowUpRight className="w-3 h-3 text-stone-400 group-hover/btn:text-[#161514] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all duration-150" />
+              </button>
             </div>
 
-            {/* Video Thumbnail (Static crisp framing, no enlarge hover scale) */}
+            {/* Video Thumbnail (Static crisp framing, interactive click to explore) */}
             <div 
-              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              role="button"
+              tabIndex={0}
+              onClick={() => onNavigate && onNavigate('/interests/minecraft/')}
+              onKeyDown={(e) => e.key === 'Enter' && onNavigate && onNavigate('/interests/minecraft/')}
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video cursor-pointer"
               onMouseEnter={() => mcVideoRef.current?.play()}
+              aria-label="Open Minecraft Speedrunner details"
             >
               <video 
                 ref={mcVideoRef}
                 src="/gallery/videos/GixelMC.mp4" 
+                poster="/gallery/videos/GixelMC-poster.webp"
                 autoPlay
                 loop 
                 muted 
                 playsInline 
+                preload="metadata"
                 className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 transition-opacity duration-300 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
-                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
-                  Sub-20m · RSG
-                </span>
-              </div>
             </div>
 
             {/* Sub-thumbnail Details: TWO SEPARATE ROWS (Pro App + Extra Apps) */}
@@ -180,33 +176,44 @@ export default function InterestsExperience() {
 
           {/* Bottom Block: Video Direction & Motion Design */}
           <section aria-labelledby="video-heading" className="pt-5 sm:pt-6">
-            {/* Header with Divider Line */}
+            {/* Header with Divider Line & Explore More Button */}
             <div className="flex items-center gap-2 mb-2 group/header">
-              <span id="video-heading" className="text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150">
+              <span id="video-heading" className="text-[11px] sm:text-xs font-mono font-bold text-[#161514] tracking-tight group-hover/header:text-black transition-colors duration-150 shrink-0 whitespace-nowrap">
                 # Video Editing &amp; Motion Design
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('/interests/video-editing/')}
+                className="pressable group/btn inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-stone-400 hover:text-[#161514] hover:bg-black/[0.04] transition-all duration-150 cursor-pointer shrink-0 select-none whitespace-nowrap"
+                aria-label="Explore more about Video Editing and Motion Design"
+              >
+                <span>explore more</span>
+                <ArrowUpRight className="w-3 h-3 text-stone-400 group-hover/btn:text-[#161514] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-all duration-150" />
+              </button>
             </div>
 
-            {/* Video Thumbnail (Static crisp framing, no enlarge hover scale) */}
+            {/* Video Thumbnail (Static crisp framing, interactive click to explore) */}
             <div 
-              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video"
+              role="button"
+              tabIndex={0}
+              onClick={() => onNavigate && onNavigate('/interests/video-editing/')}
+              onKeyDown={(e) => e.key === 'Enter' && onNavigate && onNavigate('/interests/video-editing/')}
+              className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video cursor-pointer"
               onMouseEnter={() => editVideoRef.current?.play()}
+              aria-label="Open Video Editing and Motion Design details"
             >
               <video 
                 ref={editVideoRef}
                 src="/gallery/videos/Showcase-2.mp4" 
+                poster="/gallery/videos/Showcase-2-poster.webp"
                 autoPlay
                 loop 
                 muted 
                 playsInline 
+                preload="metadata"
                 className="w-full h-full object-cover opacity-90 group-hover/video:opacity-100 transition-opacity duration-300 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-2">
-                <span className="text-[9px] font-mono text-white/95 bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/10 font-medium group-hover/video:bg-black/75 group-hover/video:border-white/20 transition-all duration-200">
-                  Kinetic Pacing · 4K
-                </span>
-              </div>
             </div>
 
             {/* Sub-thumbnail Details: TWO SEPARATE ROWS (Pro Tool + Extra Tools) */}
@@ -283,7 +290,7 @@ export default function InterestsExperience() {
                 <span># Blogs</span>
               </span>
               <div className="flex-1 h-[1px] bg-stone-200/80 group-hover/header:bg-stone-300 transition-colors duration-200" />
-              <span className="text-[10px] font-mono text-stone-400 group-hover/header:text-stone-500 font-medium transition-colors duration-150">4 notes</span>
+              <span className="text-[10px] font-mono text-stone-400 group-hover/header:text-stone-500 font-medium transition-colors duration-150">2 notes</span>
             </div>
 
             {/* Cleaner Note Entries (Only title, arrow icon, date below it, with smooth microanimations) */}
@@ -292,9 +299,13 @@ export default function InterestsExperience() {
                 <a
                   key={blog.id}
                   href={blog.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/item block py-2.5 sm:py-3 -mx-2 px-2 rounded-lg hover:bg-stone-500/[0.04] active:scale-[0.985] transition-all duration-200 ease-out"
+                  onClick={(e) => {
+                    if (onNavigate) {
+                      e.preventDefault();
+                      onNavigate(blog.link);
+                    }
+                  }}
+                  className="group/item block py-2.5 sm:py-3 -mx-2 px-2 rounded-lg hover:bg-stone-500/[0.04] active:scale-[0.985] transition-all duration-200 ease-out cursor-pointer"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">

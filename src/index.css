@@ -26,6 +26,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -34,7 +35,67 @@
     min-height: 100vh;
     background-color: var(--bg-canvas);
     color: var(--ink-primary);
+    overflow-x: hidden;
   }
+}
+
+/* ========================================================
+   MODERN MINIMAL ZEN SCROLLBAR
+   - Replaces the ugly 17px Windows OS grey scrollbar
+   - Completely transparent track (zero layout gutter color)
+   - Ultra-sleek, floating 6px pill thumb with rounded ends
+   - Zero arrow buttons, zero horizontal scrollbar leaks
+   ======================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 21, 20, 0.16) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(22, 21, 20, 0.16);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+  transition: background-color 150ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(22, 21, 20, 0.35);
+}
+
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Hide scrollbars cleanly on single-screen sheets / overlays */
+.no-scrollbar,
+.blog-sheet-container,
+.post-page {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.blog-sheet-container::-webkit-scrollbar,
+.post-page::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Custom Font Families */
@@ -51,6 +112,96 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.024 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
+/* A note is exactly one screen: no scrollbar, no second page behind it */
+.post-page {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Blog post artwork: fills the sheet edge to edge, never distorted */
+.post-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.post-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.post-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(80px, 14vh, 120px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Home page canvas depth scaling when a blog note is open */
+.home-canvas-resting {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease-out;
+  transform-origin: center top;
+}
+
+.home-canvas-receded {
+  transform: scale(0.985);
+  opacity: 0.94;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease-out;
+  transform-origin: center top;
+}
+
+/* Tactile Floating Sheet Transition (for Blog Notes & Explore views) */
+.blog-sheet-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100svh;
+  z-index: 50;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  will-change: transform, opacity;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.08);
+}
+
+.blog-sheet-enter {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+  pointer-events: none;
+}
+
+.blog-sheet-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1), transform 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 280ms ease-out;
+}
+
+.blog-sheet-exit {
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+  pointer-events: none;
+  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1), transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Smooth Spring Physics */
 .spring-fast {
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -60,13 +211,22 @@
   transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 180ms ease-out;
 }
 
-/* Tactile Active Press */
+/* Tactile Active Press (better-ui exact spec: 0.96 scale, 150ms ease-out, no tap highlight) */
 .pressable {
-  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 150ms cubic-bezier(0.2, 0, 0, 1), background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .pressable:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
+}
+
+.pressable:disabled,
+.pressable[aria-disabled="true"] {
+  transform: none !important;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Progressive Blur Overlay Mask */
@@ -80,11 +240,26 @@
   background: radial-gradient(circle at 50% 25%, rgba(240, 233, 218, 0.75) 0%, rgba(250, 250, 248, 0) 70%);
 }
 
-/* Smooth Fade In Stagger Keyframes */
+/* Pure Opacity Fade In (For fixed viewport overlays: zero translateY to prevent 12px layout overflow) */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity;
+}
+
+/* Smooth Fade In Stagger Keyframes (Strictly both fill-mode to eliminate initial load flicker) */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
@@ -93,7 +268,8 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
 }
 
 @keyframes subtlePulse {
@@ -289,5 +465,11 @@
   will-change: transform;
 }
 
+/* Mobile Safe Area & Tap Polish */
+.safe-top {
+  padding-top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+}
 
-
+* {
+  -webkit-tap-highlight-color: transparent;
+}

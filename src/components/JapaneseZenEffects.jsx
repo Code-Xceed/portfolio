@@ -25,7 +25,8 @@ const PETALS = [
 export default function JapaneseZenEffects() {
   return (
     <div 
-      className="fixed inset-0 pointer-events-none select-none overflow-hidden z-0" 
+      className="fixed inset-0 pointer-events-none select-none overflow-hidden z-0 animate-fade-in" 
+      style={{ animationDuration: '900ms' }}
       aria-hidden="true"
     >
       {/* 1. TOP-LEFT CORNER: ZEN WATER RIPPLES */}

@@ -32,4 +32,9 @@ Thumbs.db
 # Scratch & temporary workspace files
 scratch/
 portfolio-old/
+.archive_assets/
 *.tmp-*
+*.bak
+test_*.js
+test_*.cjs
+*.webm

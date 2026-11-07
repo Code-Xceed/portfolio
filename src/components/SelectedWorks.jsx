@@ -224,25 +224,34 @@ function EditorialProjectCard({ project }) {
 
     const lenR = pathRightRef.current.getTotalLength?.() || halfLen;
     const lenL = pathLeftRef.current.getTotalLength?.() || halfLen;
+    const offsetStartR = Math.max(lenR, halfLen) + 10;
+    const offsetStartL = Math.max(lenL, halfLen) + 10;
 
+    // Both paths start at top-middle. At offset 0 (resting/refresh), opacity MUST be strictly 0
+    // so no strokeLinecap="round" dot/dash is ever rendered on initial load or refresh.
+    // Within 2% of the animation (~10ms), opacity transitions to full 1.0 as the line sweeps around.
     const coreKeyframesR = [
-      { strokeDashoffset: `${lenR}px`, opacity: 1 },
-      { strokeDashoffset: '0px', opacity: 1 }
+      { strokeDashoffset: `${offsetStartR}px`, opacity: 0, offset: 0 },
+      { strokeDashoffset: `${lenR * 0.98}px`, opacity: 1, offset: 0.02 },
+      { strokeDashoffset: '0px', opacity: 1, offset: 1.0 }
     ];
 
     const coreKeyframesL = [
-      { strokeDashoffset: `${lenL}px`, opacity: 1 },
-      { strokeDashoffset: '0px', opacity: 1 }
+      { strokeDashoffset: `${offsetStartL}px`, opacity: 0, offset: 0 },
+      { strokeDashoffset: `${lenL * 0.98}px`, opacity: 1, offset: 0.02 },
+      { strokeDashoffset: '0px', opacity: 1, offset: 1.0 }
     ];
 
     const glowKeyframesR = [
-      { strokeDashoffset: `${lenR}px`, opacity: 0.35 },
-      { strokeDashoffset: '0px', opacity: 0.18 }
+      { strokeDashoffset: `${offsetStartR}px`, opacity: 0, offset: 0 },
+      { strokeDashoffset: `${lenR * 0.98}px`, opacity: 0.35, offset: 0.02 },
+      { strokeDashoffset: '0px', opacity: 0.18, offset: 1.0 }
     ];
 
     const glowKeyframesL = [
-      { strokeDashoffset: `${lenL}px`, opacity: 0.35 },
-      { strokeDashoffset: '0px', opacity: 0.18 }
+      { strokeDashoffset: `${offsetStartL}px`, opacity: 0, offset: 0 },
+      { strokeDashoffset: `${lenL * 0.98}px`, opacity: 0.35, offset: 0.02 },
+      { strokeDashoffset: '0px', opacity: 0.18, offset: 1.0 }
     ];
 
     const anims = [
@@ -270,7 +279,7 @@ function EditorialProjectCard({ project }) {
 
     animsRef.current.forEach(a => {
       if (!a) return;
-      // If animation completed forward or rewound to start, restart from 0 immediately without lag
+      // If animation was finished forward or rewound back to start (<= 0), reset to 0 cleanly
       if (a.playState === 'finished' || (a.currentTime != null && a.currentTime <= 0) || (a.currentTime != null && a.currentTime >= 550)) {
         a.currentTime = 0;
       }
@@ -349,8 +358,8 @@ function EditorialProjectCard({ project }) {
             filter={`url(#thumbBlur-${project.id})`}
             style={{
               opacity: 0,
-              strokeDasharray: `${halfLen} ${halfLen}`,
-              strokeDashoffset: `${halfLen}`,
+              strokeDasharray: `${halfLen + 20} ${halfLen + 20}`,
+              strokeDashoffset: `${halfLen + 20}`,
               willChange: 'stroke-dashoffset, opacity',
             }}
           />
@@ -365,8 +374,8 @@ function EditorialProjectCard({ project }) {
             filter={`url(#thumbBlur-${project.id})`}
             style={{
               opacity: 0,
-              strokeDasharray: `${halfLen} ${halfLen}`,
-              strokeDashoffset: `${halfLen}`,
+              strokeDasharray: `${halfLen + 20} ${halfLen + 20}`,
+              strokeDashoffset: `${halfLen + 20}`,
               willChange: 'stroke-dashoffset, opacity',
             }}
           />
@@ -382,8 +391,8 @@ function EditorialProjectCard({ project }) {
             strokeLinejoin="round"
             style={{
               opacity: 0,
-              strokeDasharray: `${halfLen} ${halfLen}`,
-              strokeDashoffset: `${halfLen}`,
+              strokeDasharray: `${halfLen + 20} ${halfLen + 20}`,
+              strokeDashoffset: `${halfLen + 20}`,
               willChange: 'stroke-dashoffset, opacity',
             }}
           />
@@ -397,8 +406,8 @@ function EditorialProjectCard({ project }) {
             strokeLinejoin="round"
             style={{
               opacity: 0,
-              strokeDasharray: `${halfLen} ${halfLen}`,
-              strokeDashoffset: `${halfLen}`,
+              strokeDasharray: `${halfLen + 20} ${halfLen + 20}`,
+              strokeDashoffset: `${halfLen + 20}`,
               willChange: 'stroke-dashoffset, opacity',
             }}
           />
@@ -545,7 +554,8 @@ export default function SelectedWorks() {
   return (
     <section 
       id="projects" 
-      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8 scroll-mt-8 sm:scroll-mt-12"
+      className="relative z-10 w-full max-w-3xl mx-auto px-6 sm:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8 scroll-mt-8 sm:scroll-mt-12 animate-fade-in-up"
+      style={{ animationDelay: '340ms' }}
     >
       {/* PROJECTS LIST: Structured Editorial Spec Stack */}
       <div className="flex flex-col gap-4 sm:gap-5">

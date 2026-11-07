@@ -261,7 +261,7 @@ export default function HeroSkillsShelf() {
   return (
     <div 
       className="mt-7 sm:mt-9 w-full max-w-xl animate-fade-in-up"
-      style={{ animationDelay: '280ms' }}
+      style={{ animationDelay: '240ms' }}
     >
       {/* 
         ==================================================

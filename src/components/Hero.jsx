@@ -68,7 +68,7 @@ export default function Hero({ onExploreClick }) {
         <div className="flex-1 flex flex-col items-start text-left w-full">
           
           {/* Main Title Row (With Mobile Portrait Integration) */}
-          <div className="w-full flex items-start justify-between gap-4 animate-fade-in-up" style={{ animationDelay: '80ms' }}>
+          <div className="w-full flex items-start justify-between gap-4 animate-fade-in-up" style={{ animationDelay: '60ms' }}>
             <div className="space-y-2">
               <h1 className="text-[38px] sm:text-5xl md:text-[56px] font-bold text-[#161514] tracking-[-0.035em] leading-[1.04]">
                 Aditya Rathore
@@ -87,7 +87,7 @@ export default function Hero({ onExploreClick }) {
           {/* Manifesto / Hook */}
           <p 
             className="mt-6 sm:mt-7 max-w-lg text-[15px] sm:text-[16.5px] leading-[1.7] text-[#57534E] font-normal animate-fade-in-up"
-            style={{ animationDelay: '160ms' }}
+            style={{ animationDelay: '140ms' }}
           >
             Obsessed with building scalable web products, developer utilities, and high-craft interfaces with relentless attention to speed, feel, and simplicity.
           </p>
@@ -95,7 +95,7 @@ export default function Hero({ onExploreClick }) {
           {/* ACTIONS & SOCIALS: Fixed-size Morphing Contact Button */}
           <div 
             className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3 animate-fade-in-up"
-            style={{ animationDelay: '240ms' }}
+            style={{ animationDelay: '200ms' }}
           >
             {/* Interactive Deal Handshake Button with Hover Meme Thumbnail */}
             <ContactDealButton />
@@ -124,7 +124,7 @@ export default function Hero({ onExploreClick }) {
         {/* RIGHT COLUMN: Desktop Museum-Grade Tactile Portrait Plate (Uplifted & Compact) */}
         <div 
           className="hidden md:block relative shrink-0 pt-1 md:pt-1.5 animate-fade-in-up"
-          style={{ animationDelay: '140ms' }}
+          style={{ animationDelay: '180ms' }}
         >
           <HeroPortraitCard />
         </div>
@@ -132,7 +132,7 @@ export default function Hero({ onExploreClick }) {
       </div>
 
       {/* BOTTOM FOOTER CUE */}
-      <footer className="relative z-10 w-full flex items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 animate-fade-in-up" style={{ animationDelay: '320ms' }}>
+      <footer className="relative z-10 w-full flex items-center justify-between text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.06)] pt-4 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
         <span className="flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-amber-500/80" />
           <span>17 months of shipping</span>

@@ -6,9 +6,12 @@ import { ArrowUp, ArrowUpRight } from 'lucide-react';
  * Expansive width with generous center breathing room (Ma),
  * and precision micro-interactions.
  */
-export default function Footer({ onScrollToTop }) {
+export default function Footer({ onScrollToTop, onNavigate }) {
   return (
-    <footer className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 mt-auto pt-4 sm:pt-6 pb-6 sm:pb-8">
+    <footer 
+      className="relative z-10 w-full max-w-[860px] mx-auto px-6 sm:px-8 mt-auto pt-4 sm:pt-6 pb-6 sm:pb-8 animate-fade-in-up"
+      style={{ animationDelay: '480ms' }}
+    >
       {/* 1px Minimal Divider Line with generous breathing room */}
       <div className="w-full border-t border-[rgba(22,21,20,0.08)] pt-4 sm:pt-5">
         
@@ -33,6 +36,21 @@ export default function Footer({ onScrollToTop }) {
 
           {/* Right: Discreet Tactile Links & Back to Top */}
           <div className="flex items-center gap-2.5 sm:gap-3 text-stone-500 select-none shrink-0">
+            <a
+              href="/blogs/how-i-started/"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/blogs/how-i-started/');
+                }
+              }}
+              className="group/link pressable inline-flex items-center gap-1 px-1.5 py-0.5 rounded hover:text-[#161514] hover:bg-black/[0.035] transition-all duration-150 cursor-pointer"
+              title="Blogs"
+            >
+              <span>Blogs</span>
+              <ArrowUpRight className="w-3 h-3 opacity-50 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all duration-150" />
+            </a>
+
             <a
               href="https://github.com/Code-Xceed"
               target="_blank"
@@ -87,6 +105,19 @@ export default function Footer({ onScrollToTop }) {
           {/* Mobile Bottom Row: Clean tactile action links */}
           <div className="flex items-center justify-between text-stone-500 select-none pt-0.5">
             <div className="flex items-center gap-3">
+              <a
+                href="/blogs/how-i-started/"
+                onClick={(e) => {
+                  if (onNavigate) {
+                    e.preventDefault();
+                    onNavigate('/blogs/how-i-started/');
+                  }
+                }}
+                className="group/link inline-flex items-center gap-1 py-0.5 hover:text-[#161514] transition-colors duration-150 active:scale-95 cursor-pointer"
+              >
+                <span>Blogs</span>
+                <ArrowUpRight className="w-3 h-3 opacity-50" />
+              </a>
               <a
                 href="https://github.com/Code-Xceed"
                 target="_blank"
