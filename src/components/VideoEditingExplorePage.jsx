@@ -424,49 +424,26 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                   </div>
                 )}
 
-                {/* Top Header Overlay */}
-                <div className="absolute top-0 inset-x-0 p-3 sm:p-3.5 bg-gradient-to-b from-black/85 via-black/40 to-transparent flex items-center justify-between pointer-events-none select-none z-10 gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="px-2 py-0.5 rounded-md bg-amber-500 text-black text-[10px] font-mono font-bold tracking-wide uppercase shrink-0 shadow-xs whitespace-nowrap">
-                      {activeCategory.video.badge}
-                    </span>
-                    <span className="text-xs sm:text-[13px] font-medium text-white/95 tracking-tight truncate drop-shadow-sm">
-                      {activeCategory.video.title}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono text-white/70 px-1.5 py-0.5 rounded bg-white/10 backdrop-blur-xs shrink-0 hidden sm:inline">
-                    {activeCategory.video.tool}
-                  </span>
-                </div>
-
-                {/* Bottom Video Controls */}
-                <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-center justify-between z-10">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={toggleYtPlay}
-                      className="pressable p-1.5 rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer backdrop-blur-xs"
-                      aria-label={ytPlaying ? 'Pause video' : 'Play video'}
-                    >
-                      {ytPlaying ? <Pause className="w-3.5 h-3.5 fill-white" /> : <Play className="w-3.5 h-3.5 fill-white ml-0.5" />}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={toggleYtMute}
-                      className="pressable p-1.5 rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer backdrop-blur-xs"
-                      aria-label={ytMuted ? 'Unmute video' : 'Mute video'}
-                    >
-                      {ytMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-                    </button>
-                    <span className="text-[11px] font-mono text-white/70 ml-1">
-                      {activeCategory.video.duration}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-[10px] font-mono text-white/80">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span>{activeCategory.video.format}</span>
-                  </div>
+                {/* Minimal Floating Controls: Just two buttons for Play/Pause and Mute */}
+                <div className="absolute bottom-3 right-3 sm:bottom-3.5 sm:right-3.5 flex items-center gap-2 z-10">
+                  <button
+                    type="button"
+                    onClick={toggleYtPlay}
+                    className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                    title={ytPlaying ? 'Pause video' : 'Play video'}
+                    aria-label={ytPlaying ? 'Pause video' : 'Play video'}
+                  >
+                    {ytPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleYtMute}
+                    className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                    title={ytMuted ? 'Unmute video' : 'Mute video'}
+                    aria-label={ytMuted ? 'Unmute video' : 'Mute video'}
+                  >
+                    {ytMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                  </button>
                 </div>
               </div>
             )}
@@ -489,11 +466,7 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                         tabIndex={0}
                         onClick={() => handleReelCardClick(idx)}
                         onKeyDown={(e) => e.key === 'Enter' && handleReelCardClick(idx)}
-                        className={`group/reel relative w-[76vw] sm:w-auto shrink-0 snap-center aspect-[9/16] rounded-2xl bg-black overflow-hidden border transition-all duration-200 cursor-pointer select-none shadow-[0_4px_16px_rgba(0,0,0,0.08)] ${
-                          isReelActive
-                            ? 'border-amber-500/90 shadow-[0_0_0_2px_rgba(245,158,11,0.25),0_6px_24px_rgba(0,0,0,0.12)]'
-                            : 'border-stone-200/80 hover:border-stone-400/80'
-                        }`}
+                        className="group/reel relative w-[76vw] sm:w-auto shrink-0 snap-center aspect-[9/16] rounded-2xl bg-black overflow-hidden border border-stone-200/80 hover:border-stone-400/60 transition-all duration-200 cursor-pointer select-none shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
                         aria-label={`Play ${reel.title}`}
                       >
                         {/* Video Element */}
@@ -528,55 +501,29 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                           </div>
                         )}
 
-                        {/* Top Reels Card Header Bar */}
-                        <div className="absolute top-0 inset-x-0 p-2.5 sm:p-3 bg-gradient-to-b from-black/85 via-black/40 to-transparent flex items-center justify-between z-10">
-                          <span className="px-2 py-0.5 rounded-md bg-amber-500 text-black text-[9.5px] font-mono font-bold tracking-tight uppercase shadow-xs truncate max-w-[70%]">
-                            {reel.badge}
-                          </span>
+                        {/* Minimal Floating Controls: Just two buttons for Mute and Play/Pause */}
+                        <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 flex items-center gap-1.5 z-10">
+                          {/* Audio Toggle Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => toggleReelMute(idx, e)}
+                            className="pressable p-1.5 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-sm active:scale-90"
+                            title={isMuted ? 'Unmute audio' : 'Mute audio'}
+                            aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+                          >
+                            {isMuted ? <VolumeX className="w-3 h-3 text-stone-300" /> : <Volume2 className="w-3 h-3 text-white" />}
+                          </button>
 
-                          <div className="flex items-center gap-1.5">
-                            {/* Audio Toggle Button */}
-                            <button
-                              type="button"
-                              onClick={(e) => toggleReelMute(idx, e)}
-                              className="pressable p-1.5 rounded-full bg-black/60 hover:bg-black/85 text-white border border-white/10 backdrop-blur-xs transition-all cursor-pointer shadow-sm active:scale-90"
-                              title={isMuted ? 'Unmute audio' : 'Mute audio'}
-                              aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
-                            >
-                              {isMuted ? <VolumeX className="w-3 h-3 text-stone-300" /> : <Volume2 className="w-3 h-3 text-amber-400" />}
-                            </button>
-
-                            {/* Play / Pause Toggle Button */}
-                            <button
-                              type="button"
-                              onClick={(e) => toggleReelPlay(idx, e)}
-                              className="pressable p-1.5 rounded-full bg-black/60 hover:bg-black/85 text-white border border-white/10 backdrop-blur-xs transition-all cursor-pointer shadow-sm active:scale-90"
-                              title={isPlaying ? 'Pause' : 'Play'}
-                              aria-label={isPlaying ? 'Pause' : 'Play'}
-                            >
-                              {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Center Tap Indicator on Hover */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover/reel:opacity-100 transition-opacity duration-200 z-10">
-                          <div className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white shadow-lg">
-                            {isPlaying ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
-                          </div>
-                        </div>
-
-                        {/* Bottom Reels Card Footer Overlay */}
-                        <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col gap-0.5 z-10 pointer-events-none">
-                          <h3 className="text-xs font-semibold text-white tracking-tight line-clamp-1 drop-shadow-sm">
-                            {reel.title}
-                          </h3>
-                          <div className="flex items-center justify-between text-[10px] font-mono text-white/70 pt-0.5">
-                            <span className="truncate">{reel.subtitle}</span>
-                            <span className="shrink-0 px-1.5 py-0.2 rounded bg-white/15 text-[9px]">
-                              {reel.format}
-                            </span>
-                          </div>
+                          {/* Play / Pause Toggle Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => toggleReelPlay(idx, e)}
+                            className="pressable p-1.5 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-sm active:scale-90"
+                            title={isPlaying ? 'Pause' : 'Play'}
+                            aria-label={isPlaying ? 'Pause' : 'Play'}
+                          >
+                            {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current ml-0.5" />}
+                          </button>
                         </div>
                       </div>
                     );
@@ -615,12 +562,6 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                       aria-label={`Go to reel ${i + 1}`}
                     />
                   ))}
-                </div>
-
-                {/* Subtle helper note */}
-                <div className="flex items-center justify-between px-1 text-[11px] font-mono text-stone-500 pt-0.5">
-                  <span>⚡ Tap any reel card to play or toggle sound</span>
-                  <span className="hidden sm:inline">Optimized 9:16 vertical delivery</span>
                 </div>
               </div>
             )}
