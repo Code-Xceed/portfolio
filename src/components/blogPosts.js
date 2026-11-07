@@ -32,6 +32,19 @@ export const POSTS = [
     paper: '#FCF4ED',
     artFocus: 'center bottom',
   },
+  {
+    id: 'what-im-building-next',
+    number: '3',
+    title: "What I'm Building Next",
+    date: "Nov '26",
+    readTime: '3 min',
+    href: '/blogs/what-im-building-next/',
+    link: '/blogs/what-im-building-next/',
+    art: '/blogs/blog-1-bg.webp',
+    mobileArt: '/blogs/blog-1-mobile.webp',
+    paper: '#F7F2EB',
+    artFocus: 'center bottom',
+  },
 ];
 
 /** Resolve a post from any pathname, with or without trailing slash. */
