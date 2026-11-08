@@ -26,69 +26,43 @@ function SeigaihaLines({ className = "w-full h-full" }) {
 }
 
 /**
- * Minimalist Vector Emblems (Zero Text - Pure Japanese Technical Craft)
- */
-function McpEmblem({ color }) {
-  return (
-    <svg className="w-11 h-11" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.2">
-      <circle cx="24" cy="24" r="20" strokeDasharray="3 3" opacity="0.35" />
-      <circle cx="24" cy="24" r="13" opacity="0.75" />
-      <circle cx="24" cy="24" r="3.5" fill={color} fillOpacity="0.25" />
-      <line x1="24" y1="5" x2="24" y2="43" opacity="0.35" strokeDasharray="2 2" />
-      <line x1="5" y1="24" x2="43" y2="24" opacity="0.35" strokeDasharray="2 2" />
-      <circle cx="24" cy="11" r="2" fill={color} />
-      <circle cx="37" cy="24" r="2" fill={color} />
-      <circle cx="24" cy="37" r="2" fill={color} />
-      <circle cx="11" cy="24" r="2" fill={color} />
-    </svg>
-  );
-}
-
-function FoliaEmblem({ color }) {
-  return (
-    <svg className="w-11 h-11" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.2">
-      <rect x="12" y="12" width="24" height="24" transform="rotate(45 24 24)" opacity="0.4" strokeDasharray="3 3" />
-      <rect x="15" y="15" width="18" height="18" transform="rotate(45 24 24)" opacity="0.8" />
-      <line x1="24" y1="11" x2="24" y2="37" opacity="0.5" />
-      <line x1="11" y1="24" x2="37" y2="24" opacity="0.5" />
-      <circle cx="24" cy="24" r="3" fill={color} fillOpacity="0.25" />
-      <circle cx="24" cy="7" r="1.8" fill={color} />
-      <circle cx="41" cy="24" r="1.8" fill={color} />
-      <circle cx="24" cy="41" r="1.8" fill={color} />
-      <circle cx="7" cy="24" r="1.8" fill={color} />
-    </svg>
-  );
-}
-
-function ZenEmblem({ color }) {
-  return (
-    <svg className="w-11 h-11" viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.2">
-      <path d="M24 7L39 15.5V32.5L24 41L9 32.5V15.5L24 7Z" opacity="0.85" />
-      <path d="M24 24V41" opacity="0.75" />
-      <path d="M24 24L39 15.5" opacity="0.75" />
-      <path d="M24 24L9 15.5" opacity="0.75" />
-      <path d="M24 7L39 15.5L24 24L9 15.5Z" fill={color} fillOpacity="0.12" />
-      <circle cx="24" cy="7" r="1.8" fill={color} />
-      <circle cx="39" cy="15.5" r="1.8" fill={color} />
-      <circle cx="39" cy="32.5" r="1.8" fill={color} />
-      <circle cx="24" cy="41" r="1.8" fill={color} />
-      <circle cx="9" cy="32.5" r="1.8" fill={color} />
-      <circle cx="9" cy="15.5" r="1.8" fill={color} />
-    </svg>
-  );
-}
-
-/**
- * FEATURED PROJECTS (Refined, Human Copy & Pure Japanese Tech Aesthetic)
+ * FEATURED PROJECTS (Authentic Open-Source Engineering Works)
  */
 const PROJECTS = [
   {
-    id: 'goatmcp',
+    id: 'resolve-aiedit',
     index: '01',
     kanji: '壱',
     status: 'active',
     statusType: 'active',
-    title: 'GoatMCP',
+    title: 'Resolve-AIEdit',
+    theme: {
+      accent: '#F59E0B',
+      accentBg: 'bg-[#F59E0B]/8',
+      accentText: 'text-[#F59E0B]',
+      borderHover: 'hover:border-[#F59E0B]/30',
+      ambientGradient: 'from-[#F59E0B]/12 via-[#FBBF24]/4 to-transparent',
+      plateBorder: 'border-[#F59E0B]/15',
+    },
+    description: 'Production MCP server for DaVinci Resolve Studio exposing 42 verified tools for timeline, color, Fairlight audio, Fusion, and render automation.',
+    link: 'https://github.com/Code-Xceed/Resolve-AIEdit',
+    github: 'https://github.com/Code-Xceed/Resolve-AIEdit',
+    logo: '/projects/resolve-aiedit-logo.webp',
+    skills: [
+      { name: 'DaVinci Resolve', icon: '/icons/davinci.svg' },
+      { name: 'Model Context Protocol', icon: '/icons/ai.svg' },
+      { name: 'TypeScript', icon: '/icons/typescript.svg' },
+      { name: 'Python', icon: '/icons/python.svg' },
+      { name: 'Node.js', icon: '/icons/nodejs.svg' },
+    ],
+  },
+  {
+    id: 'winpreview',
+    index: '02',
+    kanji: '弐',
+    status: 'active',
+    statusType: 'active',
+    title: 'WinPreview',
     theme: {
       accent: '#0284C7',
       accentBg: 'bg-[#0284C7]/8',
@@ -97,71 +71,43 @@ const PROJECTS = [
       ambientGradient: 'from-[#0284C7]/12 via-[#38BDF8]/4 to-transparent',
       plateBorder: 'border-[#0284C7]/15',
     },
-    description: 'Curated discovery registry for Model Context Protocol servers, agent tools, and developer workflows.',
-    link: 'https://goatmcp.com',
-    github: 'https://github.com/aditya-rathore',
+    description: 'Ultra-fast native C++20 QuickLook & Apple Preview for Windows featuring <35ms cold launches, <20MB RAM, and pure Direct2D/Direct3D 11 hardware rendering.',
+    link: 'https://github.com/Code-Xceed/WinPreview',
+    github: 'https://github.com/Code-Xceed/WinPreview',
+    logo: '/projects/winpreview-logo.webp',
     skills: [
-      { name: 'Next.js', icon: '/icons/nextjs.svg' },
-      { name: 'TypeScript', icon: '/icons/typescript.svg' },
-      { name: 'Tailwind CSS', icon: '/icons/tailwindcss.svg' },
-      { name: 'Node.js', icon: '/icons/nodejs.svg' },
-      { name: 'Docker', icon: '/icons/docker.svg' },
+      { name: 'C++20', icon: '/icons/cpp.svg' },
+      { name: 'Direct2D / 3D', icon: '/icons/windows.svg' },
+      { name: 'Win32 API', icon: '/icons/windows.svg' },
+      { name: 'CMake', icon: '/icons/cmake.svg' },
     ],
-    emblem: <McpEmblem color="#0284C7" />,
   },
   {
-    id: 'folia-core',
-    index: '02',
-    kanji: '弐',
-    status: 'building',
-    statusType: 'building',
-    title: 'FoliaCore Engine',
-    theme: {
-      accent: '#EA580C',
-      accentBg: 'bg-[#EA580C]/8',
-      accentText: 'text-[#EA580C]',
-      borderHover: 'hover:border-[#EA580C]/30',
-      ambientGradient: 'from-[#EA580C]/12 via-[#FB923C]/4 to-transparent',
-      plateBorder: 'border-[#EA580C]/15',
-    },
-    description: 'Regionized multi-threaded server architecture engineered for zero tick drops under high player concurrency.',
-    link: 'https://github.com/aditya-rathore',
-    github: 'https://github.com/aditya-rathore',
-    skills: [
-      { name: 'Java', icon: '/icons/java.svg' },
-      { name: 'Folia', icon: '/icons/folia.svg' },
-      { name: 'PaperMC', icon: '/icons/papermc.svg' },
-      { name: 'Fabric', icon: '/icons/fabric.svg' },
-      { name: 'Gradle', icon: '/icons/gradle.svg' },
-    ],
-    emblem: <FoliaEmblem color="#EA580C" />,
-  },
-  {
-    id: 'zen-canvas',
+    id: 'codex-client',
     index: '03',
     kanji: '参',
-    status: 'active',
-    statusType: 'active',
-    title: 'ZenCanvas 3D',
+    status: 'archived',
+    statusType: 'archived',
+    title: 'CodeX Client',
     theme: {
-      accent: '#0D9488',
-      accentBg: 'bg-[#0D9488]/8',
-      accentText: 'text-[#0D9488]',
-      borderHover: 'hover:border-[#0D9488]/30',
-      ambientGradient: 'from-[#0D9488]/12 via-[#2DD4BF]/4 to-transparent',
-      plateBorder: 'border-[#0D9488]/15',
+      accent: '#059669',
+      accentBg: 'bg-[#059669]/8',
+      accentText: 'text-[#059669]',
+      borderHover: 'hover:border-[#059669]/30',
+      ambientGradient: 'from-[#059669]/12 via-[#10B981]/4 to-transparent',
+      plateBorder: 'border-[#059669]/15',
     },
-    description: 'Interactive WebGL canvas exploring procedural shaders, paper textures, and real-time lighting physics.',
-    link: 'https://github.com/aditya-rathore',
-    github: 'https://github.com/aditya-rathore',
+    description: 'High-performance Fabric utility client for Minecraft 1.21.4 featuring custom rendering pipeline, event bus architecture, modular cheat engine, and modern HUD.',
+    link: 'https://codexclient.netlify.app',
+    github: 'https://github.com/Code-Xceed/CodeX-Client-src',
+    logo: '/projects/codex-logo.webp',
     skills: [
-      { name: 'Three.js', icon: '/icons/threejs.svg' },
-      { name: 'React', icon: '/icons/react.svg' },
-      { name: 'TypeScript', icon: '/icons/typescript.svg' },
-      { name: 'Motion', icon: '/icons/motion.svg' },
-      { name: 'Tailwind CSS', icon: '/icons/tailwindcss.svg' },
+      { name: 'Java 21', icon: '/icons/java.svg' },
+      { name: 'Fabric Loader', icon: '/icons/fabric.svg' },
+      { name: 'Minecraft 1.21.4', icon: '/icons/minecraft-brand.svg' },
+      { name: 'OpenGL', icon: '/icons/opengl.svg' },
+      { name: 'Gradle', icon: '/icons/gradle.svg' },
     ],
-    emblem: <ZenEmblem color="#0D9488" />,
   },
 ];
 
@@ -457,6 +403,10 @@ function EditorialProjectCard({ project }) {
             <span className="font-mono text-[10px] font-medium tracking-wide text-emerald-600 border-b-[1.5px] border-emerald-500/80 pb-0.5 select-none">
               active
             </span>
+          ) : project.statusType === 'archived' ? (
+            <span className="font-mono text-[10px] font-medium tracking-wide text-stone-500 border-b-[1.5px] border-stone-400/80 pb-0.5 select-none">
+              archived
+            </span>
           ) : (
             <span className="font-mono text-[10px] font-medium tracking-wide bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent border-b-[1.5px] border-orange-400/90 pb-0.5 select-none">
               building
@@ -464,10 +414,18 @@ function EditorialProjectCard({ project }) {
           )}
         </div>
 
-        {/* Plate Center: Minimalist Vector Art (Zero Text Clutter) */}
+        {/* Plate Center: Project Logo with Micro-Scale on Hover */}
         <div className="relative z-10 my-auto py-2 flex items-center justify-center">
-          <div className="transform group-hover:scale-110 transition-transform duration-200 ease-out">
-            {project.emblem}
+          <div className="transform group-hover:scale-105 transition-transform duration-200 ease-out flex items-center justify-center">
+            {project.logo ? (
+              <img
+                src={project.logo}
+                alt={`${project.title} logo`}
+                className="w-[72px] h-[72px] sm:w-[82px] sm:h-[82px] object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.08)] select-none pointer-events-none"
+              />
+            ) : (
+              project.emblem
+            )}
           </div>
         </div>
       </div>
