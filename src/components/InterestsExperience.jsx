@@ -69,8 +69,8 @@ export default function InterestsExperience({ onNavigate }) {
       <header className="w-full flex items-center justify-between text-[11px] sm:text-xs text-[#8C867E] font-mono border-t border-[rgba(22,21,20,0.08)] pt-4 mb-7 sm:mb-9 select-none">
         <span className="flex items-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5 text-amber-500/80 shrink-0" />
-          <span className="text-[#161514] font-medium">Games I Play</span>
-          <span className="hidden sm:inline text-stone-500 font-normal"> &amp; Social work</span>
+          <span className="text-[#161514] font-medium">Creative Pursuits</span>
+          <span className="hidden sm:inline text-stone-500 font-normal"> &amp; Trajectory</span>
         </span>
 
         <div className="inline-flex items-center gap-1 text-[#57534E] text-[11px] sm:text-xs">
@@ -114,9 +114,17 @@ export default function InterestsExperience({ onNavigate }) {
               role="button"
               tabIndex={0}
               onClick={() => onNavigate && onNavigate('/interests/minecraft/')}
-              onKeyDown={(e) => e.key === 'Enter' && onNavigate && onNavigate('/interests/minecraft/')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                  e.preventDefault();
+                  onNavigate && onNavigate('/interests/minecraft/');
+                }
+              }}
               className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video cursor-pointer"
-              onMouseEnter={() => mcVideoRef.current?.play()}
+              onMouseEnter={() => {
+                const p = mcVideoRef.current?.play();
+                p?.catch((err) => { if (err.name !== 'AbortError') console.warn(err); });
+              }}
               aria-label="Open Minecraft Speedrunner details"
             >
               <video 
@@ -198,9 +206,17 @@ export default function InterestsExperience({ onNavigate }) {
               role="button"
               tabIndex={0}
               onClick={() => onNavigate && onNavigate('/interests/video-editing/')}
-              onKeyDown={(e) => e.key === 'Enter' && onNavigate && onNavigate('/interests/video-editing/')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                  e.preventDefault();
+                  onNavigate && onNavigate('/interests/video-editing/');
+                }
+              }}
               className="relative w-full h-[142px] sm:h-[150px] md:h-[126px] lg:h-[134px] rounded-xl overflow-hidden bg-stone-900 my-2 border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] hover:border-stone-300 transition-all duration-300 ease-out group/video cursor-pointer"
-              onMouseEnter={() => editVideoRef.current?.play()}
+              onMouseEnter={() => {
+                const p = editVideoRef.current?.play();
+                p?.catch((err) => { if (err.name !== 'AbortError') console.warn(err); });
+              }}
               aria-label="Open Video Editing and Motion Design details"
             >
               <video 

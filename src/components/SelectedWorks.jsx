@@ -240,6 +240,8 @@ function EditorialProjectCard({ project }) {
     // Seamless reverse unwind back to top-middle starting point with snappy 1.6x speed
     animsRef.current.forEach(a => {
       if (!a) return;
+      // Guard against jumping to end if animation never progressed or already at start
+      if (a.currentTime !== null && a.currentTime <= 0) return;
       a.playbackRate = -1.6;
       a.play();
     });
@@ -389,14 +391,6 @@ function EditorialProjectCard({ project }) {
           <SeigaihaLines />
         </div>
 
-        {/* Kanji Seal Watermark */}
-        <span 
-          className="absolute right-2 bottom-1 text-[42px] font-serif font-black select-none pointer-events-none opacity-[0.08] transition-transform duration-200 group-hover:scale-105"
-          style={{ color: project.theme.accent }}
-        >
-          {project.kanji}
-        </span>
-
         {/* Plate Top Bar: Minimal Status Text (Zero Pill - Clean Colored Text with Underline) */}
         <div className="relative z-10 flex items-center justify-end">
           {project.statusType === 'active' ? (
@@ -460,7 +454,7 @@ function EditorialProjectCard({ project }) {
                 rel="noopener noreferrer"
                 className="pressable group/btn relative overflow-hidden px-3.5 py-1.5 rounded-lg bg-[#161514] hover:bg-black text-white text-[11.5px] font-medium flex items-center gap-1.5 transition-all duration-150 active:scale-95 shadow-2xs"
               >
-                <span>Visit</span>
+                <span>{project.id === 'codex-client' ? 'Visit' : 'View Code'}</span>
                 <ArrowUpRight className="w-3 h-3 transition-transform duration-150 ease-out group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
               </a>
             </div>

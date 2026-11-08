@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Mail } from 'lucide-react';
+import { Mail, Check } from 'lucide-react';
 
 const TALK_TEXT = "Let's talk";
 const EMAIL = "aditya.rathore10101@gmail.com";
@@ -392,6 +392,21 @@ export default function ContactDealButton() {
           </div>
         </div>
       </button>
+
+      {/* Visual Feedback Confirmation on Email Copy */}
+      {buttonPhase === 'active' && (
+        <div 
+          className="absolute -top-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-full bg-[#161514] text-[#FAFAF8] text-[11px] font-mono flex items-center gap-1.5 shadow-lg animate-fade-in whitespace-nowrap z-50 pointer-events-none"
+        >
+          <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+          <span>Email copied to clipboard!</span>
+        </div>
+      )}
+
+      {/* Screen Reader Notification */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {buttonPhase === 'active' ? "Email address copied to clipboard." : ""}
+      </div>
     </div>
   );
 }

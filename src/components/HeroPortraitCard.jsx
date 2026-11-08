@@ -24,7 +24,6 @@ export default function HeroPortraitCard({ compact = false }) {
       <div 
         className="relative shrink-0 select-none group cursor-pointer"
         onClick={toggleMobileThought}
-        onTouchEnd={toggleMobileThought}
         onMouseEnter={() => setIsTapped(true)}
         onMouseLeave={() => setIsTapped(false)}
         role="button"

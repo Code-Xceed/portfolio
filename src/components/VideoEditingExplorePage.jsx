@@ -203,6 +203,11 @@ export default function VideoEditingExplorePage({ onNavigate }) {
   // Reset reel active index whenever category changes
   useEffect(() => {
     setActiveReelIndex(0);
+    // Pause YouTube video if playing
+    if (ytVideoRef.current && !ytVideoRef.current.paused) {
+      ytVideoRef.current.pause();
+      setYtPlaying(false);
+    }
     // Pause all reels from previous category
     Object.values(reelRefs.current).forEach((videoEl) => {
       if (videoEl && !videoEl.paused) {
@@ -210,6 +215,20 @@ export default function VideoEditingExplorePage({ onNavigate }) {
       }
     });
   }, [selectedCategoryId]);
+
+  // Clean up media streams on unmount to prevent audio leaks and memory retention
+  useEffect(() => {
+    return () => {
+      if (ytVideoRef.current) {
+        ytVideoRef.current.pause();
+      }
+      Object.values(reelRefs.current).forEach((videoEl) => {
+        if (videoEl) {
+          videoEl.pause();
+        }
+      });
+    };
+  }, []);
 
   const handleBack = (e) => {
     e.preventDefault();
@@ -226,12 +245,28 @@ export default function VideoEditingExplorePage({ onNavigate }) {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+  // Safe play helper to gracefully handle interrupted play() promises
+  const safePlay = (videoEl, onStarted) => {
+    if (!videoEl) return;
+    const playPromise = videoEl.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => onStarted?.())
+        .catch((err) => {
+          if (err.name !== 'AbortError') {
+            console.warn('Play interrupted:', err);
+          }
+        });
+    } else {
+      onStarted?.();
+    }
+  };
+
   // YouTube controls
   const toggleYtPlay = () => {
     if (!ytVideoRef.current) return;
     if (ytVideoRef.current.paused) {
-      ytVideoRef.current.play();
-      setYtPlaying(true);
+      safePlay(ytVideoRef.current, () => setYtPlaying(true));
     } else {
       ytVideoRef.current.pause();
       setYtPlaying(false);
@@ -258,9 +293,10 @@ export default function VideoEditingExplorePage({ onNavigate }) {
           setReelPlayingStates((prev) => ({ ...prev, [k]: false }));
         }
       });
-      videoEl.play();
-      setReelPlayingStates((prev) => ({ ...prev, [idx]: true }));
-      setActiveReelIndex(idx);
+      safePlay(videoEl, () => {
+        setReelPlayingStates((prev) => ({ ...prev, [idx]: true }));
+        setActiveReelIndex(idx);
+      });
     } else {
       videoEl.pause();
       setReelPlayingStates((prev) => ({ ...prev, [idx]: false }));
@@ -289,8 +325,9 @@ export default function VideoEditingExplorePage({ onNavigate }) {
           setReelPlayingStates((prev) => ({ ...prev, [k]: false }));
         }
       });
-      videoEl.play();
-      setReelPlayingStates((prev) => ({ ...prev, [idx]: true }));
+      safePlay(videoEl, () => {
+        setReelPlayingStates((prev) => ({ ...prev, [idx]: true }));
+      });
     } else {
       videoEl.pause();
       setReelPlayingStates((prev) => ({ ...prev, [idx]: false }));
@@ -393,57 +430,79 @@ export default function VideoEditingExplorePage({ onNavigate }) {
             
             {/* CASE A: YouTube Long-Form (16:9 Cinematic Video Player) */}
             {activeCategory.layout === 'cinematic' && (
-              <div className="group/player relative w-full aspect-video rounded-2xl bg-black overflow-hidden border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_4px_20px_rgba(0,0,0,0.06)] shrink-0">
-                <video
-                  key={activeCategory.video.src}
-                  ref={ytVideoRef}
-                  src={activeCategory.video.src}
-                  poster={activeCategory.video.poster}
-                  autoPlay
-                  loop
-                  muted={ytMuted}
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover"
-                  onWaiting={() => setYtLoading(true)}
-                  onPlaying={() => {
-                    setYtLoading(false);
-                    setYtPlaying(true);
-                  }}
-                  onPause={() => setYtPlaying(false)}
-                  onCanPlay={() => setYtLoading(false)}
-                />
+              <div className="flex flex-col gap-2">
+                <div className="group/player relative w-full aspect-video rounded-2xl bg-black overflow-hidden border border-stone-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.12),0_4px_20px_rgba(0,0,0,0.06)] shrink-0">
+                  <video
+                    key={activeCategory.video.src}
+                    ref={ytVideoRef}
+                    src={activeCategory.video.src}
+                    poster={activeCategory.video.poster}
+                    autoPlay
+                    loop
+                    muted={ytMuted}
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                    onWaiting={() => setYtLoading(true)}
+                    onPlaying={() => {
+                      setYtLoading(false);
+                      setYtPlaying(true);
+                    }}
+                    onPause={() => setYtPlaying(false)}
+                    onCanPlay={() => setYtLoading(false)}
+                  />
 
-                {/* Tactile Buffering / Loading Animation */}
-                {ytLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-none z-20">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/70 border border-white/10 shadow-lg text-white">
-                      <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-amber-400 animate-spin" />
-                      <span className="text-[11px] font-mono text-white/90">Buffering...</span>
+                  {/* Tactile Buffering / Loading Animation */}
+                  {ytLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-none z-20">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/70 border border-white/10 shadow-lg text-white">
+                        <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-amber-400 animate-spin" />
+                        <span className="text-[11px] font-mono text-white/90">Buffering...</span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Minimal Floating Controls: Just two buttons for Play/Pause and Mute */}
-                <div className="absolute bottom-3 right-3 sm:bottom-3.5 sm:right-3.5 flex items-center gap-2 z-10">
-                  <button
-                    type="button"
-                    onClick={toggleYtPlay}
-                    className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
-                    title={ytPlaying ? 'Pause video' : 'Play video'}
-                    aria-label={ytPlaying ? 'Pause video' : 'Play video'}
-                  >
-                    {ytPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={toggleYtMute}
-                    className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
-                    title={ytMuted ? 'Unmute video' : 'Mute video'}
-                    aria-label={ytMuted ? 'Unmute video' : 'Mute video'}
-                  >
-                    {ytMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-                  </button>
+                  {/* Minimal Floating Controls: Just two buttons for Play/Pause and Mute */}
+                  <div className="absolute bottom-3 right-3 sm:bottom-3.5 sm:right-3.5 flex items-center gap-2 z-10">
+                    <button
+                      type="button"
+                      onClick={toggleYtPlay}
+                      className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                      title={ytPlaying ? 'Pause video' : 'Play video'}
+                      aria-label={ytPlaying ? 'Pause video' : 'Play video'}
+                    >
+                      {ytPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleYtMute}
+                      className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                      title={ytMuted ? 'Unmute video' : 'Mute video'}
+                      aria-label={ytMuted ? 'Unmute video' : 'Mute video'}
+                    >
+                      {ytMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Editorial Metadata Strip Below Video */}
+                <div className="px-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-t border-stone-200/70 pt-2">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-[#161514] tracking-tight">
+                      {activeCategory.video.title}
+                    </h3>
+                    <p className="text-xs text-stone-500 font-mono mt-0.5">
+                      {activeCategory.video.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[10.5px] font-mono text-stone-500 bg-stone-100 px-2 py-0.5 rounded border border-stone-200/80">
+                      {activeCategory.video.tool}
+                    </span>
+                    <span className="text-[10.5px] font-mono font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80">
+                      {activeCategory.video.duration}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
@@ -563,6 +622,27 @@ export default function VideoEditingExplorePage({ onNavigate }) {
                     />
                   ))}
                 </div>
+
+                {/* Editorial Metadata Strip Below Active Reel */}
+                {activeCategory.reels[activeReelIndex] && (
+                  <div className="mt-2.5 px-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-t border-stone-200/70 pt-2">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/80">
+                        {activeCategory.reels[activeReelIndex].badge}
+                      </span>
+                      <h3 className="text-xs sm:text-sm font-bold text-[#161514] tracking-tight">
+                        {activeCategory.reels[activeReelIndex].title}
+                      </h3>
+                      <span className="hidden sm:inline text-stone-300">•</span>
+                      <p className="hidden sm:inline text-[11px] sm:text-xs text-stone-500 font-mono">
+                        {activeCategory.reels[activeReelIndex].subtitle}
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono text-stone-400 shrink-0">
+                      {activeCategory.reels[activeReelIndex].tool} • {activeCategory.reels[activeReelIndex].format}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 

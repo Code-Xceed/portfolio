@@ -54,6 +54,14 @@ export default function App() {
   const [isSheetMounted, setIsSheetMounted] = useState(() => Boolean(initialRoute));
   const [isPageMounted, setIsPageMounted] = useState(false);
   const sheetContainerRef = useRef(null);
+  const closeTimerRef = useRef(null);
+
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
 
   useEffect(() => {
     // Coordinated first-load reveal: ensures DOM, styles, and assets are ready before revealing
@@ -113,6 +121,7 @@ export default function App() {
 
   // Direct sheet-to-sheet switch: transitions content directly without unmounting or visiting home page
   const switchRoute = (targetRoute, href, updateHistory = true) => {
+    clearCloseTimer();
     if (updateHistory) {
       window.history.pushState(null, '', href);
     }
@@ -123,6 +132,7 @@ export default function App() {
   };
 
   const openSheet = (targetRoute, href, updateHistory = true) => {
+    clearCloseTimer();
     if (updateHistory) {
       window.history.pushState(null, '', href);
     }
@@ -139,11 +149,13 @@ export default function App() {
   };
 
   const closeSheet = (targetHref = '/', updateHistory = true) => {
+    clearCloseTimer();
     setSheetState('exiting');
-    setTimeout(() => {
+    closeTimerRef.current = setTimeout(() => {
       setIsSheetMounted(false);
       setActiveRoute(null);
       setSheetState('idle');
+      closeTimerRef.current = null;
     }, 240);
     if (updateHistory && window.location.pathname !== targetHref) {
       window.history.pushState(null, '', targetHref);

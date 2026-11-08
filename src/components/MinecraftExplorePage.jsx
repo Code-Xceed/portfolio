@@ -37,8 +37,17 @@ export default function MinecraftExplorePage({ onNavigate }) {
   const togglePlay = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            if (err.name !== 'AbortError') console.warn('Play interrupted:', err);
+            setIsPlaying(false);
+          });
+      } else {
+        setIsPlaying(true);
+      }
     } else {
       videoRef.current.pause();
       setIsPlaying(false);
@@ -129,48 +138,42 @@ export default function MinecraftExplorePage({ onNavigate }) {
                 onPause={() => setIsPlaying(false)}
               />
 
-              {/* Top YouTube-Style Video Header Overlay (Responsive, never wraps badge) */}
-              <div className="absolute top-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-b from-black/80 via-black/40 to-transparent flex items-center justify-between pointer-events-none select-none z-10 gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-600 text-[10px] font-mono font-bold text-white tracking-wide uppercase shrink-0 shadow-xs whitespace-nowrap">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                    MCSR Clip
-                  </span>
-                  <span className="text-xs sm:text-[13px] font-medium text-white/95 tracking-tight truncate drop-shadow-sm">
-                    Minecraft Speedrunning (MCSR)
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-white/70 px-1.5 py-0.5 rounded bg-white/10 backdrop-blur-xs shrink-0">
-                  1080p60
+              {/* Minimal Floating Controls: Just two buttons for Play/Pause and Mute */}
+              <div className="absolute bottom-3 right-3 sm:bottom-3.5 sm:right-3.5 flex items-center gap-2 z-10">
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                  title={isPlaying ? 'Pause video' : 'Play video'}
+                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                >
+                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  className="pressable p-2 rounded-full bg-black/45 hover:bg-black/70 text-white/90 hover:text-white border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-md active:scale-90"
+                  title={isMuted ? 'Unmute video' : 'Mute video'}
+                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                >
+                  {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Editorial Metadata Strip Below Video */}
+            <div className="mt-2.5 px-1 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-t border-stone-200/70 pt-2 mb-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80">
+                  MCSR Clip
                 </span>
+                <h3 className="text-xs sm:text-sm font-bold text-[#161514] tracking-tight">
+                  Minecraft Speedrunning Ranked Record
+                </h3>
               </div>
-
-              {/* Bottom YouTube-Style Floating Control Bar */}
-              <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex items-center justify-between z-10">
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={togglePlay}
-                    className="pressable p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer backdrop-blur-xs"
-                    aria-label={isPlaying ? 'Pause speedrun video' : 'Play speedrun video'}
-                  >
-                    {isPlaying ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={toggleMute}
-                    className="pressable p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer backdrop-blur-xs"
-                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                  >
-                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2 text-[10.5px] font-mono text-white/80">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span>OnlyCodeX Speedrun</span>
-                </div>
-              </div>
+              <span className="text-[10px] font-mono text-stone-400">
+                OnlyCodeX • 1080p60
+              </span>
             </div>
 
             {/* 2. Minecraft Speedrunner Identity & Specs (Direct on washi background, zero white box) */}
@@ -431,9 +434,9 @@ export default function MinecraftExplorePage({ onNavigate }) {
                     <div className="min-w-0">
                       <div className="text-xs font-mono font-semibold text-[#161514] flex items-center gap-2">
                         <span>Chess.com</span>
-                        <span className="text-[9.5px] font-mono text-emerald-700 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded">ELO 500</span>
+                        <span className="text-[9.5px] font-mono text-emerald-700 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">Casual · Rapid/Blitz</span>
                       </div>
-                      <div className="text-[11px] font-mono text-stone-500 truncate mt-0.5">IGN: codeXceed · Rapid / Blitz</div>
+                      <div className="text-[11px] font-mono text-stone-500 truncate mt-0.5">IGN: codeXceed</div>
                     </div>
                   </div>
                   <button

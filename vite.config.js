@@ -85,6 +85,16 @@ export default defineConfig(({ mode }) => {
           'interests-minecraft': fileURLToPath(new URL('./interests/minecraft/index.html', import.meta.url)),
           'interests-video-editing': fileURLToPath(new URL('./interests/video-editing/index.html', import.meta.url)),
         },
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/lucide-react')) {
+              return 'lucide-icons';
+            }
+            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+              return 'vendor-react';
+            }
+          },
+        },
       },
     },
   };
